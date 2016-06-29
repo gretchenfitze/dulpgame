@@ -37,9 +37,6 @@
 .screen__end {
 }
 
-
-/* Все стили для круга */
-
 .circle {
   position: relative;
   overflow: hidden;
@@ -84,7 +81,7 @@
   transform-origin: 100% 100%;
 }
 
-.balls {
+.bullets {
   position: absolute;
   top: 90%;
   left: 50%;
@@ -97,7 +94,7 @@
 }
 
 
-.ball {
+.bullet {
   left: 50%;
   display: inline-block;
   margin-bottom: 5px;
@@ -107,7 +104,7 @@
   box-shadow: 0 0 7px #cccccc;
 }
 
-.ball--active {
+.bullet--active {
   margin-bottom: 10px;
   width: 50px;
   height: 50px;
@@ -145,22 +142,22 @@ background-image: linear-gradient от прозрачного к генерир�
 }
 
 
-.balls li:nth-child(1) {
+.bullets li:nth-child(1) {
   background: #ef5350;
 }
 
-.balls li:nth-child(2) {
+.bullets li:nth-child(2) {
     background: #FF7043;
 }
 
-.balls li:nth-child(3) {
+.bullets li:nth-child(3) {
   background: #FFEE58;
 }
 
-.balls li:nth-child(4) {
+.bullets li:nth-child(4) {
   background: #9CCC65;
 }
 
-.balls li:nth-child(5) {
+.bullets li:nth-child(5) {
   background: #29B6F6;
 }
