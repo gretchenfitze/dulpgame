@@ -1,5 +1,8 @@
 * {
   box-sizing: border-box;
+}
+
+body {
   background: #FAFAFA;
 }
 
@@ -10,21 +13,31 @@
 
 
 .screen__start {
-  vertical-align: middle;
   text-align: center;
 }
 
 .screen__start--game-name {
   padding: 5vh;
-  vertical-align: middle;
-  text-align: center;
   font-size: 10vh;
 }
 
 .screen__start--btn {
   margin: 10vh;
-  width: 50vw;
   font-size: 5vh;
+  background-color: #E96781;
+  color: #fff;
+  border: 0;
+  font-weight: 300;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0 1vh #C0526B;
+  transition: all .2s;
+}
+
+.screen__start--btn:hover {
+  margin: 11vh;
+  box-shadow: 0 0 #C0526B;
 }
 
 .screen__game {
@@ -62,7 +75,7 @@
   height: 80%;
   border-radius: 50%;
   background: #EFEBE9;
-  box-shadow: 0 0 10px #cccccc;
+  box-shadow: 0 0 10px #ccc;
   line-height: 32vh;
   text-align: center;
   font-size: 10vh;
@@ -74,7 +87,7 @@
   overflow: hidden;
   width: 50%;
   height: 50%;
-  box-shadow: 0 0 10px #cccccc;
+  box-shadow: 0 0 10px #ccc;
   transform-origin: 100% 100%;
 }
 
@@ -99,7 +112,7 @@
   width: 3vh;
   height: 3vh;
   border-radius: 50%;
-  box-shadow: 0 0 7px #cccccc;
+  box-shadow: 0 0 7px #ccc;
 }
 
 .bullet--active {
