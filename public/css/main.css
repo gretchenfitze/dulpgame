@@ -52,7 +52,7 @@
   list-style: none;
 }
 
-.circle .circle__counter {
+.circle .circle__center {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -63,8 +63,9 @@
   border-radius: 50%;
   background: #EFEBE9;
   box-shadow: 0 0 10px #cccccc;
-  vertical-align: middle;
+  line-height: 32vh;
   text-align: center;
+  font-size: 10vh;
   transform: translate(-50%, -50%);
 }
 
