@@ -1,22 +1,8 @@
 /**
-* @module Circle module
-*/
-
-// Test object for level first look at game
-// MAX colorSlice for Objects is 170 deg!
-const testLevelObj = {
-	name: '1',
-	colorCount: 5,
-	colorSlice: [45, 45, 90, 150, 30],
-	colors: ['#26C6DA', '#D4E157', '#FF7043', '#7E57C2', '#B2DFDB'],
-	circleSpeed: 1,
-	bulletSpeed: 1,
-};
-
-/**
  * @class Circle class
  */
-class Circle {
+
+export default class Circle {
 	constructor(level) {
 		this.level = level;
 		this.el = document.querySelector('.js-circle');
@@ -55,7 +41,7 @@ class Circle {
 		this.center.innerHTML = this.level.name;
 	}
 
-	_renderSlices() {
+	renderSlices() {
 		this._showLevelNumber();
 		this._getRotationDegs();
 		this._getScaleMetric();
@@ -81,10 +67,4 @@ class Circle {
 	deleteHitSector() {
 		this.el.removeChild(this.hitSector);
 	}
-
 }
-
-const myCircle = new Circle(testLevelObj);
-
-myCircle._renderSlices();
-

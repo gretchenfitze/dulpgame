@@ -2,22 +2,29 @@
   "name": "learnjs-dulpgame",
   "version": "1.0.0",
   "description": "<h1>LearnJs Dulp game</h1>",
-  "main": "index.js",
+  "main": "",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "lint": "eslint *.js public/js; exit 0",
+    "lint": "eslint *.js src/js; exit 0",
+    "build": "webpack",
+    "dev": "webpack -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
+    "babel-core": "6.9.0",
+    "babel-loader": "6.2.4",
+    "babel-preset-es2015": "6.9.0",
+    "css-loader": "0.23.1",
+    "es6-loader": "0.2.0",
     "eslint": "2.13.1",
     "eslint-config-airbnb": "9.0.1",
     "eslint-plugin-import": "1.10.0",
-    "eslint-plugin-jsx-a11y": "1.5.3",
     "eslint-plugin-promise": "1.3.2",
     "eslint-plugin-react": "5.2.2",
     "eslint-plugin-standard": "1.3.2",
+    "style-loader": "0.13.1",
     "webpack": "1.13.1",
     "webpack-dev-server": "1.14.1"
   },
