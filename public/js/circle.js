@@ -1,18 +1,16 @@
-'use strict';
-// /**
-//	* @module Circle module
-//	*/
-// (function() {
+/**
+* @module Circle module
+*/
 
 // Test object for level first look at game
 // MAX colorSlice for Objects is 170 deg!
-let testLevelObj = {
-	'name': '1',
-	'colorCount': 5,
-	'colorSlice': [45, 45, 90, 150, 30],
-	'colors': ['#26C6DA', '#D4E157', '#FF7043', '#7E57C2', '#B2DFDB'],
-	'circleSpeed': 1,
-	'bulletSpeed': 1
+const testLevelObj = {
+	name: '1',
+	colorCount: 5,
+	colorSlice: [45, 45, 90, 150, 30],
+	colors: ['#26C6DA', '#D4E157', '#FF7043', '#7E57C2', '#B2DFDB'],
+	circleSpeed: 1,
+	bulletSpeed: 1,
 };
 
 /**
@@ -44,12 +42,11 @@ class Circle {
 
 	_spin(speed) {
 		this.spinDegree = 0;
-		let self = this;
-		setInterval(function() {
-			self.el.style.transform = `rotate(${self.spinDegree}deg)`;
-			self.spinDegree += 1;
-			if (self.spinDegree == 360) {
-				self.spinDegree = 0;
+		setInterval(() => {
+			this.el.style.transform = `rotate(${this.spinDegree}deg)`;
+			this.spinDegree += 1;
+			if (this.spinDegree === 360) {
+				this.spinDegree = 0;
 			}
 		}, (50 - speed));
 	}
@@ -63,10 +60,14 @@ class Circle {
 		this._getRotationDegs();
 		this._getScaleMetric();
 		for (let i = 0; i < this.level.colorCount; i++) {
-			let newSector = document.createElement('li');
+			const newSector = document.createElement('li');
 			newSector.classList.add('circle__part');
 			newSector.style.background = this.level.colors[i];
-			newSector.style.transform = `rotate(${this._rotationDegs[i]}deg) skew(${90 - this.level.colorSlice[i]}deg) scale(${this._scaleMetrics[i]})`;
+			newSector.style.transform = `
+				rotate(${this._rotationDegs[i]}deg)
+				skew(${90 - this.level.colorSlice[i]}deg)
+				scale(${this._scaleMetrics[i]})
+			`;
 			this.el.appendChild(newSector);
 		}
 		this._spin(this.level.circleSpeed);
@@ -83,8 +84,7 @@ class Circle {
 
 }
 
-let myCircle = new Circle(testLevelObj);
+const myCircle = new Circle(testLevelObj);
 
 myCircle._renderSlices();
 
-// })();

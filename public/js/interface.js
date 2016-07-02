@@ -1,13 +1,11 @@
-'use strict';
+/**
+* @module UI module
+*/
 
-// /**
-//	* @module UI module
-//	*/
-// (function () {
-let startScreen = document.querySelector('.screen__start');
-let startButton = document.querySelector('.btn__start');
-let gameScreen = document.querySelector('.screen__game');
-let endScreen = document.querySelector('.screen__end');
+const startScreen = document.querySelector('.screen__start');
+const startButton = document.querySelector('.btn__start');
+const gameScreen = document.querySelector('.screen__game');
+const endScreen = document.querySelector('.screen__end');
 
 function hideElement(element) {
 	element.classList.add('invisible');
@@ -24,4 +22,3 @@ function showGameScreen() {
 }
 
 startButton.addEventListener('click', showGameScreen);
-// })()

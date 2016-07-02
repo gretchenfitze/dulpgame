@@ -12,9 +12,9 @@ class Game {
 /* *
 * @constructor
 */
-	constructor (level) {
+	// constructor (level) {
 
-	}
+	// }
 
 	/**
 	* Some method
@@ -23,7 +23,7 @@ class Game {
 	someMethod() {
 		return Math.random();
 	}
-	}
+}
 
 // export
 window.Game = Game;
