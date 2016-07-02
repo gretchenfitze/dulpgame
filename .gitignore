@@ -3,3 +3,5 @@
 *.sublime-workspace
 log/
 node_modules/
+.eslintrc.js
+package.json

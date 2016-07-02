@@ -16,14 +16,7 @@
 
 	<div class="screen__game invisible">
 		<div class="circle">
-			<ul>
-				<li class="circle__part"><span></span></li>
-				<li class="circle__part"></li>
-				<li class="circle__part"></li>
-				<li class="circle__part"></li>
-				<li class="circle__part"></li>
-				<!-- Сюда в дальнейшем вставляем с помощью js элементы круга для каждого уровня,
-				сейчас эти li для примера -->
+			<ul class="js-circle">
 			</ul>
 			<div class="circle__counter"></div>
 			<div class="circle__target"></div>
@@ -44,9 +37,10 @@
 		<!--Оставить последнее значение счетчика попаданий-->
 		<div class="circle__counter">_YOUR SCORE_</div>
     <button class="btn__start">NEW GAME</button>
-		<button class="btn__results">TOP SCORES</button>
 	</div>
 
 <script src="js/interface.js"></script>
+<script src="js/circle.js"></script>
+<script src="js/game.js"></script>
 </body>
 </html>
