@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>LearnJs Dulp game</title>
+	<link rel="stylesheet" href="css/_normalize.css">
+	<link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+	<div class="screen__start">
+		<div class="screen__start--game-name">dulp</div>
+		<div class="screen__start--created-by">(version by learn.javascript.ru students)</div>
+    <button class="screen__start--btn btn__start">NEW GAME</button>
+	</div>
+
+	<div class="screen__game invisible">
+		<div class="circle">
+			<ul class="js-circle">
+			</ul>
+			<div class="circle__center"></div>
+		</div>
+
+			<ul class="bullets">
+				<li class="bullet bullet--active"></li>
+				<li class="bullet"></li>
+				<li class="bullet"></li>
+				<li class="bullet"></li>
+				<li class="bullet"></li>
+				<!-- В этом списке кол-во мячей должно будет совпадать с кол-вом в списке долей круга -->
+			</ul>
+	</div>
+
+	<div class="screen__end invisible">
+		<span>Your score:</span>
+		<!--Оставить последнее значение счетчика попаданий-->
+		<div class="circle__counter">_YOUR SCORE_</div>
+    <button class="btn__start">NEW GAME</button>
+		<button class="btn__results">TOP SCORES</button>
+	</div>
+
+<script src="js/interface.js"></script>
+<script src="js/circle.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
