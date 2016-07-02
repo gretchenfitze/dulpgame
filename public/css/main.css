@@ -112,35 +112,7 @@
 
 /*
 Ниже примеры в css для наглядности - допишем в js
-background-image: linear-gradient от прозрачного к генерируемому цвету, чтобы получился "бублик"
-Либо можно оставить в центре белый круг .circle__counter
-Также в js будем генерировать размеры углов трансформации
 */
-.circle li:nth-child(1) {
-  background: #ef5350;
-  transform: rotate(0deg) skew(30deg);
-}
-
-.circle li:nth-child(2) {
-    background: #FF7043;
-    transform: rotate(60deg) skew(30deg);
-}
-
-.circle li:nth-child(3) {
-  background: #FFEE58;
-  transform: rotate(120deg) skew(30deg);
-}
-
-.circle li:nth-child(4) {
-  background: #9CCC65;
-  transform: rotate(180deg) skew(30deg);
-}
-
-.circle li:nth-child(5) {
-  background: #29B6F6;
-  transform: rotate(240deg) skew(30deg);
-}
-
 
 .bullets li:nth-child(1) {
   background: #ef5350;
