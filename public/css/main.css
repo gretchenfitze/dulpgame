@@ -10,24 +10,21 @@
 
 
 .screen__start {
-  width: 100%;
-  height: 100%;
   vertical-align: middle;
   text-align: center;
 }
 
 .screen__start--game-name {
-  padding: 50px;
+  padding: 5vh;
   vertical-align: middle;
   text-align: center;
-  font-size: 80px;
+  font-size: 10vh;
 }
 
 .screen__start--btn {
-  margin: 50px;
-  width: 50%;
-  height: 20%;
-  font-size: 30px;
+  margin: 10vh;
+  width: 50vw;
+  font-size: 5vh;
 }
 
 .screen__game {
@@ -40,13 +37,12 @@
 .circle {
   position: relative;
   overflow: hidden;
-  margin: 50px auto;
-  width: 400px;
-  height: 400px;
+  margin: 5vh auto;
+  width: 40vh;
+  height: 40vh;
   border-radius: 50%;
 }
 
-/*Скорее всего будем крутить этот элемент (надо пробовать :)) */
 .circle ul {
   position: absolute;
   margin: 0;
@@ -85,29 +81,30 @@
   position: absolute;
   top: 90%;
   left: 50%;
+  overflow: hidden;
   margin: 0 auto;
   padding: 0;
-  width: 50px;
+  width: 5vh;
+  height: 20vh;
   list-style: none;
   text-align: center;
   transform: translate(-50%, -50%);
 }
 
-
 .bullet {
   left: 50%;
   display: inline-block;
-  margin-bottom: 5px;
-  width: 30px;
-  height: 30px;
+  margin-bottom: 1vh;
+  width: 3vh;
+  height: 3vh;
   border-radius: 50%;
   box-shadow: 0 0 7px #cccccc;
 }
 
 .bullet--active {
-  margin-bottom: 10px;
-  width: 50px;
-  height: 50px;
+  margin-bottom: 2vh;
+  width: 5vh;
+  height: 5vh;
 }
 
 /*
