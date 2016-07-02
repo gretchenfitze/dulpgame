@@ -41,6 +41,18 @@ class Circle {
 		}
 	}
 
+	_spin(speed) {
+		this.spinDegree = 0;
+		let self = this;
+		setInterval(function() {
+			self.el.style.transform = `rotate(${self.spinDegree}deg)`;
+			self.spinDegree += 1;
+			if (self.spinDegree == 360) {
+				self.spinDegree = 0;
+			}
+		}, (50 - speed));
+	}
+
 	_renderSlices() {
 		this._getRotationDegs();
 		this._getScaleMetric();
@@ -51,10 +63,7 @@ class Circle {
 			newSector.style.transform = `rotate(${this._rotationDegs[i]}deg) skew(${90 - this.level.colorSlice[i]}deg) scale(${this._scaleMetrics[i]})`;
 			this.el.appendChild(newSector);
 		}
-	}
-
-	_spin() {
-
+		this._spin(this.level.circleSpeed);
 	}
 
 }
