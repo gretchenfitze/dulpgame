@@ -22,6 +22,7 @@ class Circle {
 	constructor(level) {
 		this.level = level;
 		this.el = document.querySelector('.js-circle');
+		this.center = document.querySelector('.circle__center');
 	}
 
 	_getRotationDegs() {
@@ -53,7 +54,12 @@ class Circle {
 		}, (50 - speed));
 	}
 
+	_showLevelNumber() {
+		this.center.innerHTML = this.level.name;
+	}
+
 	_renderSlices() {
+		this._showLevelNumber();
 		this._getRotationDegs();
 		this._getScaleMetric();
 		for (let i = 0; i < this.level.colorCount; i++) {
@@ -64,6 +70,15 @@ class Circle {
 			this.el.appendChild(newSector);
 		}
 		this._spin(this.level.circleSpeed);
+	}
+
+	getHitSector(x, y) {
+		this.hitSector = document.elementFromPoint(x, y);
+		this.hitSectorColor = this.hitSector.style.backgroundColor;
+	}
+
+	deleteHitSector() {
+		this.el.removeChild(this.hitSector);
 	}
 
 }
