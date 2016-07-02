@@ -113,6 +113,7 @@
 /*
 Ниже примеры в css для наглядности - допишем в js
 */
+
 .bullets li:nth-child(1) {
   background: #ef5350;
 }
