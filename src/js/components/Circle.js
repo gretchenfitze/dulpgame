@@ -7,6 +7,7 @@ export default class Circle {
 		this.level = level;
 		this.el = document.querySelector('.js-circle');
 		this.center = document.querySelector('.circle__center');
+		this.spinDegree = 0;
 	}
 
 	_getRotationDegs() {
@@ -24,17 +25,6 @@ export default class Circle {
 			this._scale = this.level.colorSlice[i] <= 90 ? 1 : 10;
 			this._scaleMetrics.push(this._scale);
 		}
-	}
-
-	_spin(speed) {
-		this.spinDegree = 0;
-		setInterval(() => {
-			this.el.style.transform = `rotate(${this.spinDegree}deg)`;
-			this.spinDegree += 1;
-			if (this.spinDegree === 360) {
-				this.spinDegree = 0;
-			}
-		}, (50 - speed));
 	}
 
 	_showLevelNumber() {
@@ -56,7 +46,6 @@ export default class Circle {
 			`;
 			this.el.appendChild(newSector);
 		}
-		this._spin(this.level.circleSpeed);
 	}
 
 	getHitSector(x, y) {
@@ -66,5 +55,13 @@ export default class Circle {
 
 	deleteHitSector() {
 		this.el.removeChild(this.hitSector);
+	}
+
+	update(delta) {
+		this.spinDegree += delta / 50 * this.level.circleSpeed;
+		if (this.spinDegree >= 360) {
+			this.spinDegree = 0;
+		}
+		this.el.style.transform = `rotate(${this.spinDegree}deg)`;
 	}
 }
