@@ -21,6 +21,7 @@ export default class Game {
 
 		this.userInterface = new Interface();
 		this.circle = new Circle(this.circleOptions);
+		this._lastTime = 0;
 	}
 
 	/**
@@ -28,7 +29,7 @@ export default class Game {
 	 */
 	initGame() {
 		this.render();
-		this.userInterface.showGameScreen();
+		setInterval(this.gameLoop.bind(this), 50);
 	}
 
 	/**
@@ -45,15 +46,13 @@ export default class Game {
 		const time = Date.now();
 		const delta = time - this._lastTime; // сколько прошло с последнего обновления;
 		this._lastTime = time; // сохраним на следующий вызов текущее время;
-
 		this.circle.update(delta); // провернем круг исходя из прошедшего с последнего поворота времени
+		// console.log(this.circle.hitSectorColor);
 		if (this._activeBullet) {
 			this.activeBullet.update(delta); // "продвинем» пулю, если она есть на  нужное расстояние.
 
 			this.checkIntersection(); // проверим, а не долетела ли пуля до круга
 		}
-
-		this._timerID = setInterval(this.updateState.bind(this), 11);
 	}
 
 	/**
