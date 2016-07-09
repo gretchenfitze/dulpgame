@@ -1,7 +1,8 @@
 @import '_normalize.css';
 
-* {
+* {;
   box-sizing: border-box;
+  font-family: 'Fredoka One', sans-serif;
 }
 
 body {
@@ -13,33 +14,89 @@ body {
   display: none !important;
 }
 
-
 .screen__start {
-  text-align: center;
+  color: #EC407A;
+  text-align: center
 }
 
 .screen__start--game-name {
   padding: 5vh;
+  color: #FF7043;
   font-size: 10vh;
 }
 
-.screen__start--btn {
-  margin: 10vh;
-  font-size: 5vh;
-  background-color: #E96781;
-  color: #fff;
+button {
+  display: block;
+  margin: 10vh auto;
+  padding: 1vh;
+  width: 40vh;
   border: 0;
-  font-weight: 300;
-  padding: 10px;
-  cursor: pointer;
   border-radius: 8px;
-  box-shadow: 0 1vh #C0526B;
+  color: #fff;
+  font-weight: 300;
+  font-size: 5vh;
+  cursor: pointer;
   transition: all .2s;
 }
 
-.screen__start--btn:hover {
-  margin: 11vh;
+button:hover {
+  margin-top: 11vh;
+  margin-bottom: 9vh;
+}
+
+button:hover + button {
+  margin-top: 9vh;
+}
+
+button:focus {
+	outline: none;
+}
+
+.btn__start {
+  background-color: #81C784;
+  box-shadow: 0 1vh #43A047;
+}
+
+.btn__start:hover {
+  box-shadow: 0 0 #43A047;
+}
+
+.btn__continue {
+  background-color: #4FC3F7;
+  box-shadow: 0 1vh #039BE5;
+}
+
+.btn__continue:hover {
+  box-shadow: 0 0 #039BE5;
+}
+
+.btn__exit {
+  background-color: #E96781;
+  box-shadow: 0 1vh #C0526B;
+}
+
+.btn__exit:hover {
   box-shadow: 0 0 #C0526B;
+}
+
+.screen__game--pause {
+  position: fixed;
+  top: 1vh;
+  left: 1vh;
+  margin: 0;
+  padding: 0;
+  width: 5vh;
+  box-shadow: none;
+  font-weight: 900;
+  font-size: 3vh;
+  line-height: 5vh;
+  transition: none;
+}
+
+.screen__game--pause:hover {
+  margin: 0;
+  background: #e57373;
+  box-shadow: none;
 }
 
 .screen__game {
@@ -78,9 +135,9 @@ body {
   border-radius: 50%;
   background: #EFEBE9;
   box-shadow: 0 0 10px #ccc;
-  line-height: 32vh;
   text-align: center;
   font-size: 10vh;
+  line-height: 32vh;
   transform: translate(-50%, -50%);
 }
 
