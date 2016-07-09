@@ -1,6 +1,6 @@
 @import '_normalize.css';
 
-* {;
+* {
   box-sizing: border-box;
   font-family: 'Fredoka One', sans-serif;
 }
@@ -16,7 +16,7 @@ body {
 
 .screen__start {
   color: #EC407A;
-  text-align: center
+  text-align: center;
 }
 
 .screen__start--game-name {
@@ -146,7 +146,6 @@ button:focus {
   overflow: hidden;
   width: 50%;
   height: 50%;
-  box-shadow: 0 0 10px #ccc;
   transform-origin: 100% 100%;
 }
 

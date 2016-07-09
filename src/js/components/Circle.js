@@ -41,15 +41,19 @@ export default class Circle {
 			newSector.style.background = this.level.colors[i];
 			newSector.style.transform = `
 				rotate(${this._rotationDegs[i]}deg)
-				skew(${90 - this.level.colorSlice[i]}deg)
+				skew(${90 - this.level.colorSlice[i] - 1}deg)
 				scale(${this._scaleMetrics[i]})
 			`;
 			this.el.appendChild(newSector);
 		}
 	}
 
-	getHitSector(x, y) {
-		this.hitSector = document.elementFromPoint(x, y);
+	getHitSector() {
+		this.x = Math.max(document.documentElement.clientWidth,
+			window.innerWidth || 0) / 2;
+		this.y = Math.max(document.documentElement.clientHeight,
+			window.innerHeight || 0) / 100 * 45 - 1;
+		this.hitSector = document.elementFromPoint(this.x, this.y);
 		this.hitSectorColor = this.hitSector.style.backgroundColor;
 	}
 
@@ -63,5 +67,6 @@ export default class Circle {
 			this.spinDegree = 0;
 		}
 		this.el.style.transform = `rotate(${this.spinDegree}deg)`;
+		this.getHitSector();
 	}
 }
