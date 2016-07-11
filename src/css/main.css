@@ -100,7 +100,10 @@ button:focus {
 }
 
 .screen__game {
-
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .screen__end {
@@ -151,13 +154,14 @@ button:focus {
 
 .bullets {
   position: absolute;
-  top: 90%;
+  top: 94vh;
   left: 50%;
   overflow: hidden;
   margin: 0 auto;
-  padding: 0;
+  padding-top: 1vh;
+  padding-left: 0;
   width: 5vh;
-  height: 20vh;
+  height: 12vh;
   list-style: none;
   text-align: center;
   transform: translate(-50%, -50%);
@@ -174,31 +178,16 @@ button:focus {
 }
 
 .bullet--active {
+  position: absolute;
+  top: 82vh;
+  left: 50%;
+  overflow: visible;
+  margin: 0 auto;
   margin-bottom: 2vh;
+  padding: 0;
   width: 5vh;
   height: 5vh;
-}
-
-/*
-Ниже примеры в css для наглядности - допишем в js
-*/
-
-.bullets li:nth-child(1) {
-  background: #ef5350;
-}
-
-.bullets li:nth-child(2) {
-    background: #FF7043;
-}
-
-.bullets li:nth-child(3) {
-  background: #FFEE58;
-}
-
-.bullets li:nth-child(4) {
-  background: #9CCC65;
-}
-
-.bullets li:nth-child(5) {
-  background: #29B6F6;
+  list-style: none;
+  text-align: center;
+  transform: translate(-50%);
 }
