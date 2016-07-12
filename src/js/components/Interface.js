@@ -46,18 +46,6 @@ export default class Interface {
 		document.body.addEventListener('click', this._onClick.bind(this));
 	}
 
-		/**
-	 * @param	{string} name event type
-	 * @param	{Object} data event object
-	 */
-	trigger(name, data) {
-		const widgetEvent = new CustomEvent(name, {
-			bubbles: true,
-			detail: data,
-		});
-		this.el.dispatchEvent(widgetEvent);
-	}
-
 	/**
 	 * @param	{Event} event
 	 * @private
