@@ -4,6 +4,5 @@ import Game from './components/Game.js';
 
 const game = new Game();
 
-const startButton = document.querySelector('.btn__start');
-
-startButton.addEventListener('click', game.initGame.bind(game));
+document.body.addEventListener('click', game.onClick.bind(game));
+game.interface.gameScreen.addEventListener('click', game.fire.bind(game));

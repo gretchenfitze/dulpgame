@@ -19,15 +19,17 @@ export default class Bullets {
 			newBullet.style.background = color;
 			this.el.appendChild(newBullet);
 		});
-		this._makeActiveBullet();
+		this.makeActiveBullet();
 	}
 
 	// Установка активной пули
-	_makeActiveBullet() {
+	makeActiveBullet() {
 		this.activeBullet = this.el.childNodes[0];
-		this.activeBullet.classList.add('bullet--active');
-		this.activeBullet.color = this.activeBullet.style.backgroundColor;
-		this.el.parentNode.insertBefore(this.activeBullet, this.el);
+		if (this.activeBullet) {
+			this.activeBullet.classList.add('bullet--active');
+			this.activeBullet.color = this.activeBullet.style.backgroundColor;
+			this.el.parentNode.insertBefore(this.activeBullet, this.el);
+		}
 	}
 
 	// Движение пули для цикла игры
@@ -40,5 +42,14 @@ export default class Bullets {
 			this.hit = true;
 		}
 		this.activeBullet.style.transform = `translate(-50%, -${this.bulletPath}px)`;
+	}
+
+	// Сброс настроек пуль после выстрела, присвоение новой пули статуса активной
+	reset() {
+		this.hit = false;
+		this.activeBullet.remove();
+		this.bulletPath = 0;
+		this.activeBullet.style.transform = 'translate(-50%)';
+		this.makeActiveBullet();
 	}
 }
