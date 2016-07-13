@@ -1,0 +1,16 @@
+{
+  "1": {
+    "name": "1",
+    "colorSlice": [45, 45, 90, 150, 30],
+    "colors": ["#26C6DA", "#D4E157", "#FF7043", "#7E57C2", "#B2DFDB"],
+    "circleSpeed": 2,
+    "bulletSpeed": 7
+  },
+"2": {
+    "name": "2",
+    "colorSlice": [60, 30, 45, 120, 105],
+    "colors": ["#ef5350", "#FFEE58", "#26A69A", "#424242", "#29B6F6"],
+    "circleSpeed": 2.5,
+    "bulletSpeed": 7
+  }
+}

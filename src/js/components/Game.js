@@ -9,19 +9,9 @@ export default class Game {
 	/**
 	 * @constructor
 	 */
-	constructor(level) {
-		this.level = level;
-		this.levelOptions = {
-			name: '1',
-			colorSlice: [45, 45, 90, 150, 30],
-			colors: ['#26C6DA', '#D4E157', '#FF7043', '#7E57C2', '#B2DFDB'],
-			circleSpeed: 2,
-			bulletSpeed: 2,
-		};
-
+	constructor() {
+		this._getLevels();
 		this.interface = new Interface();
-		this.circle = new Circle(this.levelOptions);
-		this.bullets = new Bullets(this.levelOptions);
 	}
 
 	/**
@@ -29,7 +19,10 @@ export default class Game {
 	 *
 	 * @private
 	 */
-	_initNewGame() {
+	_initNewGame(level) {
+		this.level = this.levels[level];
+		this.circle = new Circle(this.level);
+		this.bullets = new Bullets(this.level);
 		this._render();
 		this._isPaused = false;
 		this._lastTime = 0;
@@ -38,6 +31,16 @@ export default class Game {
 		this.interface.showGameScreen();
 		this._gameLoopInterval = setInterval(this._gameLoop.bind(this), 50);
 		// TODO: Удаление данных о всех пройденных уровнях
+	}
+
+	_getLevels() {
+		const xhr = new XMLHttpRequest();
+		xhr.open('GET', 'src/data/levels.json', false);
+		xhr.send();
+		if (xhr.status !== 200) {
+			console.log( xhr.status + ': ' + xhr.statusText );
+		}
+		this.levels = JSON.parse(xhr.responseText);
 	}
 
 	/**
@@ -75,9 +78,8 @@ export default class Game {
 			this._levelPassed();
 			this.bullets.reset();
 		} else {
-			console.log('YOU LOSE!');
 			this._resetLevel();
-			this.interface.showStartScreen();
+			this.interface.showLoseScreen();
 			// TODO: Показываем экран проигрыша
 		}
 	}
@@ -109,10 +111,8 @@ export default class Game {
 	 */
 	_levelPassed() {
 		if (!this.circle.el.children.length) {
-			console.log('YOU WIN!');
 			this._resetLevel();
-			this.interface.showStartScreen();
-			// TODO: Показываем экран выигрыша и перехода на следующий уровень
+			this.interface.showWinScreen();
 		}
 	}
 
@@ -139,7 +139,8 @@ export default class Game {
 
 		switch (event.target.dataset.action) {
 		case 'newgame':
-			this._initNewGame();
+			this.levelNumber = 1;
+			this._initNewGame(this.levelNumber);
 			break;
 		case 'continue':
 			// TODO: Загрузка из кукис данных о последнем законченном уровне
@@ -151,9 +152,18 @@ export default class Game {
 			this.interface.showPauseScreen();
 			break;
 		case 'exit':
-			// TODO: Удаление данных уровня, сохранение в кукис данных о последнем законченном уровне
+			// TODO: Сохранение в кукис данных о последнем законченном уровне
 			this._resetLevel();
 			this.interface.showStartScreen();
+			break;
+		case 'nextlevel':
+			this.levelNumber++;
+			this._initNewGame(this.levelNumber);
+			this.interface.showGameScreen();
+			break;
+		case 'tryagain':
+			this._initNewGame(this.levelNumber);
+			this.interface.showGameScreen();
 			break;
 		default:
 			break;
