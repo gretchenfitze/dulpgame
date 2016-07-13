@@ -31,6 +31,18 @@
     <button class="screen__pause--btn btn__exit" data-action="exit">EXIT</button>
 	</div>
 
+	<div class="screen__win invisible">
+		<div class="screen__win--verdict">Level passed!</div>
+		<button class="screen__win--btn btn__continue" data-action="nextlevel">NEXT LEVEL</button>
+		<button class="screen__win--btn btn__exit" data-action="exit">EXIT</button>
+	</div>
+
+	<div class="screen__lose invisible">
+		<div class="screen__lose--verdict">You missed!</div>
+		<button class="screen__lose--btn btn__tryagain" data-action="tryagain">TRY AGAIN</button>
+		<button class="screen__lose--btn btn__exit" data-action="exit">EXIT</button>
+	</div>
+
 	<script src="public/js/app.min.js"></script>
 </body>
 </html>

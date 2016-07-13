@@ -6,7 +6,8 @@ export default class Interface {
 		this.startScreen = document.querySelector('.screen__start');
 		this.gameScreen = document.querySelector('.screen__game');
 		this.pauseScreen = document.querySelector('.screen__pause');
-		this.initInterface();
+		this.winScreen = document.querySelector('.screen__win');
+		this.loseScreen = document.querySelector('.screen__lose');
 	}
 
 	/**
@@ -29,12 +30,16 @@ export default class Interface {
 		this._hideElement(this.gameScreen);
 		this._showElement(this.startScreen);
 		this._hideElement(this.pauseScreen);
+		this._hideElement(this.loseScreen);
+		this._hideElement(this.winScreen);
 	}
 
 	showGameScreen() {
 		this._showElement(this.gameScreen);
 		this._hideElement(this.startScreen);
 		this._hideElement(this.pauseScreen);
+		this._hideElement(this.loseScreen);
+		this._hideElement(this.winScreen);
 	}
 
 	showPauseScreen() {
@@ -42,36 +47,14 @@ export default class Interface {
 		this._showElement(this.pauseScreen);
 	}
 
-	initInterface() {
-		document.body.addEventListener('click', this._onClick.bind(this));
+	showWinScreen() {
+		this._hideElement(this.gameScreen);
+		this._showElement(this.winScreen);
 	}
 
-	/**
-	 * @param	{Event} event
-	 * @private
-	 */
-	_onClick(event) {
-		event.preventDefault();
-
-		switch (event.target.dataset.action) {
-		case 'newgame':
-			// + добавить Удаление данных о всех пройденных уровнях
-			this.showGameScreen();
-			break;
-		case 'continue':
-			// + добавить Загрузку из кукис данных о последнем законченном уровне
-			this.showGameScreen();
-			break;
-		case 'pause':
-			this.showPauseScreen();
-			break;
-		case 'exit':
-			// + добавить Удаление данных уровня, сохранение в кукис данных о последнем законченном уровне
-			this.showStartScreen();
-			break;
-		default:
-			break;
-		}
+	showLoseScreen() {
+		this._hideElement(this.gameScreen);
+		this._showElement(this.loseScreen);
 	}
 
 }

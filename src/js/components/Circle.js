@@ -9,7 +9,11 @@ export default class Circle {
 		this.spinDegree = 0;
 	}
 
-	// Получение значений для размера секторов круга
+	/**
+	 * Получение значений для размера секторов круга
+	 *
+	 * @private
+	 */
 	_getRotationDegs() {
 		this._rotationDegs = [0];
 		this._rotationDeg = 0;
@@ -19,7 +23,11 @@ export default class Circle {
 		}
 	}
 
-	// Если сектор больше 90 градусов, то для корректного отражения он увеличивается в 10 раз
+	/**
+	 * Если сектор больше 90 градусов, то для корректного отражения он увеличивается в 10 раз
+	 *
+	 * @private
+	 */
 	_getScaleMetric() {
 		this._scaleMetrics = [];
 		for (let i = 0; i < this.level.colors.length; i++) {
@@ -28,7 +36,11 @@ export default class Circle {
 		}
 	}
 
-	// Отображение номер уровня в центре круга
+	/**
+	 * Отображение номер уровня в центре круга
+	 *
+	 * @private
+	 */
 	_showLevelNumber() {
 		this.center.innerHTML = this.level.name;
 	}
@@ -62,7 +74,7 @@ export default class Circle {
 
 	// Удаление сектора при попадании
 	deleteHitSector() {
-		this.el.removeChild(this.hitSector);
+		this.hitSector.remove();
 	}
 
 	// Кручение круга для цикла игры
