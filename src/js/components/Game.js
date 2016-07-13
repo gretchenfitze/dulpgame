@@ -61,7 +61,9 @@ export default class Game {
 	_resetLevel() {
 		clearInterval(this._gameLoopInterval);
 		this.bullets.bulletPath = 0;
-		this.bullets.activeBullet.remove();
+		if (this.bullets.activeBullet) {
+			this.bullets.activeBullet.remove();
+		}
 		this.circle.el.innerHTML = '';
 		this.bullets.el.innerHTML = '';
 	}
