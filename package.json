@@ -9,6 +9,7 @@
   "scripts": {
     "lint": "eslint *.js src/js; exit 0",
     "build": "webpack",
+    "start": "static public/",
     "dev": "webpack -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

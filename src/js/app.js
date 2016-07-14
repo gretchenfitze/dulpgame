@@ -1,5 +1,3 @@
-import '../css/main.css';
-
 import Game from './components/Game.js';
 
 const game = new Game();

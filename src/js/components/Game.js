@@ -35,7 +35,7 @@ export default class Game {
 
 	_getLevels() {
 		const xhr = new XMLHttpRequest();
-		xhr.open('GET', 'src/data/levels.json', false);
+		xhr.open('GET', '/levels.json', false);
 		xhr.send();
 		if (xhr.status !== 200) {
 			console.log( xhr.status + ': ' + xhr.statusText );
@@ -61,7 +61,9 @@ export default class Game {
 	_resetLevel() {
 		clearInterval(this._gameLoopInterval);
 		this.bullets.bulletPath = 0;
-		this.bullets.activeBullet.remove();
+		if (this.bullets.activeBullet) {
+			this.bullets.activeBullet.remove();
+		}
 		this.circle.el.innerHTML = '';
 		this.bullets.el.innerHTML = '';
 	}
