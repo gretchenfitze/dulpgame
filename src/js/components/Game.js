@@ -20,27 +20,57 @@ export default class Game {
 	 * @private
 	 */
 	_initNewGame(level) {
+		this.gameColors = ['#f44336', '#FF4081', '#9C27B0', '#3F51B5',
+		'#42A5F5', '#18FFFF', '#76FF03', '#EEFF41', '#FFCA28', '#FF5722',
+		'#424242', '#795548', '#CFD8DC'];
 		this.level = this.levels[level];
-		this.circle = new Circle(this.level);
-		this.bullets = new Bullets(this.level);
+		this._shuffleColors(this.gameColors, this.level.colorSlice.length);
+		this.circle = new Circle(this.level, this.colors);
+		this.bullets = new Bullets(this.level, this.colors);
 		this._render();
 		this._isPaused = false;
 		this._lastTime = 0;
 		this._fire = false;
 		this.bullets.hit = false;
 		this.interface.showGameScreen();
-		this._gameLoopInterval = setInterval(this._gameLoop.bind(this), 50);
+		this._updateStep = 25;
+		this._gameLoopInterval = setInterval(this._gameLoop.bind(this), this._updateStep);
 		// TODO: Удаление данных о всех пройденных уровнях
 	}
 
+	/**
+	 * Получение данных об уровнях игры
+	 *
+	 * @private
+	 */
 	_getLevels() {
 		const xhr = new XMLHttpRequest();
+		// TODO: Исправить на асинхронный запрос
 		xhr.open('GET', '/levels.json', false);
 		xhr.send();
-		if (xhr.status !== 200) {
-			console.log( xhr.status + ': ' + xhr.statusText );
-		}
 		this.levels = JSON.parse(xhr.responseText);
+		if (xhr.status !== 200) {
+			console.log(`${xhr.status}: ${xhr.statusText}`);
+		}
+	}
+
+	/**
+	 * Выбрать случайные цвета из массива для уровня
+	 *
+	 * @param  {Array} colors used in the game
+	 * @param  {number} number of circle slices for level
+	 */
+	_shuffleColors(gameColors, count) {
+		this.colors = gameColors.slice(0);
+		let i = gameColors.length;
+		const min = i - count;
+		while (i-- > min) {
+			const index = Math.floor((i + 1) * Math.random());
+			const temp = this.colors[index];
+			this.colors[index] = this.colors[i];
+			this.colors[i] = temp;
+		}
+		this.colors = this.colors.slice(min);
 	}
 
 	/**
@@ -121,7 +151,7 @@ export default class Game {
 	/**
 	* Обработка клика для запуска пули
 	*
-	* @param  {event} bullet fire event
+	* @param	{event} bullet fire event
 	* @returns {boolean}
 	*/
 	fire(event) {

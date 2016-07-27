@@ -2,37 +2,47 @@
  * @class Circle class
  */
 export default class Circle {
-	constructor(level) {
+	constructor(level, colors) {
 		this.level = level;
+		this.circleColors = colors.slice(0);
+		this.colorSlice = this.level.colorSlice.slice(0);
 		this.el = document.querySelector('.js-circle');
 		this.center = document.querySelector('.circle__center');
 		this.spinDegree = 0;
 	}
 
 	/**
-	 * Получение значений для размера секторов круга
+	 * Получение значений для растяжения секторов
+	 * Если сектор больше 90 градусов, для корректного отражения создается его дубликат
 	 *
 	 * @private
 	 */
-	_getRotationDegs() {
-		this._rotationDegs = [0];
-		this._rotationDeg = 0;
-		for (let i = 0; i < this.level.colors.length; i++) {
-			this._rotationDeg += +this.level.colorSlice[i];
-			this._rotationDegs.push(this._rotationDeg);
+	_getSkewMetric() {
+		this._skewMetrics = [];
+		for (let i = 0; i < this.colorSlice.length; i++) {
+			if (this.colorSlice[i] <= 90) {
+				this._skew = 89 - this.colorSlice[i];
+			} else {
+				this.colorSlice[i] = this.colorSlice[i] / 2;
+				this.colorSlice.splice(i, 0, this.colorSlice[i]);
+				this.circleColors.splice(i, 0, this.circleColors[i]);
+				i--;
+			}
+			this._skewMetrics.push(this._skew);
 		}
 	}
 
 	/**
-	 * Если сектор больше 90 градусов, то для корректного отражения он увеличивается в 10 раз
-	 *
-	 * @private
-	 */
-	_getScaleMetric() {
-		this._scaleMetrics = [];
-		for (let i = 0; i < this.level.colors.length; i++) {
-			this._scale = this.level.colorSlice[i] <= 90 ? 1 : 10;
-			this._scaleMetrics.push(this._scale);
+	* Получение значений для размера секторов круга
+	*
+	* @private
+	*/
+	_getRotationDegs() {
+		this._rotationDegs = [0];
+		this._rotationDeg = 0;
+		for (let i = 0; i < this.circleColors.length; i++) {
+			this._rotationDeg += +this.colorSlice[i];
+			this._rotationDegs.push(this._rotationDeg);
 		}
 	}
 
@@ -48,16 +58,15 @@ export default class Circle {
 	// Прорисовка секторов круга
 	renderSlices() {
 		this._showLevelNumber();
+		this._getSkewMetric();
 		this._getRotationDegs();
-		this._getScaleMetric();
-		for (let i = 0; i < this.level.colors.length; i++) {
+		for (let i = 0; i < this.circleColors.length; i++) {
 			const newSector = document.createElement('li');
 			newSector.classList.add('circle__part');
-			newSector.style.background = this.level.colors[i];
+			newSector.style.background = this.circleColors[i];
 			newSector.style.transform = `
 				rotate(${this._rotationDegs[i]}deg)
-				skew(${90 - this.level.colorSlice[i] - 1}deg)
-				scale(${this._scaleMetrics[i]})
+				skew(${this._skewMetrics[i]}deg)
 			`;
 			this.el.appendChild(newSector);
 		}
@@ -79,7 +88,7 @@ export default class Circle {
 
 	// Кручение круга для цикла игры
 	update(delta) {
-		this.spinDegree += delta / 50 * this.level.circleSpeed;
+		this.spinDegree += delta / 25 * this.level.circleSpeed;
 		if (this.spinDegree >= 360) {
 			this.spinDegree = 0;
 		}

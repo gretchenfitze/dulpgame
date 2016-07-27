@@ -2,19 +2,37 @@
  * @class Bullets class
  */
 export default class Bullets {
-	constructor(level) {
+	constructor(level, colors) {
 		this.level = level;
+		this.colors = colors;
+		this._shuffleBullets(this.colors);
 		this.el = document.querySelector('.js-bullets');
 		this.circle = document.querySelector('.js-circle');
 		this.bulletPath = 0;
 		this.hit = false;
 	}
 
+
+	/**
+	 * Перемешивание цветов пуль, чтобы они не шли по порядку как сектора круга
+	 *
+	 * @param  {Array} level colors
+	 */
+	_shuffleBullets(colors) {
+		this.bulletColors = colors.slice(0);
+		for (let i = this.bulletColors.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			const temp = this.bulletColors[i];
+			this.bulletColors[i] = this.bulletColors[j];
+			this.bulletColors[j] = temp;
+		}
+	}
+
 	// Отрисовка пуль
 	renderBullets() {
 		const li = document.createElement('li');
 		li.classList.add('bullet');
-		this.level.colors.forEach(color => {
+		this.bulletColors.forEach(color => {
 			const newBullet = li.cloneNode();
 			newBullet.style.background = color;
 			this.el.appendChild(newBullet);
