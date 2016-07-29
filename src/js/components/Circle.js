@@ -12,27 +12,6 @@ export default class Circle {
 	}
 
 	/**
-	 * Получение значений для растяжения секторов
-	 * Если сектор больше 90 градусов, для корректного отражения создается его дубликат
-	 *
-	 * @private
-	 */
-	_getSkewMetric() {
-		this._skewMetrics = [];
-		for (let i = 0; i < this.colorSlice.length; i++) {
-			if (this.colorSlice[i] <= 90) {
-				this._skew = 89 - this.colorSlice[i];
-			} else {
-				this.colorSlice[i] = this.colorSlice[i] / 2;
-				this.colorSlice.splice(i, 0, this.colorSlice[i]);
-				this.circleColors.splice(i, 0, this.circleColors[i]);
-				i--;
-			}
-			this._skewMetrics.push(this._skew);
-		}
-	}
-
-	/**
 	* Получение значений для размера секторов круга
 	*
 	* @private
@@ -47,7 +26,7 @@ export default class Circle {
 	}
 
 	/**
-	 * Отображение номер уровня в центре круга
+	 * Отображение номера уровня в центре круга
 	 *
 	 * @private
 	 */
@@ -58,7 +37,6 @@ export default class Circle {
 	// Прорисовка секторов круга
 	renderSlices() {
 		this._showLevelNumber();
-		this._getSkewMetric();
 		this._getRotationDegs();
 		for (let i = 0; i < this.circleColors.length; i++) {
 			const newSector = document.createElement('li');
@@ -66,7 +44,7 @@ export default class Circle {
 			newSector.style.background = this.circleColors[i];
 			newSector.style.transform = `
 				rotate(${this._rotationDegs[i]}deg)
-				skew(${this._skewMetrics[i]}deg)
+				skew(${89 - this.colorSlice[i]}deg)
 			`;
 			this.el.appendChild(newSector);
 		}

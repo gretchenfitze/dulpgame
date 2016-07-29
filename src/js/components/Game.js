@@ -10,7 +10,6 @@ export default class Game {
 	 * @constructor
 	 */
 	constructor() {
-		this._getLevels();
 		this.interface = new Interface();
 	}
 
@@ -36,22 +35,6 @@ export default class Game {
 		this._updateStep = 25;
 		this._gameLoopInterval = setInterval(this._gameLoop.bind(this), this._updateStep);
 		// TODO: Удаление данных о всех пройденных уровнях
-	}
-
-	/**
-	 * Получение данных об уровнях игры
-	 *
-	 * @private
-	 */
-	_getLevels() {
-		const xhr = new XMLHttpRequest();
-		// TODO: Исправить на асинхронный запрос
-		xhr.open('GET', '/levels.json', false);
-		xhr.send();
-		this.levels = JSON.parse(xhr.responseText);
-		if (xhr.status !== 200) {
-			console.log(`${xhr.status}: ${xhr.statusText}`);
-		}
 	}
 
 	/**
