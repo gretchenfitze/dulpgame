@@ -19,11 +19,15 @@ body {
 	text-align: center;
 }
 
-.screen__start--game-name, .screen__win--verdict, .screen__lose--verdict {
+h1, h2 {
 	padding: 5vh;
 	color: #FF7043;
 	text-align: center;
 	font-size: 10vh;
+}
+
+.screen__pause--verdict {
+	color: #FFCA28;
 }
 
 .screen__win--verdict {
@@ -45,6 +49,7 @@ button {
 	font-weight: 300;
 	font-size: 5vh;
 	cursor: pointer;
+	-webkit-transition: all .2s;
 	transition: all .2s;
 }
 
@@ -108,6 +113,7 @@ button:focus {
 	font-weight: 900;
 	font-size: 3vh;
 	line-height: 5vh;
+	-webkit-transition: none;
 	transition: none;
 }
 
@@ -156,7 +162,8 @@ button:focus {
 	text-align: center;
 	font-size: 10vh;
 	line-height: 32vh;
-	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	        transform: translate(-50%, -50%);
 }
 
 .circle li {
@@ -166,7 +173,8 @@ button:focus {
 	overflow: hidden;
 	width: 500%;
 	height: 500%;
-	transform-origin: 100% 100%;
+	-webkit-transform-origin: 100% 100%;
+	        transform-origin: 100% 100%;
 }
 
 .bullets {
@@ -181,7 +189,8 @@ button:focus {
 	height: 12vh;
 	list-style: none;
 	text-align: center;
-	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	        transform: translate(-50%, -50%);
 }
 
 .bullet {
@@ -206,5 +215,6 @@ button:focus {
 	height: 5vh;
 	list-style: none;
 	text-align: center;
-	transform: translate(-50%);
+	-webkit-transform: translate(-50%);
+	        transform: translate(-50%);
 }

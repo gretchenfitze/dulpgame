@@ -34,7 +34,6 @@ export default class Game {
 		this.interface.showGameScreen();
 		this._updateStep = 25;
 		this._gameLoopInterval = setInterval(this._gameLoop.bind(this), this._updateStep);
-		// TODO: Удаление данных о всех пройденных уровнях
 	}
 
 	/**
@@ -95,7 +94,6 @@ export default class Game {
 		} else {
 			this._resetLevel();
 			this.interface.showLoseScreen();
-			// TODO: Показываем экран проигрыша
 		}
 	}
 
@@ -154,11 +152,13 @@ export default class Game {
 
 		switch (event.target.dataset.action) {
 		case 'newgame':
+			localStorage.removeItem('levelNumber');
 			this.levelNumber = 1;
 			this._initNewGame(this.levelNumber);
 			break;
 		case 'continue':
-			// TODO: Загрузка из кукис данных о последнем законченном уровне
+			this.levelNumber = localStorage.getItem('levelNumber');
+			this._initNewGame(this.levelNumber);
 			this._isPaused = false;
 			this.interface.showGameScreen();
 			break;
@@ -166,13 +166,24 @@ export default class Game {
 			this._isPaused = true;
 			this.interface.showPauseScreen();
 			break;
+		case 'continue-pause':
+			this._isPaused = false;
+			this.interface.showGameScreen();
+			break;
 		case 'exit':
-			// TODO: Сохранение в кукис данных о последнем законченном уровне
+			localStorage.setItem('levelNumber', this.levelNumber + 1);
 			this._resetLevel();
 			this.interface.showStartScreen();
+			this.interface.isContinuable();
+			break;
+		case 'exit-pause':
+			this._resetLevel();
+			this.interface.showStartScreen();
+			this.interface.isContinuable();
 			break;
 		case 'nextlevel':
 			this.levelNumber++;
+			localStorage.setItem('levelNumber', this.levelNumber);
 			this._initNewGame(this.levelNumber);
 			this.interface.showGameScreen();
 			break;
