@@ -9,8 +9,10 @@ xhr.onreadystatechange = () => {
 	if (xhr.status === 200) {
 		const game = new Game();
 		game.levels = JSON.parse(xhr.responseText);
+		game.checkLocation();
 		document.body.addEventListener('click', game.onClick.bind(game));
 		game.interface.gameScreen.addEventListener('click', game.fire.bind(game));
+		// document.body.addEventListener('popstate', );
 	} else {
 		console.log(`${xhr.status}: ${xhr.statusText}`); // TODO: страница ошибки
 	}

@@ -1,4 +1,7 @@
 module.exports = {
+	devServer: {
+		contentBase: './public',
+	},
 	entry: {
 		app: './src/js/app.js',
 	},

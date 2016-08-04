@@ -31,6 +31,7 @@ export default class Game {
 		this._lastTime = 0;
 		this._fire = false;
 		this.bullets.hit = false;
+		this._changeUrl(`Level ${this.levelNumber}`, `#level/${this.levelNumber}`);
 		this.interface.showGameScreen();
 		this._updateStep = 25;
 		this._gameLoopInterval = setInterval(this._gameLoop.bind(this), this._updateStep);
@@ -94,6 +95,7 @@ export default class Game {
 		} else {
 			this._resetLevel();
 			this.interface.showLoseScreen();
+			this._changeUrl(`Level ${this.levelNumber} | Lose`, `#level/${this.levelNumber}/lose`);
 		}
 	}
 
@@ -124,6 +126,7 @@ export default class Game {
 	 */
 	_levelPassed() {
 		if (!this.circle.el.children.length) {
+			this._changeUrl(`Level ${this.levelNumber} | Win`, `#level/${this.levelNumber}/win`);
 			this._resetLevel();
 			this.interface.showWinScreen();
 		}
@@ -140,6 +143,15 @@ export default class Game {
 		if (event.target.dataset.action !== 'pause') {
 			this._fire = true;
 		}
+	}
+
+	/**
+	 * Смена состояния адресной строки
+	 *
+	 * @private
+	 */
+	_changeUrl(name, href) {
+		history.replaceState({ level: this.levelNumber }, `Dulp | ${name}`, href);
 	}
 
 	/**
@@ -164,19 +176,21 @@ export default class Game {
 			break;
 		case 'pause':
 			this._isPaused = true;
+			this._changeUrl(`Level ${this.levelNumber} | Paused`, `#level/${this.levelNumber}/paused`);
 			this.interface.showPauseScreen();
 			break;
 		case 'continue-pause':
 			this._isPaused = false;
+			this._changeUrl(`Level ${this.levelNumber}`, `#level/${this.levelNumber}`);
 			this.interface.showGameScreen();
 			break;
-		case 'exit':
+		case 'exit-win':
 			localStorage.setItem('levelNumber', this.levelNumber + 1);
 			this._resetLevel();
 			this.interface.showStartScreen();
 			this.interface.isContinuable();
 			break;
-		case 'exit-pause':
+		case 'exit':
 			this._resetLevel();
 			this.interface.showStartScreen();
 			this.interface.isContinuable();
@@ -195,4 +209,15 @@ export default class Game {
 			break;
 		}
 	}
+
+	checkLocation() {
+		if ((location.hash.indexOf('#level/') === 0) && (history.state.level)) {
+			this.levelNumber = history.state.level;
+			this._initNewGame(this.levelNumber);
+			this._isPaused = true;
+			this._changeUrl(`Level ${this.levelNumber} | Paused`, `#level/${this.levelNumber}/paused`);
+			this.interface.showPauseScreen();
+		}
+	}
+
 }
