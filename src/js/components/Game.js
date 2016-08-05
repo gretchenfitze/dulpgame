@@ -151,7 +151,7 @@ export default class Game {
 	 * @private
 	 */
 	_changeUrl(name, href) {
-		history.replaceState({ level: this.levelNumber }, `Dulp | ${name}`, href);
+		history.replaceState(null, `Dulp | ${name}`, href);
 	}
 
 	/**
@@ -210,13 +210,27 @@ export default class Game {
 		}
 	}
 
+	/**
+	 * Запуск уровня, соответствующего URL в адресной строке
+	 * Если уровень ещё не открыт - редирект на главную страницу
+	 */
 	checkLocation() {
-		if ((location.hash.indexOf('#level/') === 0) && (history.state.level)) {
-			this.levelNumber = history.state.level;
+		this.levelHash = location.hash.split('/')[1];
+		if ((location.hash.indexOf('#level/') > -1) &&
+		((localStorage.getItem('levelNumber')) &&
+		(this.levelHash <= localStorage.getItem('levelNumber')) ||
+		(+this.levelHash === 1))) {
+			this.levelNumber = this.levelHash;
 			this._initNewGame(this.levelNumber);
 			this._isPaused = true;
 			this._changeUrl(`Level ${this.levelNumber} | Paused`, `#level/${this.levelNumber}/paused`);
 			this.interface.showPauseScreen();
+		} else {
+			if (this.bullets) {
+				this._resetLevel();
+			}
+			this.interface.showStartScreen();
+			this.interface.isContinuable();
 		}
 	}
 

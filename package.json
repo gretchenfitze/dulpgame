@@ -32,12 +32,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/markovskiy/learnjs-dulpgame.git"
+    "url": "git+https://github.com/gretchenfitze/dulpgame.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/markovskiy/learnjs-dulpgame/issues"
+    "url": "https://github.com/gretchenfitze/dulpgame/issues"
   },
-  "homepage": "https://github.com/markovskiy/learnjs-dulpgame#readme"
+  "homepage": "https://github.com/gretchenfitze/dulpgame#readme"
 }
