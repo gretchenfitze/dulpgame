@@ -234,4 +234,21 @@ export default class Game {
 		}
 	}
 
+	// Обработка событий для пробела (пуск пули) и Esc (пауза)
+	initKeyboardEvents(event) {
+		if (!this.interface.gameScreen.classList.contains('invisible')) {
+			switch (event.keyCode) {
+			case 27:
+				this._isPaused = true;
+				this._changeUrl(`Level ${this.levelNumber} | Paused`, `#level/${this.levelNumber}/paused`);
+				this.interface.showPauseScreen();
+				break;
+			case 32:
+				this._fire = true;
+				break;
+			default:
+				break;
+			}
+		}
+	}
 }
