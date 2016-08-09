@@ -65,12 +65,11 @@ export default class Circle {
 	}
 
 	// Кручение круга для цикла игры
-	update(delta) {
-		this.spinDegree += delta / 25 * this.level.circleSpeed;
+	update() {
+		this.spinDegree += this.level.circleSpeed;
 		if (this.spinDegree >= 360) {
 			this.spinDegree = 0;
 		}
 		this.el.style.transform = `rotate(${this.spinDegree}deg)`;
-		this.getHitSector();
 	}
 }

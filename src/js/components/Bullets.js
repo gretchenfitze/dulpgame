@@ -51,10 +51,10 @@ export default class Bullets {
 	}
 
 	// Движение пули для цикла игры
-	update(delta) {
+	update() {
 		this.fullPath = this.activeBullet.offsetTop - this.activeBullet.clientHeight -
 			this.circle.offsetTop - this.circle.clientHeight;
-		this.bulletPath += this.fullPath / delta * this.level.bulletSpeed;
+		this.bulletPath += this.fullPath * this.level.bulletSpeed / 50;
 		if (this.bulletPath >= this.fullPath) {
 			this.bulletPath = this.fullPath;
 			this.hit = true;

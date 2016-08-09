@@ -29,7 +29,7 @@ export default class Interface {
 	}
 
 	isContinuable() {
-		if (localStorage.getItem('levelNumber')) {
+		if (localStorage.getItem('levelNumber') > 1) {
 			this._showElement(this.continueButton);
 		} else {
 			this._hideElement(this.continueButton);
@@ -38,7 +38,7 @@ export default class Interface {
 
 	showStartScreen() {
 		this._hideElement(this.gameScreen);
-		history.replaceState(null, 'Dulp', '#');
+		history.replaceState(null, null, '#');
 		this._showElement(this.startScreen);
 		this._hideElement(this.pauseScreen);
 		this._hideElement(this.loseScreen);
