@@ -1,0 +1,40 @@
+.bullets {
+	position: absolute;
+	top: 94vh;
+	left: 50%;
+	overflow: hidden;
+	margin: 0 auto;
+	padding-top: 1vh;
+	padding-left: 0;
+	width: 5vh;
+	height: 12vh;
+	list-style: none;
+	text-align: center;
+	-webkit-transform: translate(-50%, -50%);
+	        transform: translate(-50%, -50%);
+}
+
+.bullet {
+	left: 50%;
+	display: inline-block;
+	margin-bottom: 1vh;
+	width: 3vh;
+	height: 3vh;
+	border-radius: 50%;
+}
+
+.bullet--active {
+	position: absolute;
+	top: 82vh;
+	left: 50%;
+	overflow: visible;
+	margin: 0 auto;
+	margin-bottom: 2vh;
+	padding: 0;
+	width: 5vh;
+	height: 5vh;
+	list-style: none;
+	text-align: center;
+	-webkit-transform: translate(-50%);
+	        transform: translate(-50%);
+}

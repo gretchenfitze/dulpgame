@@ -1,3 +1,5 @@
+import './../../css/circle.css';
+
 /**
  * @class Circle class
  */

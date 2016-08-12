@@ -1,4 +1,6 @@
 import Game from './components/Game.js';
+import './../css/_normalize.css';
+import './../css/app.css';
 
 const xhr = new XMLHttpRequest();
 xhr.open('GET', '/levels.json', true);
