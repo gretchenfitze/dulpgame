@@ -3,7 +3,7 @@ import './../css/_normalize.css';
 import './../css/app.css';
 
 const xhr = new XMLHttpRequest();
-xhr.open('GET', '/levels.json', true);
+xhr.open('GET', '/data/levels.json', true);
 xhr.send();
 
 xhr.onreadystatechange = () => {
