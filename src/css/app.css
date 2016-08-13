@@ -1,10 +1,8 @@
-* {
-	box-sizing: border-box;
-	font-family: 'Fredoka One', sans-serif;
-}
-
 body {
+	overflow: hidden;
+	box-sizing: border-box;
 	background: #FAFAFA;
+	font-family: 'Fredoka One', sans-serif;
 }
 
 /* Общий стиль, используемый для скрытия/отображенияэлементов */

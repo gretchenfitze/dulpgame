@@ -23,7 +23,8 @@ export default class Game {
 	 * @private
 	 */
 	_initNewGame(level) {
-		this.level = this.levels[+level];
+		this._resetLevel();
+		this.level = this.levels[level];
 		this._shuffleColors(this.gameColors, this.level.colorSlice.length);
 		this.circle = new Circle(this.level, this.colors);
 		this.bullets = new Bullets(this.level, this.colors);
@@ -72,12 +73,19 @@ export default class Game {
 	 */
 	_resetLevel() {
 		clearInterval(this._gameLoopInterval);
-		this.bullets.bulletPath = 0;
-		if (this.bullets.activeBullet) {
-			this.bullets.activeBullet.remove();
+		if (this.bullets) {
+			if (this.bullets.boundingBullet) {
+				this.bullets.boundingBullet.removeEventListener('transitionend', this.bullets.removeBullet);
+			}
+			this.activeBall = this.bullets.el.parentNode.querySelector('.bullet--active');
+			if (this.activeBall) {
+				this.activeBall.remove();
+			}
+			this.circle.el.innerHTML = '';
+			this.bullets.el.innerHTML = '';
+			this.circle = null;
+			this.bullets = null;
 		}
-		this.circle.el.innerHTML = '';
-		this.bullets.el.innerHTML = '';
 	}
 
 	/**
@@ -86,8 +94,9 @@ export default class Game {
 	 * @private
 	 */
 	_onHit() {
+		this.bullets.rebound();
 		this.circle.getHitSector();
-		if (this.circle.hitSectorColor === this.bullets.activeBullet.color) {
+		if (this.circle.hitSectorColor === this.bullets.activeBulletColor) {
 			this._fire = false;
 			this.circle.deleteHitSector();
 			this._levelPassed();
@@ -223,9 +232,7 @@ export default class Game {
 			this._changeUrl(`#level/${this.levelNumber}/paused`);
 			this.interface.showPauseScreen();
 		} else {
-			if (this.bullets) {
-				this._resetLevel();
-			}
+			this._resetLevel();
 			this.interface.showStartScreen();
 			this.interface.isContinuable();
 		}

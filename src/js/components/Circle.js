@@ -11,6 +11,8 @@ export default class Circle {
 		this.el = document.querySelector('.js-circle');
 		this.center = document.querySelector('.circle__center');
 		this.spinDegree = 0;
+		this.circleSpeed = +this.level.name % 2 ?
+		+this.level.circleSpeed : 0 - this.level.circleSpeed;
 	}
 
 	/**
@@ -68,8 +70,8 @@ export default class Circle {
 
 	// Кручение круга для цикла игры
 	update() {
-		this.spinDegree += this.level.circleSpeed;
-		if (this.spinDegree >= 360) {
+		this.spinDegree += this.circleSpeed;
+		if (this.spinDegree >= 360 || this.spinDegree <= -360) {
 			this.spinDegree = 0;
 		}
 		this.el.style.transform = `rotate(${this.spinDegree}deg)`;

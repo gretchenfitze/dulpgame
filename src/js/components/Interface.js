@@ -29,7 +29,7 @@ export default class Interface {
 	}
 
 	isContinuable() {
-		if (localStorage.getItem('levelNumber') > 1) {
+		if (+localStorage.getItem('levelNumber') > 1) {
 			this._showElement(this.continueButton);
 		} else {
 			this._hideElement(this.continueButton);

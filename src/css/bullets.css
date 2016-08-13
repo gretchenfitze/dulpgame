@@ -35,6 +35,8 @@
 	height: 5vh;
 	list-style: none;
 	text-align: center;
+	-webkit-transition-timing-function: ease-out;
+	        transition-timing-function: ease-out;
 	-webkit-transform: translate(-50%);
 	        transform: translate(-50%);
 }

@@ -46,8 +46,10 @@ export default class Bullets {
 	makeActiveBullet() {
 		this.activeBullet = this.el.childNodes[0];
 		if (this.activeBullet) {
+			this.activeBullet.style.transform = 'translate(-50%)';
+			this.activeBullet.style.transition = 'none';
 			this.activeBullet.classList.add('bullet--active');
-			this.activeBullet.color = this.activeBullet.style.backgroundColor;
+			this.activeBulletColor = this.activeBullet.style.backgroundColor;
 			this.el.parentNode.insertBefore(this.activeBullet, this.el);
 		}
 	}
@@ -67,9 +69,19 @@ export default class Bullets {
 	// Сброс настроек пуль после выстрела, присвоение новой пули статуса активной
 	reset() {
 		this.hit = false;
-		this.activeBullet.remove();
 		this.bulletPath = 0;
-		this.activeBullet.style.transform = 'translate(-50%)';
 		this.makeActiveBullet();
+	}
+
+	// Возможность пули отлетать после удара
+	rebound() {
+		this.boundingBullet = this.activeBullet;
+		if (this.activeBullet) {
+			this.boundingBullet.style.transition = `transform ${this.level.bulletSpeed * 500}ms`;
+			this.boundingBullet.addEventListener('transitionend', this.boundingBullet.remove);
+			this.boundingBullet.style.transform = +this.level.name % 2 ?
+			`translate(-${this.level.circleSpeed * 500}%, 50vh)` :
+			`translate(${this.level.circleSpeed * 500}%, 50vh)`;
+		}
 	}
 }
