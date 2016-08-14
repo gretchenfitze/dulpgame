@@ -20,6 +20,7 @@ export default class Game {
 	/**
 	 * Запуск игрового процесса
 	 *
+	 * @param {Number} Level number
 	 * @private
 	 */
 	_initNewGame(level) {
@@ -41,7 +42,7 @@ export default class Game {
 	 * Выбрать случайные цвета из массива для уровня
 	 *
 	 * @param	{Array} colors used in the game
-	 * @param	{number} number of circle slices for level
+	 * @param	{Number} number of circle slices for level
 	 */
 	_shuffleColors(gameColors, count) {
 		this.colors = gameColors.slice(0);
@@ -100,7 +101,9 @@ export default class Game {
 			this._fire = false;
 			this.circle.deleteHitSector();
 			this._levelPassed();
-			this.bullets.reset();
+			if (this.bullets) {
+				this.bullets.reset();
+			}
 		} else {
 			this._resetLevel();
 			this.interface.showLoseScreen();
@@ -141,8 +144,8 @@ export default class Game {
 	/**
 	* Обработка клика для запуска пули
 	*
-	* @param	{event} bullet fire event
-	* @returns {boolean}
+	* @param	{Event} bullet fire event
+	* @returns {Boolean}
 	*/
 	fire(event) {
 		event.preventDefault();
@@ -154,6 +157,7 @@ export default class Game {
 	/**
 	 * Смена состояния адресной строки
 	 *
+	 * @param {String} href
 	 * @private
 	 */
 	_changeUrl(href) {
@@ -238,7 +242,11 @@ export default class Game {
 		}
 	}
 
-	// Обработка событий для пробела (пуск пули) и Esc (пауза)
+	/**
+	 * Обработка событий для пробела (пуск пули) и Esc (пауза)
+	 *
+	 * @param  {Event} keyboard event
+	 */
 	initKeyboardEvents(event) {
 		if (!this.interface.gameScreen.classList.contains('invisible')) {
 			switch (event.keyCode) {
