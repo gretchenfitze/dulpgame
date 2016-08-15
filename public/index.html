@@ -13,7 +13,7 @@
 	<link rel="apple-touch-icon" sizes="144x144" href="/favicons/apple-icon-144x144.png">
 	<link rel="apple-touch-icon" sizes="152x152" href="/favicons/apple-icon-152x152.png">
 	<link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-icon-180x180.png">
-	<link rel="icon" type="image/png" sizes="192x192"  href="/favicons/android-icon-192x192.png">
+	<link rel="shortcut icon" type="image/png" sizes="192x192"  href="/favicons/android-icon-192x192.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
 	<link rel="icon" type="image/png" sizes="96x96" href="/favicons/favicon-96x96.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
@@ -22,11 +22,19 @@
 	<meta name="msapplication-TileImage" content="/favicons/ms-icon-144x144.png">
 	<meta name="theme-color" content="#ffffff">
 	<meta name="viewport" content="width=device-width, user-scalable=no">
+
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
+	<meta name="mobile-web-app-capable" content="yes">
+	<script type="text/javascript" src="./js/addtohomescreen.js"></script>
+	<script type="text/javascript">
+		addToHomescreen();
+	</script>
 </head>
 
 <body>
 	<div class="screen__start">
-		<h1 class="screen__start--game-name menu-header">dulp</h1>
+		<h1 class="screen__start--game-name">dulp</h1>
 		<button class="screen__start--btn btn__continue invisible" data-action="continue">CONTINUE</button>
 		<button class="screen__start--btn btn__start" data-action="newgame">NEW GAME</button>
 	</div>
@@ -40,27 +48,27 @@
 
 			<ul class="bullets js-bullets"></ul>
 
-		<button class="screen__game--pause" data-action="pause">| |</button>
+		<button class="screen__game--pause" data-action="pause">&#10073 &#10073</button>
 	</div>
 
 	<div class="screen__pause invisible">
-		<h2 class="screen__pause--verdict menu-header">Game paused</h2>
+		<h2 class="screen__pause--verdict">Game paused</h2>
 		<button class="screen__pause--btn btn__continue" data-action="continue-pause">CONTINUE</button>
-	<button class="screen__pause--btn btn__exit" data-action="exit">EXIT</button>
+		<button class="screen__pause--btn btn__exit" data-action="exit">EXIT</button>
 	</div>
 
 	<div class="screen__win invisible">
-		<h2 class="screen__win--verdict menu-header">Level passed!</h2>
+		<h2 class="screen__win--verdict">Level passed!</h2>
 		<button class="screen__win--btn btn__continue" data-action="nextlevel">NEXT LEVEL</button>
 		<button class="screen__win--btn btn__exit" data-action="exit-win">EXIT</button>
 	</div>
 
 	<div class="screen__lose invisible">
-		<h2 class="screen__lose--verdict menu-header">You lose!</h2>
+		<h2 class="screen__lose--verdict">You lose!</h2>
 		<button class="screen__lose--btn btn__tryagain" data-action="tryagain">TRY AGAIN</button>
 		<button class="screen__lose--btn btn__exit" data-action="exit">EXIT</button>
 	</div>
 
-	<script src="/js/app.min.js"></script>
+	<script type="text/javascript" src="/js/app.min.js"></script>
 </body>
 </html>

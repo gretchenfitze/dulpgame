@@ -15,7 +15,7 @@ export default class Bullets {
 		this.hit = false;
 		this._stepInterval = 1000 / 60;
 		this.bulletSpeedCorrection = 30;
-		this.boundAngleFrom = 25;
+		this.boundAngleFrom = 15;
 		this.boundAngleTo = 40;
 		this.timingFunction = 0;
 		this.g = 9.80665 / (1000 * 1000);

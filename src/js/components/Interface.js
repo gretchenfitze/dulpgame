@@ -67,5 +67,4 @@ export default class Interface {
 		this._hideElement(this.gameScreen);
 		this._showElement(this.loseScreen);
 	}
-
 }
