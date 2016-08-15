@@ -2,6 +2,7 @@ body {
 	overflow: hidden;
 	box-sizing: border-box;
 	background: #FAFAFA;
+	text-align: center;
 	font-family: 'Fredoka One', sans-serif;
 }
 
@@ -10,14 +11,9 @@ body {
 	display: none !important;
 }
 
-.screen__start {
-	text-align: center;
-}
-
-h1, h2 {
-	padding: 5vh;
+.screen__start--game-name {
+	margin: 10vh auto;
 	color: #FF7043;
-	text-align: center;
 	font-size: 17vh;
 }
 
@@ -107,12 +103,13 @@ button:focus {
 	left: 1vh;
 	margin: 0;
 	padding: 0;
-	width: 5vh;
+	width: 9vh;
+	border-radius: 8px;
 	background: #E0E0E0;
 	box-shadow: none;
 	font-weight: 900;
-	font-size: 3vh;
-	line-height: 5vh;
+	font-size: 5vh;
+	line-height: 9vh;
 	-webkit-transition: none;
 	transition: none;
 }
