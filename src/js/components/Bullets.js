@@ -15,7 +15,8 @@ export default class Bullets {
 		this.hit = false;
 		this._stepInterval = 1000 / 60;
 		this.bulletSpeedCorrection = 30;
-		this.boundAngle = 30;
+		this.boundAngleFrom = 25;
+		this.boundAngleTo = 40;
 		this.timingFunction = 0;
 		this.g = 9.80665 / (1000 * 1000);
 	}
@@ -95,17 +96,15 @@ export default class Bullets {
 			this.fromCircleToBottom = document.documentElement.clientHeight -
 				this.boundingBullet.offsetTop + this.fullPath;
 
-			this.reboundPath = this.fromCircleToBottom /
-				Math.sin(this._degreesToRads(90 - this.boundAngle));
-			this.boundPathX = this.reboundPath * Math.sin(this._degreesToRads(this.boundAngle));
-			this.boundPathY = this.reboundPath * Math.cos(this._degreesToRads(this.boundAngle))
-				- this.fullPath;
-
-			this.boundPathEveryMs = this._rootSumOfSquares(this.circleStep, this.bulletStep)
-				/ this._stepInterval;
+			this.boundAngle = this._degreesToRads(this.boundAngleFrom + Math.random() *
+				(this.boundAngleTo - this.boundAngleFrom));
+			this.reboundPath = this.fromCircleToBottom / Math.sin(
+				this._degreesToRads(90) - this.boundAngle);
+			this.boundPathX = this.reboundPath * Math.sin(this.boundAngle);
+			this.boundPathY = this.reboundPath * Math.cos(this.boundAngle) - this.fullPath;
 
 			this.boundingBullet.style.transition =
-				`transform ${this.reboundPath / this.boundPathEveryMs}ms`;
+				`transform ${this.reboundPath / (this.bulletStep / this._stepInterval)}ms`;
 
 			this.boundingBullet.style.transform = +this.level.name % 2 ?
 				`translate(-${this.boundPathX}px,
@@ -115,17 +114,6 @@ export default class Bullets {
 
 			this.boundingBullet.addEventListener('transitionend', this.boundingBullet.remove);
 		}
-	}
-
-	/**
-	 * Вычисление квадратного корня из суммы квадратов
-	 *
-	 * @param  {Number} a первое число
-	 * @param  {Number} b второе число
-	 * @return {Number}
-	 */
-	_rootSumOfSquares(a, b) {
-		return Math.sqrt(a * a + b * b);
 	}
 
 	/**

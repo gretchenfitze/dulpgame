@@ -58,7 +58,8 @@ export default class Circle {
 	getHitSector() {
 		this.x = Math.max(document.documentElement.clientWidth,
 			window.innerWidth || 0) / 2;
-		this.y = this.el.parentNode.offsetTop + this.el.clientHeight - 1;
+		this.y = this.el.parentNode.offsetTop + this.el.clientHeight -
+			(this.el.clientHeight - this.center.clientHeight) / 4;
 		this.hitSector = document.elementFromPoint(this.x, this.y);
 		this.hitSectorColor = this.hitSector.style.backgroundColor;
 	}
