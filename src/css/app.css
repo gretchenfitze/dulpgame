@@ -102,7 +102,7 @@ button:focus {
 	top: 1vh;
 	left: 1vh;
 	margin: 0;
-	padding: 2vh;
+	padding: 1vh;
 	width: 8vh;
 	height: 8vh;
 	border-radius: 1vh;
@@ -119,13 +119,8 @@ button:focus {
 }
 
 .screen__game--pause-symbol {
-	position: fixed;
-	top: 3vh;
-	left: 3vh;
-	width: 2vh;
+	width: 4vh;
 	height: 4vh;
-	border-right: 1vh solid #fff;
-  border-left: 1vh solid #fff;
 }
 
 .screen__game {
