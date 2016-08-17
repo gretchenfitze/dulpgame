@@ -103,13 +103,13 @@ button:focus {
 	left: 1vh;
 	margin: 0;
 	padding: 0;
-	width: 9vh;
+	width: 8vh;
 	border-radius: 8px;
 	background: #E0E0E0;
 	box-shadow: none;
 	font-weight: 900;
 	font-size: 5vh;
-	line-height: 9vh;
+	line-height: 8vh;
 	-webkit-transition: none;
 	transition: none;
 }
