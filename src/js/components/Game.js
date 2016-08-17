@@ -11,7 +11,7 @@ export default class Game {
 	 */
 	constructor() {
 		this.interface = new Interface();
-		this._stepInterval = 1000 / 60;
+		this._stepInterval = 1000 / 30;
 		this.gameColors = ['#f472d0', '#e51400', '#FF6E40', '#FFAB40', '#FFFF00', '#60a917', '#76FF03',
 		'#64FFDA', '#64B5F6', '#0050ef', '#B388FF', '#9C27B0', '#9E9E9E', '#8D6E63'];
 	}

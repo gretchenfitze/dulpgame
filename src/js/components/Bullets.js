@@ -13,8 +13,8 @@ export default class Bullets {
 		this.rotatingCircle = document.querySelector('.js-circle');
 		this.bulletPath = 0;
 		this.hit = false;
-		this._stepInterval = 1000 / 60;
-		this.bulletSpeedCorrection = 30;
+		this._stepInterval = 1000 / 30;
+		this.bulletSpeedCorrection = 15;
 		this.boundAngleFrom = 15;
 		this.boundAngleTo = 40;
 		this.timingFunction = 0;

@@ -76,7 +76,7 @@ export default class Circle {
 
 	// Кручение круга для цикла игры
 	update() {
-		this.spinDegree += this.circleSpeed;
+		this.spinDegree += this.circleSpeed * 2;
 		if (this.spinDegree >= 360 || this.spinDegree <= -360) {
 			this.spinDegree = 0;
 		}
