@@ -119,8 +119,9 @@ button:focus {
 }
 
 .screen__game--pause-symbol {
-	width: 2vh;
-	height: 4vh;
+	position: fixed;
+	top: 3vh;
+	left: 3vh;
 	border-right: 1vh solid #fff;
   border-left: 1vh solid #fff;
 }
