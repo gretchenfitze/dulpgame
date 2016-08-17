@@ -40,12 +40,15 @@ export default class Circle {
 
 	// Прорисовка секторов круга
 	renderSlices() {
+		this.el.parentNode.style.height = this.el.parentNode.style.width = `${this.level.size}vh`;
+		this.center.style.lineHeight = `${this.level.size * 4 / 5}vh`;
 		this._showLevelNumber();
 		this._getRotationDegs();
 		for (let i = 0; i < this.circleColors.length; i++) {
 			const newSector = document.createElement('li');
 			newSector.classList.add('circle__part');
 			newSector.style.background = this.circleColors[i];
+
 			newSector.style.transform = `
 				rotate(${this._rotationDegs[i]}deg)
 				skew(${89 - this.colorSlice[i]}deg)
