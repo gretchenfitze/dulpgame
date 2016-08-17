@@ -19,6 +19,7 @@ export default class Bullets {
 		this.boundAngleTo = 40;
 		this.timingFunction = 0;
 		this.g = 9.80665 / (1000 * 1000);
+		this.boundedBullets = 0;
 	}
 
 	/**
@@ -100,19 +101,23 @@ export default class Bullets {
 				(this.boundAngleTo - this.boundAngleFrom));
 			this.reboundPath = this.fromCircleToBottom / Math.sin(
 				this._degreesToRads(90) - this.boundAngle);
-			this.boundPathX = this.reboundPath * Math.sin(this.boundAngle);
+			this.boundPathX = -this.reboundPath * Math.sin(this.boundAngle);
+			if (this.level.circleSpeed < 1) {
+				this.boundPathX = -this.boundPathX;
+			}
 			this.boundPathY = this.reboundPath * Math.cos(this.boundAngle) - this.fullPath;
 
+			if ((this.level.reverse) && (this.boundedBullets % 2)) {
+				this.boundPathX = -this.boundPathX;
+			}
 			this.boundingBullet.style.transition =
 				`transform ${this.reboundPath / (this.bulletStep / this._stepInterval)}ms`;
 
-			this.boundingBullet.style.transform = +this.level.name % 2 ?
-				`translate(-${this.boundPathX}px,
-				${this.boundPathY}px)` :
-				`translate(${this.boundPathX}px,
+			this.boundingBullet.style.transform = `translate(${this.boundPathX}px,
 				${this.boundPathY}px)`;
 
 			this.boundingBullet.addEventListener('transitionend', this.boundingBullet.remove);
+			this.boundedBullets++;
 		}
 	}
 

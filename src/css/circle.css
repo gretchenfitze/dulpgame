@@ -30,7 +30,6 @@
 	box-shadow: 0 0 10px #ccc;
 	text-align: center;
 	font-size: 10vh;
-	/* line-height: 16vh; customized 4/5 */
 	-webkit-transform: translate(-50%, -50%);
 	        transform: translate(-50%, -50%);
 }
