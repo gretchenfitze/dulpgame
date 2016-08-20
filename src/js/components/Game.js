@@ -24,7 +24,11 @@ export default class Game {
 	 */
 	_initNewGame(level) {
 		this._resetLevel();
-		this.level = this.levels[level];
+		if ((!this.levelNumber) || (this.levelNumber <= Object.keys(this.levels).length)) {
+			this.level = this.levels[level];
+		} else {
+			this._initRandomLevels();
+		}
 		this._shuffleColors(this.gameColors, this.level.colorSlice.length);
 		this.circle = new Circle(this.level, this.colors);
 		this.bullets = new Bullets(this.level, this.colors);
@@ -37,8 +41,67 @@ export default class Game {
 		this._gameLoopInterval = setInterval(this._gameLoop.bind(this), this._stepInterval);
 	}
 
+	_initRandomLevels() {
+		this.minSlice = 15;
+		this.maxSlice = 150;
+		this.levelNumber = '∞';
+		this.colorSliceRandom = [];
+		this.sumOfSlices = 0;
+		this._addRandomSlice();
+		while (this._sumOfSlices() <= 360) {
+			this._addRandomSlice();
+		}
+		this.colorSliceRandom.splice(-1, 1, this._lastSlice() - this._sumOfSlices() + 360);
+		if (this._lastSlice() < this.minSlice) {
+			this.colorSliceRandom.splice(-2, 2);
+			this.colorSliceRandom.push(360 - this._sumOfSlices());
+		}
+
+		this.speedRandom = 0.5 + Math.random() * (5 - 0.5);
+		this.sizeRandom = 20 + Math.random() * (50 - 20);
+		this.reverseRandom = Math.random() < 0.5;
+		this.level = {
+			name: '∞',
+			colorSlice: this.colorSliceRandom,
+			circleSpeed: this.speedRandom,
+			bulletSpeed: this.speedRandom,
+			size: this.sizeRandom,
+			reverse: this.reverseRandom,
+		};
+	}
+
 	/**
-	 * Выбрать случайные цвета из массива для уровня
+	 * Добавление сектора для случайных уровней
+	 *
+	 * @private
+	 * @return {Number}
+	 */
+	_addRandomSlice() {
+		this.colorSliceRandom.push(this.minSlice + Math.random() * (this.maxSlice - this.minSlice));
+	}
+
+	/**
+	 * Определение размера последнего сектора для случайных уровней
+	 *
+	 * @private
+	 * @return {Number}
+	 */
+	_lastSlice() {
+		return this.colorSliceRandom[this.colorSliceRandom.length - 1];
+	}
+
+	/**
+	 * Подсчет суммы секторов для случайных уровней
+	 *
+	 * @private
+	 * @return {Number}
+	 */
+	_sumOfSlices() {
+		return this.colorSliceRandom.reduce((slice1, slice2) => slice1 + slice2);
+	}
+
+	/**
+	 * Выбор случайных цветов из массива для уровня
 	 *
 	 * @param	{Array} colors used in the game
 	 * @param	{Number} number of circle slices for level
@@ -144,7 +207,7 @@ export default class Game {
 	* Обработка клика для запуска пули
 	*
 	* @param	{Event} bullet fire event
-	* @returns {Boolean}
+	* @return {Boolean}
 	*/
 	fire(event) {
 		event.preventDefault();
@@ -205,8 +268,10 @@ export default class Game {
 			this.interface.isContinuable();
 			break;
 		case 'nextlevel':
-			this.levelNumber++;
-			localStorage.setItem('levelNumber', this.levelNumber);
+			if (this.levelNumber !== '∞') {
+				this.levelNumber++;
+				localStorage.setItem('levelNumber', this.levelNumber);
+			}
 			this._initNewGame(this.levelNumber);
 			this.interface.showGameScreen();
 			break;

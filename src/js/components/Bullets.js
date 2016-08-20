@@ -128,6 +128,7 @@ export default class Bullets {
 	 *
 	 * @param  {Number} angle in degrees
 	 * @return {Number} angle in rads
+	 * @private
 	 */
 	_degreesToRads(angle) {
 		return angle * (Math.PI / 180);
