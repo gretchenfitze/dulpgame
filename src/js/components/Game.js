@@ -12,8 +12,19 @@ export default class Game {
 	constructor() {
 		this.interface = new Interface();
 		this._stepInterval = 1000 / 30;
-		this.gameColors = ['#f472d0', '#e51400', '#FF6E40', '#FFAB40', '#FFFF00', '#60a917', '#76FF03',
-		'#64FFDA', '#64B5F6', '#0050ef', '#B388FF', '#9C27B0', '#9E9E9E', '#8D6E63'];
+		this.gameColors = [
+			'#f63b31',
+			'#FF7A00',
+			'#FFAA1D',
+			'#FFF700',
+			'#33ff47',
+			'#AAF0D1',
+			'#50BFE6',
+			'#0066CC',
+			'#6B3FA0',
+			'#F653A6',
+			'#1B1B1B',
+			'#e6e6e6'];
 	}
 
 	/**
@@ -27,7 +38,7 @@ export default class Game {
 		if ((!this.levelNumber) || (this.levelNumber <= Object.keys(this.levels).length)) {
 			this.level = this.levels[level];
 		} else {
-			this._initRandomLevels();
+			this._initRandomLevel();
 		}
 		this._shuffleColors(this.gameColors, this.level.colorSlice.length);
 		this.circle = new Circle(this.level, this.colors);
@@ -41,7 +52,12 @@ export default class Game {
 		this._gameLoopInterval = setInterval(this._gameLoop.bind(this), this._stepInterval);
 	}
 
-	_initRandomLevels() {
+	/**
+	 * Формирование случайного уровня
+	 *
+	 * @private
+	 */
+	_initRandomLevel() {
 		this.minSlice = 15;
 		this.maxSlice = 150;
 		this.levelNumber = '∞';
@@ -108,7 +124,10 @@ export default class Game {
 	 */
 	_shuffleColors(gameColors, count) {
 		this.colors = gameColors.slice(0);
-		let i = gameColors.length;
+		if (this.level.colorSlice.length > this.colors.length) {
+			this.colors = this.colors.concat(this.colors);
+		}
+		let i = this.colors.length;
 		const min = i - count;
 		while (i-- > min) {
 			const index = Math.floor((i + 1) * Math.random());
