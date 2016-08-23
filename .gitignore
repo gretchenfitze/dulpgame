@@ -1,4 +1,5 @@
 .DS_Store
+.env
 *.sublime-project
 *.sublime-workspace
 log/

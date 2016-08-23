@@ -1,4 +1,4 @@
-
+/* eslint-disable */
 'use strict';
 
 var Webpack = require('webpack');
@@ -8,17 +8,13 @@ var buildPath = path.resolve(__dirname, 'public', 'build');
 var mainPath = path.resolve(__dirname, 'src', 'js', 'app.js');
 
 var config = {
-	devtool: 'eval',
-	entry: [
-		'webpack/hot/dev-server',
-		'webpack-dev-server/client?http://localhost:8080',
-		mainPath],
-	output: {
-		filename: 'app.min.js',
-		path: buildPath,
-		publicPath: '/build/',
-	},
-	module: {
+  devtool: 'source-map',
+  entry: mainPath,
+  output: {
+    path: buildPath,
+    filename: 'app.min.js',
+  },
+  module: {
 		loaders: [
 			{
 				test: /\.css$/,
@@ -34,7 +30,6 @@ var config = {
 			},
 		],
 	},
-	plugins: [new Webpack.HotModuleReplacementPlugin()],
 };
 
 module.exports = config;
