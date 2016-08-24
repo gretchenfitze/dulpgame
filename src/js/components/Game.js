@@ -231,6 +231,13 @@ export default class Game {
 			this._changeUrl(`#level/${this.levelNumber}/win`);
 			this._resetLevel();
 			this.interface.showWinScreen();
+			if (this.levelNumber >= Object.keys(this.levels).length) {
+				this.levelNumber = '∞';
+				localStorage.setItem('levelNumber', '∞');
+			} else if (this.levelNumber !== '∞') {
+				this.levelNumber++;
+				localStorage.setItem('levelNumber', this.levelNumber);
+			}
 		}
 	}
 
@@ -267,14 +274,40 @@ export default class Game {
 
 		switch (event.target.dataset.action) {
 		case 'newgame':
-			localStorage.removeItem('levelNumber');
+			localStorage.clear();
 			this.levelNumber = 1;
 			this._initNewGame(this.levelNumber);
 			break;
 		case 'continue':
-			this.levelNumber = localStorage.getItem('levelNumber');
+			this.levelNumber = this._getLevelFromStorage();
 			this._initNewGame(this.levelNumber);
-			this._isPaused = false;
+			this.interface.showGameScreen();
+			break;
+		case 'choose':
+			this.levelsToShow = [1];
+			switch (this._getLevelFromStorage()) {
+			case '∞':
+				for (let i = 1; i < Object.keys(this.levels).length; i++) {
+					this.levelsToShow.push(i + 1);
+				}
+				this.levelsToShow.push('∞');
+				break;
+			case null:
+				this.levelsToShow.push(1);
+				break;
+			default:
+				for (let i = 1; i < this._getLevelFromStorage(); i++) {
+					this.levelsToShow.push(i + 1);
+				}
+				break;
+			}
+			this.renderLevelsToChose();
+			this._changeUrl('#levels');
+			this.interface.showLevelsScreen();
+			break;
+		case 'continue-chosen':
+			this.levelNumber = event.target.textContent;
+			this._initNewGame(this.levelNumber);
 			this.interface.showGameScreen();
 			break;
 		case 'pause':
@@ -288,7 +321,6 @@ export default class Game {
 			this.interface.showGameScreen();
 			break;
 		case 'exit-win':
-			localStorage.setItem('levelNumber', this.levelNumber + 1);
 			this._resetLevel();
 			this.interface.showStartScreen();
 			this.interface.isContinuable();
@@ -299,10 +331,6 @@ export default class Game {
 			this.interface.isContinuable();
 			break;
 		case 'nextlevel':
-			if (this.levelNumber !== '∞') {
-				this.levelNumber++;
-				localStorage.setItem('levelNumber', this.levelNumber);
-			}
 			this._initNewGame(this.levelNumber);
 			this.interface.showGameScreen();
 			break;
@@ -322,8 +350,8 @@ export default class Game {
 	checkLocation() {
 		this.levelHash = location.hash.split('/')[1];
 		if ((location.hash.indexOf('#level/') > -1) &&
-		((localStorage.getItem('levelNumber')) &&
-		(this.levelHash <= localStorage.getItem('levelNumber')) ||
+		((this._getLevelFromStorage()) &&
+		(this.levelHash <= this._getLevelFromStorage()) ||
 		(+this.levelHash === 1))) {
 			this.levelNumber = this.levelHash;
 			this._initNewGame(this.levelNumber);
@@ -335,6 +363,18 @@ export default class Game {
 			this.interface.showStartScreen();
 			this.interface.isContinuable();
 		}
+	}
+
+	renderLevelsToChose() {
+		this.interface.levelsScreen.innerHTML = '<h2 class="screen__levels--name">Choose level</h2>';
+		const levelToChose = document.createElement('div');
+		levelToChose.classList.add('level-number');
+		levelToChose.setAttribute('data-action', 'continue-chosen');
+		this.levelsToShow.forEach(level => {
+			const newLevelToChose = levelToChose.cloneNode();
+			newLevelToChose.innerHTML = level;
+			this.interface.levelsScreen.appendChild(newLevelToChose);
+		});
 	}
 
 	/**
@@ -359,8 +399,13 @@ export default class Game {
 		}
 	}
 
-	// Обработка события обновления данных в кэше мобильного веб-приложения
-	updateSite() {
-		window.applicationCache.swapCache();
+	/**
+	 * Получить номер уровня из localStorage
+	 *
+	 * @private
+	 * @return {Number|String}
+	 */
+	_getLevelFromStorage() {
+		return localStorage.getItem('levelNumber');
 	}
 }
