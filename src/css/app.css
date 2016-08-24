@@ -79,6 +79,15 @@ button:focus {
 	box-shadow: 0 0 #039BE5;
 }
 
+.btn__levels {
+	background-color: #9575CD;
+	box-shadow: 0 1vh #5E35B1;
+}
+
+.btn__levels:hover {
+	box-shadow: 0 0 #5E35B1;
+}
+
 .btn__exit {
 	background-color: #E96781;
 	box-shadow: 0 1vh #C0526B;
