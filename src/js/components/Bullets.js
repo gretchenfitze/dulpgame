@@ -15,7 +15,6 @@ export default class Bullets {
 		this.hit = false;
 		this._stepInterval = 1000 / 30;
 		this.bulletSpeedCorrection = 15;
-		this.reboundSpeedCorrection = this.bulletSpeedCorrection / 10;
 		this.boundAngleFrom = 15;
 		this.boundAngleTo = 40;
 		this.timingFunction = 0;
@@ -111,9 +110,9 @@ export default class Bullets {
 			if ((this.level.reverse) && (this.boundedBullets % 2)) {
 				this.boundPathX = -this.boundPathX;
 			}
-			this.boundingBullet.style.transition =
-				`transform ${this.reboundPath / (this.bulletStep / this._stepInterval)
-					* this.reboundSpeedCorrection}ms`;
+			this.boundingBullet.style.transition = `transform
+			${this.reboundPath / (this.bulletStep / this._stepInterval)}ms
+			cubic-bezier(0.3,0,1,1)`;
 
 			this.boundingBullet.style.transform = `translate(${this.boundPathX}px,
 				${this.boundPathY}px)`;

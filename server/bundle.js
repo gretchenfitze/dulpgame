@@ -1,3 +1,4 @@
+/* eslint-disable */
 var Webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
 var webpackConfig = require('./../webpack.config.js');
