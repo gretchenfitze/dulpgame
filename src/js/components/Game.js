@@ -13,18 +13,18 @@ export default class Game {
 		this.interface = new Interface();
 		this._stepInterval = 1000 / 30;
 		this.gameColors = [
-			'#f63b31',
-			'#FF7A00',
-			'#FFAA1D',
-			'#FFF700',
-			'#33ff47',
-			'#AAF0D1',
-			'#50BFE6',
-			'#0066CC',
-			'#6B3FA0',
-			'#F653A6',
-			'#1B1B1B',
-			'#e6e6e6'];
+			'#001f3f',
+			'#0074D9',
+			'#7FDBFF',
+			'#39CCCC',
+			'#3D9970',
+			'#2ECC40',
+			'#01FF70',
+			'#FFDC00',
+			'#FF851B',
+			'#FF4136',
+			'#F012BE',
+			'#B10DC9'];
 	}
 
 	/**
@@ -60,6 +60,7 @@ export default class Game {
 	_initRandomLevel() {
 		this.minSlice = 15;
 		this.maxSlice = 150;
+		this.maxNumberOfSlices = 12;
 		this.levelNumber = '∞';
 		this.colorSliceRandom = [];
 		this.sumOfSlices = 0;
@@ -73,8 +74,19 @@ export default class Game {
 			this.colorSliceRandom.push(360 - this._sumOfSlices());
 		}
 
-		this.speedRandom = 0.5 + Math.random() * (5 - 0.5);
-		this.sizeRandom = 20 + Math.random() * (50 - 20);
+		if (this.colorSliceRandom.length > this.maxNumberOfSlices) {
+			this.colorSliceRandom.splice(this.maxNumberOfSlices - 1,
+				this.colorSliceRandom.length - this.maxNumberOfSlices + 1);
+			this.colorSliceRandom.push(360 - this._sumOfSlices());
+		}
+
+		this.minSpeed = 0.5;
+		this.maxSpeed = 5;
+		this.minSize = 20;
+		this.maxSize = 50;
+
+		this.speedRandom = this.minSpeed + Math.random() * (this.maxSpeed - this.minSpeed);
+		this.sizeRandom = this.minSize + Math.random() * (this.maxSize - this.minSize);
 		this.reverseRandom = Math.random() < 0.5;
 		this.level = {
 			name: '∞',
@@ -345,5 +357,10 @@ export default class Game {
 				break;
 			}
 		}
+	}
+
+	// Обработка события обновления данных в кэше мобильного веб-приложения
+	updateSite() {
+		window.applicationCache.swapCache();
 	}
 }
