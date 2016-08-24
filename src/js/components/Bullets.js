@@ -10,13 +10,13 @@ export default class Bullets {
 		this._shuffleBullets(this.colors);
 		this.el = document.querySelector('.js-bullets');
 		this.circle = document.querySelector('.js-circle');
-		this.rotatingCircle = document.querySelector('.js-circle');
 		this.bulletPath = 0;
 		this.hit = false;
 		this._stepInterval = 1000 / 30;
 		this.bulletSpeedCorrection = 15;
-		this.boundAngleFrom = 15;
-		this.boundAngleTo = 40;
+		this.reboundSpeedCorrection = 2;
+		this.boundAngleMin = 15;
+		this.boundAngleMax = 40;
 		this.timingFunction = 0;
 		this.g = 9.80665 / (1000 * 1000);
 		this.boundedBullets = 0;
@@ -91,28 +91,26 @@ export default class Bullets {
 	rebound() {
 		this.boundingBullet = this.activeBullet;
 		if (this.boundingBullet) {
-			this.circleStep = Math.PI * this.rotatingCircle.clientWidth / 2 *
-				this.level.circleSpeed / 180;
-
-			this.fromCircleToBottom = document.documentElement.clientHeight -
+			this.boundPathY = document.documentElement.clientHeight -
 				this.boundingBullet.offsetTop + this.fullPath;
 
-			this.boundAngle = this._degreesToRads(this.boundAngleFrom + Math.random() *
-				(this.boundAngleTo - this.boundAngleFrom));
-			this.reboundPath = this.fromCircleToBottom / Math.sin(
-				this._degreesToRads(90) - this.boundAngle);
+			this.boundAngle = this._degreesToRads(this.boundAngleMin + Math.random() *
+				(this.boundAngleMax - this.boundAngleMin));
+
+			this.reboundPath = this.boundPathY / Math.sin(this._degreesToRads(90) - this.boundAngle);
+
 			this.boundPathX = -this.reboundPath * Math.sin(this.boundAngle);
-			if (this.level.circleSpeed < 1) {
+
+			if (this.level.circleSpeed < 0) {
 				this.boundPathX = -this.boundPathX;
 			}
-			this.boundPathY = this.reboundPath * Math.cos(this.boundAngle) - this.fullPath;
-
 			if ((this.level.reverse) && (this.boundedBullets % 2)) {
 				this.boundPathX = -this.boundPathX;
 			}
+
 			this.boundingBullet.style.transition = `transform
-			${this.reboundPath / (this.bulletStep / this._stepInterval)}ms
-			cubic-bezier(0.3,0,1,1)`;
+			${this.reboundPath / (this.bulletStep / this._stepInterval) * this.reboundSpeedCorrection}ms
+			cubic-bezier(.12,.07,.29,.74)`;
 
 			this.boundingBullet.style.transform = `translate(${this.boundPathX}px,
 				${this.boundPathY}px)`;
