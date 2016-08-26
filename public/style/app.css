@@ -1,3 +1,7 @@
+@font-face {
+	font-family: Fredoka One; src: url('FredokaOne-Regular.ttf');
+}
+
 body {
 	box-sizing: border-box;
 	background: #FAFAFA;
@@ -13,10 +17,12 @@ body {
 .screen__start--game-name {
 	margin: 10vh auto;
 	color: #FF7043;
+	font-weight: normal;
 	font-size: 17vh;
 }
 
 h2 {
+	font-weight: normal;
 	font-size: 10vh;
 }
 
@@ -45,7 +51,7 @@ button {
 	border: 0;
 	border-radius: 1vh;
 	color: #fff;
-	font-weight: 300;
+	font-weight: normal;
 	font-size: 5vh;
 	cursor: pointer;
 	-webkit-transition: all .2s;
@@ -118,7 +124,7 @@ button:focus {
 	padding: 1vh;
 	width: 8vh;
 	height: 8vh;
-	border-radius: 1vh;
+	border-radius: 2vh;
 	background: #E0E0E0;
 	box-shadow: none;
 	-webkit-transition: none;
@@ -152,44 +158,37 @@ button:focus {
 
 .screen__levels--level-item {
 	margin: 1vh;
-	width: 14vh;
+	width: 15vh;
 	border-width: 1vh;
-	border-style: solid;
-	border-color: #B10DC9;
 	border-radius: 5vh;
-	color: #B10DC9;
+	background-color: #B10DC9;
+	color: #fff;
 	text-align: center;
 	font-size: 8vh;
-	line-height: 14vh;
+	line-height: 15vh;
 	cursor: pointer;
 }
 
 .screen__levels--level-item:nth-child(7n-6) {
-	border-color: #FF4136;
-	color: #FF4136;
+	background-color: #FF4136;
 }
 
 .screen__levels--level-item:nth-child(7n-5) {
-	border-color: #FF851B;
-	color: #FF851B;
+	background-color: #FF851B;
 }
 
 .screen__levels--level-item:nth-child(7n-4) {
-	border-color: #FFDC00;
-	color: #FFDC00;
+	background-color: #FFDC00;
 }
 
 .screen__levels--level-item:nth-child(7n-3) {
-	border-color: #2ECC40;
-	color: #2ECC40;
+	background-color: #2ECC40;
 }
 
 .screen__levels--level-item:nth-child(7n-2) {
-	border-color: #7FDBFF;
-	color: #7FDBFF;
+	background-color: #7FDBFF;
 }
 
 .screen__levels--level-item:nth-child(7n-1) {
-	border-color: #0074D9;
-	color: #0074D9;
+	background-color: #0074D9;
 }

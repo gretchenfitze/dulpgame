@@ -22,7 +22,7 @@ var config = {
 		loaders: [
 			{
 				test: /\.css$/,
-				loader: 'style-loader!css-loader',
+				loader: 'style-loader!css-loader!postcss-loader',
 			},
 			{
 				test: /\.js$/,
@@ -35,6 +35,9 @@ var config = {
 		],
 	},
 	plugins: [new Webpack.HotModuleReplacementPlugin()],
+	postcss: function () {
+        return [require('autoprefixer')];
+    }
 };
 
 module.exports = config;
