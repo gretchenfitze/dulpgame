@@ -293,7 +293,6 @@ export default class Game {
 				this.levelsToShow.push('∞');
 				break;
 			case null:
-				this.levelsToShow.push(1);
 				break;
 			default:
 				for (let i = 1; i < this._getLevelFromStorage(); i++) {
@@ -366,14 +365,14 @@ export default class Game {
 	}
 
 	renderLevelsToChose() {
-		this.interface.levelsScreen.innerHTML = '<h2 class="screen__levels--name">Choose level</h2>';
+		this.interface.levelItems.innerHTML = '';
 		const levelToChose = document.createElement('div');
-		levelToChose.classList.add('level-number');
+		levelToChose.classList.add('screen__levels--level-item');
 		levelToChose.setAttribute('data-action', 'continue-chosen');
 		this.levelsToShow.forEach(level => {
 			const newLevelToChose = levelToChose.cloneNode();
 			newLevelToChose.innerHTML = level;
-			this.interface.levelsScreen.appendChild(newLevelToChose);
+			this.interface.levelItems.appendChild(newLevelToChose);
 		});
 	}
 
