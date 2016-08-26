@@ -10,14 +10,14 @@ export default class Bullets {
 		this._shuffleBullets(this.colors);
 		this.el = document.querySelector('.js-bullets');
 		this.circle = document.querySelector('.js-circle');
-		this.rotatingCircle = document.querySelector('.js-circle');
 		this.bulletPath = 0;
 		this.hit = false;
 		this._stepInterval = 1000 / 30;
 		this.bulletSpeedCorrection = 15;
-		this.reboundSpeedCorrection = this.bulletSpeedCorrection / 10;
-		this.boundAngleFrom = 15;
-		this.boundAngleTo = 40;
+		this.reboundSpeedCorrection = 2;
+		this.reboundPathCorrection = 4 / 3;
+		this.boundAngleMin = 15;
+		this.boundAngleMax = 40;
 		this.timingFunction = 0;
 		this.g = 9.80665 / (1000 * 1000);
 		this.boundedBullets = 0;
@@ -92,28 +92,28 @@ export default class Bullets {
 	rebound() {
 		this.boundingBullet = this.activeBullet;
 		if (this.boundingBullet) {
-			this.circleStep = Math.PI * this.rotatingCircle.clientWidth / 2 *
-				this.level.circleSpeed / 180;
+			this.distanceFromCircleToBottom = document.documentElement.clientHeight -
+				this.circle.offsetTop - this.circle.clientHeight;
 
-			this.fromCircleToBottom = document.documentElement.clientHeight -
-				this.boundingBullet.offsetTop + this.fullPath;
+			this.boundAngle = this._degreesToRads(this.boundAngleMin + Math.random() *
+				(this.boundAngleMax - this.boundAngleMin));
 
-			this.boundAngle = this._degreesToRads(this.boundAngleFrom + Math.random() *
-				(this.boundAngleTo - this.boundAngleFrom));
-			this.reboundPath = this.fromCircleToBottom / Math.sin(
-				this._degreesToRads(90) - this.boundAngle);
+			this.reboundPath = this.distanceFromCircleToBottom /
+				Math.sin(this._degreesToRads(90) - this.boundAngle) * this.reboundPathCorrection;
+
 			this.boundPathX = -this.reboundPath * Math.sin(this.boundAngle);
-			if (this.level.circleSpeed < 1) {
+			this.boundPathY = this.reboundPath * Math.cos(this.boundAngle);
+
+			if (this.level.circleSpeed < 0) {
 				this.boundPathX = -this.boundPathX;
 			}
-			this.boundPathY = this.reboundPath * Math.cos(this.boundAngle) - this.fullPath;
-
 			if ((this.level.reverse) && (this.boundedBullets % 2)) {
 				this.boundPathX = -this.boundPathX;
 			}
-			this.boundingBullet.style.transition =
-				`transform ${this.reboundPath / (this.bulletStep / this._stepInterval)
-					* this.reboundSpeedCorrection}ms`;
+
+			this.boundingBullet.style.transition = `transform
+			${this.reboundPath / (this.bulletStep / this._stepInterval) * this.reboundSpeedCorrection}ms
+			cubic-bezier(.12,.07,.29,.74)`;
 
 			this.boundingBullet.style.transform = `translate(${this.boundPathX}px,
 				${this.boundPathY}px)`;
@@ -128,6 +128,7 @@ export default class Bullets {
 	 *
 	 * @param  {Number} angle in degrees
 	 * @return {Number} angle in rads
+	 * @private
 	 */
 	_degreesToRads(angle) {
 		return angle * (Math.PI / 180);

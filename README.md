@@ -1,1 +1,1 @@
-<h1>LearnJs Dulp game</h1>
+<h1>Dulp game</h1>

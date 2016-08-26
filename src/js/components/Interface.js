@@ -10,6 +10,8 @@ export default class Interface {
 		this.pauseScreen = document.querySelector('.screen__pause');
 		this.winScreen = document.querySelector('.screen__win');
 		this.loseScreen = document.querySelector('.screen__lose');
+		this.levelsScreen = document.querySelector('.screen__levels');
+		this.levelItems = document.querySelector('.screen__levels--level-items');
 	}
 
 	/**
@@ -29,7 +31,8 @@ export default class Interface {
 	}
 
 	isContinuable() {
-		if (+localStorage.getItem('levelNumber') > 1) {
+		if ((localStorage.getItem('levelNumber') === '∞') ||
+			(+localStorage.getItem('levelNumber') > 1)) {
 			this._showElement(this.continueButton);
 		} else {
 			this._hideElement(this.continueButton);
@@ -43,11 +46,13 @@ export default class Interface {
 		this._hideElement(this.pauseScreen);
 		this._hideElement(this.loseScreen);
 		this._hideElement(this.winScreen);
+		this._hideElement(this.levelsScreen);
 	}
 
 	showGameScreen() {
 		this._showElement(this.gameScreen);
 		this._hideElement(this.startScreen);
+		this._hideElement(this.levelsScreen);
 		this._hideElement(this.pauseScreen);
 		this._hideElement(this.loseScreen);
 		this._hideElement(this.winScreen);
@@ -66,5 +71,10 @@ export default class Interface {
 	showLoseScreen() {
 		this._hideElement(this.gameScreen);
 		this._showElement(this.loseScreen);
+	}
+
+	showLevelsScreen() {
+		this._hideElement(this.startScreen);
+		this._showElement(this.levelsScreen);
 	}
 }

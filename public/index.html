@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Dulp</title>
-	<link href="https://fonts.googleapis.com/css?family=Fredoka+One" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="/style/_normalize.css">
+	<link rel="stylesheet" type="text/css" href="/style/app.css">
 	<link rel="apple-touch-icon" sizes="57x57" href="/favicons/apple-icon-57x57.png">
 	<link rel="apple-touch-icon" sizes="60x60" href="/favicons/apple-icon-60x60.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="/favicons/apple-icon-72x72.png">
@@ -22,11 +23,10 @@
 	<meta name="msapplication-TileImage" content="/favicons/ms-icon-144x144.png">
 	<meta name="theme-color" content="#ffffff">
 	<meta name="viewport" content="width=device-width, user-scalable=no">
-
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-barstyle" content="black-translucent">
 	<meta name="mobile-web-app-capable" content="yes">
-	<script type="text/javascript" src="./js/addtohomescreen.js"></script>
+	<script type="text/javascript" src="./libs/addtohomescreen.js"></script>
 	<script type="text/javascript">
 		addToHomescreen();
 	</script>
@@ -37,6 +37,7 @@
 		<h1 class="screen__start--game-name">dulp</h1>
 		<button class="screen__start--btn btn__continue invisible" data-action="continue">CONTINUE</button>
 		<button class="screen__start--btn btn__start" data-action="newgame">NEW GAME</button>
+		<button class="screen__start--btn btn__levels" data-action="choose">LEVELS</button>
 	</div>
 
 	<div class="screen__game invisible">
@@ -49,7 +50,7 @@
 			<ul class="bullets js-bullets"></ul>
 
 		<button class="screen__game--pause" data-action="pause">
-			<img class="screen__game--pause-symbol" data-action="pause" src="/favicons/pause.svg"/>
+			<img data-action="pause" src="/style/pause.svg"/>
 		</button>
 	</div>
 
@@ -71,6 +72,14 @@
 		<button class="screen__lose--btn btn__exit" data-action="exit">EXIT</button>
 	</div>
 
-	<script type="text/javascript" src="/js/app.min.js"></script>
+	<div class="screen__levels invisible">
+		<h2 class="screen__levels--name">Choose<br>level</h2>
+		<div class="screen__levels--level-items"></div>
+		<button class="screen__levels--back" data-action="exit">
+			<img data-action="exit" src="/style/back.svg"/>
+		</button>
+	</div>
+
+	<script type="text/javascript" src="/build/app.min.js"></script>
 </body>
 </html>
