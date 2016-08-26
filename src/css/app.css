@@ -1,9 +1,8 @@
 body {
-	overflow: hidden;
 	box-sizing: border-box;
 	background: #FAFAFA;
 	text-align: center;
-	font-family: 'Fredoka One', sans-serif;
+	font-family: 'Fredoka One', Arial, sans-serif;
 }
 
 /* Общий стиль, используемый для скрытия/отображенияэлементов */
@@ -33,13 +32,18 @@ h2 {
 	color: #f44336;
 }
 
+.screen__levels--name {
+	margin: 0 auto;
+	color: #9575CD;
+}
+
 button {
 	display: block;
 	margin: 10vh auto;
 	padding: 1vh;
 	width: 40vh;
 	border: 0;
-	border-radius: 8px;
+	border-radius: 1vh;
 	color: #fff;
 	font-weight: 300;
 	font-size: 5vh;
@@ -106,8 +110,8 @@ button:focus {
 	box-shadow: 0 0 #F57F17;
 }
 
-.screen__game--pause {
-	position: fixed;
+.screen__game--pause, .screen__levels--back {
+	position: absolute;
 	top: 1vh;
 	left: 1vh;
 	margin: 0;
@@ -121,13 +125,13 @@ button:focus {
 	transition: none;
 }
 
-.screen__game--pause:hover {
+.screen__game--pause:hover, .screen__levels--back:hover {
 	margin: 0;
 	background: #e57373;
 	box-shadow: none;
 }
 
-.screen__game--pause-symbol {
+.screen__game--pause img, .screen__levels--back img {
 	width: 4vh;
 	height: 4vh;
 }
@@ -135,6 +139,57 @@ button:focus {
 .screen__game {
 	position: absolute;
 	top: 0;
+	overflow: hidden;
 	width: 100%;
 	height: 100%;
+}
+
+.screen__levels--level-items {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.screen__levels--level-item {
+	margin: 1vh;
+	width: 14vh;
+	border-width: 1vh;
+	border-style: solid;
+	border-color: #B10DC9;
+	border-radius: 5vh;
+	color: #B10DC9;
+	text-align: center;
+	font-size: 8vh;
+	line-height: 14vh;
+	cursor: pointer;
+}
+
+.screen__levels--level-item:nth-child(7n-6) {
+	border-color: #FF4136;
+	color: #FF4136;
+}
+
+.screen__levels--level-item:nth-child(7n-5) {
+	border-color: #FF851B;
+	color: #FF851B;
+}
+
+.screen__levels--level-item:nth-child(7n-4) {
+	border-color: #FFDC00;
+	color: #FFDC00;
+}
+
+.screen__levels--level-item:nth-child(7n-3) {
+	border-color: #2ECC40;
+	color: #2ECC40;
+}
+
+.screen__levels--level-item:nth-child(7n-2) {
+	border-color: #7FDBFF;
+	color: #7FDBFF;
+}
+
+.screen__levels--level-item:nth-child(7n-1) {
+	border-color: #0074D9;
+	color: #0074D9;
 }

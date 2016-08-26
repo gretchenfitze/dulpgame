@@ -11,6 +11,7 @@ export default class Interface {
 		this.winScreen = document.querySelector('.screen__win');
 		this.loseScreen = document.querySelector('.screen__lose');
 		this.levelsScreen = document.querySelector('.screen__levels');
+		this.levelItems = document.querySelector('.screen__levels--level-items');
 	}
 
 	/**
@@ -45,6 +46,7 @@ export default class Interface {
 		this._hideElement(this.pauseScreen);
 		this._hideElement(this.loseScreen);
 		this._hideElement(this.winScreen);
+		this._hideElement(this.levelsScreen);
 	}
 
 	showGameScreen() {
