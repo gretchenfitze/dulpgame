@@ -58,6 +58,7 @@ export default class Game {
 	 * @private
 	 */
 	_initRandomLevel() {
+		this._resetLevel();
 		this.minSlice = 15;
 		this.maxSlice = 150;
 		this.maxNumberOfSlices = 12;
@@ -83,7 +84,7 @@ export default class Game {
 		this.minSpeed = 0.5;
 		this.maxSpeed = 5;
 		this.minSize = 20;
-		this.maxSize = 50;
+		this.maxSize = 45;
 
 		this.speedRandom = this.minSpeed + Math.random() * (this.maxSpeed - this.minSpeed);
 		this.sizeRandom = this.minSize + Math.random() * (this.maxSize - this.minSize);
@@ -167,13 +168,13 @@ export default class Game {
 	 */
 	_resetLevel() {
 		clearInterval(this._gameLoopInterval);
+		this.activeBall = document.querySelector('.bullet--active');
+		if (this.activeBall) {
+			this.activeBall.remove();
+		}
 		if (this.bullets) {
 			if (this.bullets.boundingBullet) {
 				this.bullets.boundingBullet.removeEventListener('transitionend', this.bullets.removeBullet);
-			}
-			this.activeBall = this.bullets.el.parentNode.querySelector('.bullet--active');
-			if (this.activeBall) {
-				this.activeBall.remove();
 			}
 			this.circle.el.innerHTML = '';
 			this.bullets.el.innerHTML = '';

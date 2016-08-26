@@ -15,6 +15,7 @@ export default class Bullets {
 		this._stepInterval = 1000 / 30;
 		this.bulletSpeedCorrection = 15;
 		this.reboundSpeedCorrection = 2;
+		this.reboundPathCorrection = 4 / 3;
 		this.boundAngleMin = 15;
 		this.boundAngleMax = 40;
 		this.timingFunction = 0;
@@ -91,15 +92,17 @@ export default class Bullets {
 	rebound() {
 		this.boundingBullet = this.activeBullet;
 		if (this.boundingBullet) {
-			this.boundPathY = document.documentElement.clientHeight -
-				this.boundingBullet.offsetTop + this.fullPath;
+			this.distanceFromCircleToBottom = document.documentElement.clientHeight -
+				this.circle.offsetTop - this.circle.clientHeight;
 
 			this.boundAngle = this._degreesToRads(this.boundAngleMin + Math.random() *
 				(this.boundAngleMax - this.boundAngleMin));
 
-			this.reboundPath = this.boundPathY / Math.sin(this._degreesToRads(90) - this.boundAngle);
+			this.reboundPath = this.distanceFromCircleToBottom /
+				Math.sin(this._degreesToRads(90) - this.boundAngle) * this.reboundPathCorrection;
 
 			this.boundPathX = -this.reboundPath * Math.sin(this.boundAngle);
+			this.boundPathY = this.reboundPath * Math.cos(this.boundAngle);
 
 			if (this.level.circleSpeed < 0) {
 				this.boundPathX = -this.boundPathX;

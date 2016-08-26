@@ -25,7 +25,7 @@
         "name": "4",
         "colorSlice": [60, 30, 45, 120, 105],
         "circleSpeed": -3,
-        "bulletSpeed": 1.5,
+        "bulletSpeed": 3,
         "size": 35,
         "reverse": true
     },
@@ -41,7 +41,7 @@
         "colorSlice": [30, 30, 30, 30, 15, 120, 105],
         "circleSpeed": -3,
         "bulletSpeed": 2,
-        "size": 50
+        "size": 45
     },
     "7": {
         "name": "7",
@@ -53,8 +53,8 @@
     "8": {
         "name": "8",
         "colorSlice": [60, 45, 45, 120, 90],
-        "circleSpeed": -0.5,
-        "bulletSpeed": 0.5,
+        "circleSpeed": -1,
+        "bulletSpeed": 1,
         "size": 40,
         "reverse": true
     },
@@ -98,7 +98,7 @@
     "14": {
         "name": "14",
         "colorSlice": [60, 30, 45, 120, 105],
-        "circleSpeed": -1,
+        "circleSpeed": -1.5,
         "bulletSpeed": 5,
         "size": 40
     },
@@ -106,7 +106,7 @@
         "name": "15",
         "colorSlice": [60, 30, 45, 120, 105],
         "circleSpeed": 5,
-        "bulletSpeed": 1,
+        "bulletSpeed": 3,
         "size": 30
     }
 }
