@@ -21,6 +21,7 @@ xhr.onreadystatechange = () => {
 		window.addEventListener('hashchange', game.checkLocation.bind(game));
 		document.body.addEventListener('click', game.onClick.bind(game));
 		game.interface.gameScreen.addEventListener('mousedown', game.fire.bind(game));
+		game.interface.gameScreen.addEventListener('touchstart', game.fire.bind(game));
 		document.body.addEventListener('keydown', game.initKeyboardEvents.bind(game));
 	} else {
 		console.log(`${xhr.status}: ${xhr.statusText}`); // TODO: страница ошибки
