@@ -256,6 +256,17 @@ export default class Game {
 	}
 
 	/**
+	 * Пауза игры
+	 *
+	 * @private
+	 */
+	_pauseGame() {
+		this._isPaused = true;
+		this._changeUrl(`#level/${this.levelNumber}/paused`);
+		this.interface.showPauseScreen();
+	}
+
+	/**
 	 * Смена состояния адресной строки
 	 *
 	 * @param {String} href
@@ -282,7 +293,6 @@ export default class Game {
 		case 'continue':
 			this.levelNumber = this._getLevelFromStorage();
 			this._initNewGame(this.levelNumber);
-			this.interface.showGameScreen();
 			break;
 		case 'choose':
 			this.levelsToShow = [1];
@@ -301,29 +311,21 @@ export default class Game {
 				}
 				break;
 			}
-			this.renderLevelsToChose();
+			this._renderLevelsScreen();
 			this._changeUrl('#levels');
 			this.interface.showLevelsScreen();
 			break;
 		case 'continue-chosen':
 			this.levelNumber = event.target.textContent;
 			this._initNewGame(this.levelNumber);
-			this.interface.showGameScreen();
 			break;
 		case 'pause':
-			this._isPaused = true;
-			this._changeUrl(`#level/${this.levelNumber}/paused`);
-			this.interface.showPauseScreen();
+			this._pauseGame();
 			break;
 		case 'continue-pause':
 			this._isPaused = false;
 			this._changeUrl(`#level/${this.levelNumber}`);
 			this.interface.showGameScreen();
-			break;
-		case 'exit-win':
-			this._resetLevel();
-			this.interface.showStartScreen();
-			this.interface.isContinuable();
 			break;
 		case 'exit':
 			this._resetLevel();
@@ -332,11 +334,6 @@ export default class Game {
 			break;
 		case 'nextlevel':
 			this._initNewGame(this.levelNumber);
-			this.interface.showGameScreen();
-			break;
-		case 'tryagain':
-			this._initNewGame(this.levelNumber);
-			this.interface.showGameScreen();
 			break;
 		default:
 			break;
@@ -355,9 +352,7 @@ export default class Game {
 		(+this.levelHash === 1))) {
 			this.levelNumber = this.levelHash;
 			this._initNewGame(this.levelNumber);
-			this._isPaused = true;
-			this._changeUrl(`#level/${this.levelNumber}/paused`);
-			this.interface.showPauseScreen();
+			this._pauseGame();
 		} else {
 			this._resetLevel();
 			this.interface.showStartScreen();
@@ -365,7 +360,12 @@ export default class Game {
 		}
 	}
 
-	renderLevelsToChose() {
+	/**
+	 * Отрисовка уровней на экране выбора уровней
+	 *
+	 * @private
+	 */
+	_renderLevelsScreen() {
 		this.interface.levelItems.innerHTML = '';
 		const levelToChose = document.createElement('div');
 		levelToChose.classList.add('screen__levels--level-item');
@@ -386,9 +386,7 @@ export default class Game {
 		if (!this.interface.gameScreen.classList.contains('invisible')) {
 			switch (event.keyCode) {
 			case 27:
-				this._isPaused = true;
-				this._changeUrl(`#level/${this.levelNumber}/paused`);
-				this.interface.showPauseScreen();
+				this._pauseGame();
 				break;
 			case 32:
 				this._fire = true;
