@@ -211,13 +211,10 @@ export default class Game {
 	 * @private
 	 */
 	_gameLoop() {
-		if (!this._isPaused) {
-			this.circle.update();
-			if (this._fire) {
-				this.bullets.update();
-				if (this.bullets.hit) {
-					this._onHit();
-				}
+		if ((!this._isPaused) && (this._fire)) {
+			this.bullets.update();
+			if (this.bullets.hit) {
+				this._onHit();
 			}
 		}
 	}

@@ -10,7 +10,6 @@ export default class Circle {
 		this.colorSlice = this.level.colorSlice.slice(0);
 		this.el = document.querySelector('.js-circle');
 		this.center = document.querySelector('.circle__center');
-		this.spinDegree = 0;
 		this.circleSpeed = this.level.circleSpeed;
 	}
 
@@ -54,6 +53,10 @@ export default class Circle {
 			`;
 			this.el.appendChild(newSector);
 		}
+		if (this.circleSpeed < 0) {
+			this.el.style.animationDirection = 'reverse';
+		}
+		this.el.style.animationDuration = `${Math.abs(this.circleSpeed)}s`;
 	}
 
 	// Получение цвета сектора, находящегося в нижней точке круга
@@ -69,17 +72,55 @@ export default class Circle {
 	// Удаление сектора при попадании
 	deleteHitSector() {
 		this.hitSector.remove();
-		if (this.level.reverse) {
-			this.circleSpeed = -this.circleSpeed;
+		// if ((this.level.reverse) && (this.el.style.animationDirection === 'reverse')) {
+		// 	this.el.style.webkitAnimationPlayState = 'paused';
+		// 	this.changeKeyframesRule();
+		// 	this.el.style.animationDirection = 'normal';
+		// 	this.el.style.webkitAnimationPlayState = 'running';
+		// } else if (this.level.reverse) {
+		// 	this.el.style.webkitAnimationPlayState = 'paused';
+		// 	this.changeKeyframesRule();
+		// 	this.el.style.animationDirection = 'reverse';
+		// 	this.el.style.webkitAnimationPlayState = 'running';
+		// }
+	}
+
+	_getRotationValuesForReverse() {
+		const tr = window.getComputedStyle(this.el).getPropertyValue('transform');
+		let values = tr.split('(')[1];
+		values = values.split(')')[0];
+		values = values.split(',');
+		const a = values[0];
+		const b = values[1];
+		this.rotatedAngle = Math.atan2(b, a) * (180 / Math.PI);
+		if (this.rotatedAngle < 0) {
+			this.rotatedAngle += 360;
 		}
 	}
 
-	// Кручение круга для цикла игры
-	update() {
-		this.spinDegree += this.circleSpeed * 2;
-		if (this.spinDegree >= 360 || this.spinDegree <= -360) {
-			this.spinDegree = 0;
+	changeKeyframesRule() {
+		this._getRotationValuesForReverse();
+		const ss = document.styleSheets;
+		for (let i = 0; i < ss.length; ++i) {
+			for (let j = 0; j < ss[i].cssRules.length; ++j) {
+				if (ss[i].cssRules[j].type === window.CSSRule.WEBKIT_KEYFRAMES_RULE &&
+					ss[i].cssRules[j].name === 'rotate') {
+					this._keyframes = ss[i].cssRules[j];
+				}
+			}
 		}
-		this.el.style.transform = `rotate(${this.spinDegree}deg)`;
+		this._keyframes.deleteRule('from');
+		this._keyframes.deleteRule('to');
+
+		this._keyframes.appendRule(
+			`from {
+				transform: rotate(${this.rotatedAngle}deg);
+				-webkit-transform: rotate(${this.rotatedAngle}deg);
+			}`);
+		this._keyframes.appendRule(
+			`to {
+				transform: rotate(${this.rotatedAngle + 360}deg);
+				-webkit-transform: rotate(${this.rotatedAngle + 360}deg);
+		}`);
 	}
 }

@@ -3,7 +3,6 @@
 	overflow: hidden;
 	margin: 5vh auto;
 	border-radius: 50%;
-	cursor: default;
 }
 
 .circle ul {
@@ -15,6 +14,18 @@
 	height: 100%;
 	border-radius: 50%;
 	list-style: none;
+	-webkit-transform: translateZ(0);
+          transform: translateZ(0);
+	-webkit-animation-name: rotate;
+          animation-name: rotate;
+	-webkit-animation-timing-function: linear;
+          animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+					backface-visibility: hidden;
+	-webkit-backface-visibility: hidden;
+				  perspective: 1000;
+  -webkit-perspective: 1000;
 }
 
 .circle .circle__center {
@@ -22,12 +33,9 @@
 	top: 50%;
 	left: 50%;
 	z-index: 100;
-	margin: 0 auto;
 	width: 80%;
-	height: 80%;
 	border-radius: 50%;
 	background: #EFEBE9;
-	text-align: center;
 	font-size: 10vh;
 	-webkit-transform: translate(-50%, -50%);
 	        transform: translate(-50%, -50%);
@@ -42,4 +50,26 @@
 	height: 500%;
 	-webkit-transform-origin: 100% 100%;
 	        transform-origin: 100% 100%;
+}
+
+@-webkit-keyframes rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }
