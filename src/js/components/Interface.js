@@ -41,7 +41,7 @@ export default class Interface {
 
 	showStartScreen() {
 		this._hideElement(this.gameScreen);
-		history.replaceState(null, null, '#');
+		history.pushState(null, null, '#');
 		this._showElement(this.startScreen);
 		this._hideElement(this.pauseScreen);
 		this._hideElement(this.loseScreen);

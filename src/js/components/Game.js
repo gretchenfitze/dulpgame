@@ -262,7 +262,7 @@ export default class Game {
 	 */
 	_pauseGame() {
 		this._isPaused = true;
-		this._changeUrl(`#level/${this.levelNumber}/paused`);
+		this._changeUrl(`#level/${this.levelNumber}/pause`);
 		this.interface.showPauseScreen();
 	}
 
@@ -273,7 +273,7 @@ export default class Game {
 	 * @private
 	 */
 	_changeUrl(href) {
-		history.replaceState(null, null, href);
+		history.pushState(null, null, href);
 	}
 
 	/**
