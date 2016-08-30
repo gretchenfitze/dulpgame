@@ -1,6 +1,5 @@
 .circle {
 	position: relative;
-	overflow: hidden;
 	margin: 5vh auto;
 	border-radius: 50%;
 }
@@ -14,8 +13,8 @@
 	height: 100%;
 	border-radius: 50%;
 	list-style: none;
-	-webkit-transform: translateZ(0);
-          transform: translateZ(0);
+	-webkit-transform: translate3d(0,0,0);
+          transform: translate3d(0,0,0);
 	-webkit-animation-name: rotate;
           animation-name: rotate;
 	-webkit-animation-timing-function: linear;
@@ -32,7 +31,6 @@
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	z-index: 100;
 	width: 80%;
 	border-radius: 50%;
 	background: #EFEBE9;
@@ -45,7 +43,6 @@
 	position: absolute;
 	top: -450%;
 	left: -450%;
-	overflow: hidden;
 	width: 500%;
 	height: 500%;
 	-webkit-transform-origin: 100% 100%;
@@ -53,22 +50,44 @@
 }
 
 @-webkit-keyframes rotate {
-  from {
+  0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
-  to {
+  100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }
 
 @keyframes rotate {
-  from {
+  0% {
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
   }
-  to {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes rotate-change-direction {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate-change-direction {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }

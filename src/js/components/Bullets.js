@@ -21,6 +21,7 @@ export default class Bullets {
 		this.timingFunction = 0;
 		this.g = 9.80665 / (1000 * 1000);
 		this.boundedBullets = 0;
+		this._renderBullets();
 	}
 
 	/**
@@ -38,8 +39,12 @@ export default class Bullets {
 		}
 	}
 
-	// Отрисовка пуль
-	renderBullets() {
+	/**
+	 * Отрисовка пуль
+	 *
+	 * @private
+	 */
+	_renderBullets() {
 		const li = document.createElement('li');
 		li.classList.add('bullet');
 		this.bulletColors.forEach(color => {
@@ -86,6 +91,7 @@ export default class Bullets {
 		this.bulletPath = 0;
 		this.timingFunction = 0;
 		this.makeActiveBullet();
+		this.circle = document.querySelector('.js-circle');
 	}
 
 	// Возможность пули отлетать после удара в сторону кручения круга

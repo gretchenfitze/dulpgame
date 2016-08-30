@@ -43,13 +43,13 @@ export default class Game {
 		this._shuffleColors(this.gameColors, this.level.colorSlice.length);
 		this.circle = new Circle(this.level, this.colors);
 		this.bullets = new Bullets(this.level, this.colors);
-		this._render();
 		this._isPaused = false;
 		this._fire = false;
 		this.bullets.hit = false;
 		this._changeUrl(`#level/${this.levelNumber}`);
 		this.interface.showGameScreen();
 		this._gameLoopInterval = setInterval(this._gameLoop.bind(this), this._stepInterval);
+		this.circle.continueAnimation();
 	}
 
 	/**
@@ -86,7 +86,9 @@ export default class Game {
 		this.minSize = 20;
 		this.maxSize = 45;
 
-		this.speedRandom = this.minSpeed + Math.random() * (this.maxSpeed - this.minSpeed);
+		const randomSign = Math.random() < 0.5 ? -1 : 1;
+		this.speedRandom = (this.minSpeed + Math.random() *
+			(this.maxSpeed - this.minSpeed)) * randomSign;
 		this.sizeRandom = this.minSize + Math.random() * (this.maxSize - this.minSize);
 		this.reverseRandom = Math.random() < 0.5;
 		this.level = {
@@ -152,16 +154,6 @@ export default class Game {
 	}
 
 	/**
-	 * Прорисовка игровых компонентов
-	 *
-	 * @private
-	 */
-	_render() {
-		this.circle.renderSlices();
-		this.bullets.renderBullets();
-	}
-
-	/**
 	 * Сброс данных уровня при выходе или конце игры
 	 *
 	 * @private
@@ -176,10 +168,13 @@ export default class Game {
 			if (this.bullets.boundingBullet) {
 				this.bullets.boundingBullet.removeEventListener('transitionend', this.bullets.removeBullet);
 			}
-			this.circle.el.innerHTML = '';
 			this.bullets.el.innerHTML = '';
-			this.circle = null;
 			this.bullets = null;
+		}
+		if (this.circle) {
+			this.circle.pauseAnimation();
+			this.circle.el.innerHTML = '';
+			this.circle = null;
 		}
 	}
 
@@ -261,6 +256,7 @@ export default class Game {
 		this._isPaused = true;
 		this._changeUrl(`#level/${this.levelNumber}/pause`);
 		this.interface.showPauseScreen();
+		this.circle.pauseAnimation();
 	}
 
 	/**
@@ -323,6 +319,7 @@ export default class Game {
 			this._isPaused = false;
 			this._changeUrl(`#level/${this.levelNumber}`);
 			this.interface.showGameScreen();
+			this.circle.continueAnimation();
 			break;
 		case 'exit':
 			this._resetLevel();

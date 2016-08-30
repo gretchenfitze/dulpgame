@@ -10,7 +10,10 @@ export default class Circle {
 		this.colorSlice = this.level.colorSlice.slice(0);
 		this.el = document.querySelector('.js-circle');
 		this.center = document.querySelector('.circle__center');
-		this.circleSpeed = this.level.circleSpeed;
+		this.circleSpeedCorrection = 5;
+		this.fullCircleTime = Math.abs(1 / this.level.circleSpeed) * this.circleSpeedCorrection;
+		this._renderSlices();
+		this._getKeyframesRule();
 	}
 
 	/**
@@ -36,8 +39,12 @@ export default class Circle {
 		this.center.innerHTML = this.level.name;
 	}
 
-	// Прорисовка секторов круга
-	renderSlices() {
+	/**
+	 * Отрисовка секторов круга
+	 *
+	 * @private
+	 */
+	_renderSlices() {
 		this.el.parentNode.style.height = this.el.parentNode.style.width = `${this.level.size}vh`;
 		this.center.style.lineHeight = `${this.level.size * 4 / 5}vh`;
 		this._showLevelNumber();
@@ -53,10 +60,14 @@ export default class Circle {
 			`;
 			this.el.appendChild(newSector);
 		}
-		if (this.circleSpeed < 0) {
+		if (this.level.circleSpeed < 0) {
 			this.el.style.animationDirection = 'reverse';
+		} else {
+			this.el.style.animationDirection = 'normal';
 		}
-		this.el.style.animationDuration = `${Math.abs(this.circleSpeed)}s`;
+		this.el.style.WebkitAnimationDirection = this.el.style.animationDirection;
+
+		this._restartAnimation();
 	}
 
 	// Получение цвета сектора, находящегося в нижней точке круга
@@ -72,19 +83,50 @@ export default class Circle {
 	// Удаление сектора при попадании
 	deleteHitSector() {
 		this.hitSector.remove();
-		// if ((this.level.reverse) && (this.el.style.animationDirection === 'reverse')) {
-		// 	this.el.style.webkitAnimationPlayState = 'paused';
-		// 	this.changeKeyframesRule();
-		// 	this.el.style.animationDirection = 'normal';
-		// 	this.el.style.webkitAnimationPlayState = 'running';
-		// } else if (this.level.reverse) {
-		// 	this.el.style.webkitAnimationPlayState = 'paused';
-		// 	this.changeKeyframesRule();
-		// 	this.el.style.animationDirection = 'reverse';
-		// 	this.el.style.webkitAnimationPlayState = 'running';
-		// }
+		if (this.level.reverse) {
+			this._toggleRotationDirection();
+			this.el.addEventListener('animationend', this._restartAnimation.bind(this));
+		}
 	}
 
+	/**
+	* Смена направления вращения
+	*
+	* @private
+	*/
+	_toggleRotationDirection() {
+		this.pauseAnimation();
+		this._getRotationValuesForReverse();
+
+		if (this.el.style.animationDirection === 'reverse') {
+			this.el.style.animationDirection = 'normal';
+			this.el.style.WebkitAnimationDirection = 'normal';
+			this._changeKeyframesRule(this.rotatedAngle, 360, 360 - this.rotatedAngle);
+		} else {
+			this.el.style.animationDirection = 'reverse';
+			this.el.style.WebkitAnimationDirection = 'reverse';
+			this._changeKeyframesRule(0, this.rotatedAngle, this.rotatedAngle);
+		}
+		this.continueAnimation();
+	}
+
+	// Пауза анимации
+	pauseAnimation() {
+		this.el.style.animationPlayState = 'paused';
+		this.el.style.WebkitAnimationPlayState = 'paused';
+	}
+
+	// Продолжение анимации
+	continueAnimation() {
+		this.el.style.animationPlayState = 'running';
+		this.el.style.WebkitAnimationPlayState = 'running';
+	}
+
+	/**
+	* Получение размера угла, на который совершен поворот круга в данный момент
+	*
+	* @private
+	*/
 	_getRotationValuesForReverse() {
 		const tr = window.getComputedStyle(this.el).getPropertyValue('transform');
 		let values = tr.split('(')[1];
@@ -98,29 +140,89 @@ export default class Circle {
 		}
 	}
 
-	changeKeyframesRule() {
-		this._getRotationValuesForReverse();
+	/**
+	 * Изменение правил анимации для смены направления вращения
+	 *
+	 * @param  {Number} ruleFromDegrees Начальная точка анимации в градусах поворота
+	 * @param  {Number} ruleToDegrees   Конечная точка анимации в градусах поворота
+	 * @param  {Number} timeIndex       Градусы поворота? оставшиеся до конца анимации
+	 * @private
+	 */
+	_changeKeyframesRule(ruleFromDegrees, ruleToDegrees, timeIndex) {
+		this._replaceElement(this.el);
+
+		this._keyframes.forEach((_keyframe) => {
+			_keyframe.deleteRule('0%');
+			_keyframe.deleteRule('100%');
+			_keyframe.appendRule(
+				`0% {
+					transform: rotate(${ruleFromDegrees}deg);
+					-webkit-transform: rotate(${ruleFromDegrees}deg);
+				}`);
+			_keyframe.appendRule(
+				`100% {
+					transform: rotate(${ruleToDegrees}deg);
+					-webkit-transform: rotate(${ruleToDegrees}deg);
+				}`);
+		});
+
+		this.el.style.animationName = 'rotate-change-direction';
+		this.el.style.WebkitAnimationName = 'rotate-change-direction';
+
+		this.el.style.animationDuration = `${this.fullCircleTime / 360 * timeIndex}s`;
+		this.el.style.WebkitAnimationDuration = `${this.fullCircleTime / 360 * timeIndex}s`;
+
+		this.el.style.animationIterationCount = '1';
+		this.el.style.WebkitAnimationIterationCount = '1';
+
+		this.el.style.animationTimingFunction = 'linear';
+		this.el.style.WebkitAnimationTimingFunction = 'linear';
+	}
+
+	/**
+	 * Продолжить анимацию в обычном порядке
+	 *
+	 * @private
+	 */
+	_restartAnimation() {
+		this.el.style.animationName = 'rotate';
+		this.el.style.WebkitAnimationName = 'rotate';
+
+		this.el.style.animationDuration = `${this.fullCircleTime}s`;
+		this.el.style.WebkitAnimationDuration = `${this.fullCircleTime}s`;
+
+		this.el.style.animationIterationCount = 'infinite';
+		this.el.style.WebkitAnimationIterationCount = 'infinite';
+
+		this.el.style.animationTimingFunction = 'linear';
+		this.el.style.WebkitAnimationTimingFunction = 'linear';
+	}
+
+	/**
+	 * Скопировать элемент для рестарта анимации
+	 *
+	 * @private
+	 */
+	_replaceElement(el) {
+		const copy = el.cloneNode(true);
+		el.parentNode.replaceChild(copy, el);
+		this.el = document.querySelector('.js-circle');
+	}
+
+	/**
+	 * Найти CSS-правило для анимации
+	 *
+	 * @private
+	 */
+	_getKeyframesRule() {
+		this._keyframes = [];
 		const ss = document.styleSheets;
 		for (let i = 0; i < ss.length; ++i) {
 			for (let j = 0; j < ss[i].cssRules.length; ++j) {
-				if (ss[i].cssRules[j].type === window.CSSRule.WEBKIT_KEYFRAMES_RULE &&
-					ss[i].cssRules[j].name === 'rotate') {
-					this._keyframes = ss[i].cssRules[j];
+				if (ss[i].cssRules[j].name === 'rotate-change-direction') {
+					this._keyframes.push(ss[i].cssRules[j]);
 				}
 			}
 		}
-		this._keyframes.deleteRule('from');
-		this._keyframes.deleteRule('to');
-
-		this._keyframes.appendRule(
-			`from {
-				transform: rotate(${this.rotatedAngle}deg);
-				-webkit-transform: rotate(${this.rotatedAngle}deg);
-			}`);
-		this._keyframes.appendRule(
-			`to {
-				transform: rotate(${this.rotatedAngle + 360}deg);
-				-webkit-transform: rotate(${this.rotatedAngle + 360}deg);
-		}`);
 	}
 }
