@@ -16,6 +16,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "add-to-homescreen": "^3.2.6",
     "autoprefixer": "^6.4.0",
     "babel-core": "6.9.0",
     "babel-loader": "6.2.4",
