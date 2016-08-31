@@ -1,4 +1,4 @@
-.bullets {
+.game-screen__bullets {
 	position: absolute;
 	top: 94vh;
 	left: 50%;
@@ -14,7 +14,7 @@
 	        transform: translate(-50%, -50%);
 }
 
-.bullet {
+.game-screen__bullet {
 	left: 50%;
 	display: inline-block;
 	margin-bottom: 0.75vh;
@@ -23,7 +23,7 @@
 	border-radius: 50%;
 }
 
-.bullet--active {
+.game-screen__bullet--active {
 	position: absolute;
 	top: 82vh;
 	left: 50%;

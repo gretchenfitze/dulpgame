@@ -3,15 +3,15 @@
 */
 export default class Interface {
 	constructor() {
-		this.startScreen = document.querySelector('.screen__start');
-		this.continueButton = this.startScreen.querySelector('.btn__continue');
+		this.startScreen = document.querySelector('.start-screen');
+		this.continueButton = this.startScreen.querySelector('.start-screen__continue');
 		this.isContinuable();
-		this.gameScreen = document.querySelector('.screen__game');
-		this.pauseScreen = document.querySelector('.screen__pause');
-		this.winScreen = document.querySelector('.screen__win');
-		this.loseScreen = document.querySelector('.screen__lose');
-		this.levelsScreen = document.querySelector('.screen__levels');
-		this.levelItems = document.querySelector('.screen__levels--level-items');
+		this.gameScreen = document.querySelector('.game-screen');
+		this.pauseScreen = document.querySelector('.pause-screen');
+		this.winScreen = document.querySelector('.win-screen');
+		this.loseScreen = document.querySelector('.lose-screen');
+		this.levelsScreen = document.querySelector('.levels-screen');
+		this.levelItems = document.querySelector('.levels-screen__level-items');
 	}
 
 	/**

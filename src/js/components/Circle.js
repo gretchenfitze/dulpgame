@@ -9,7 +9,7 @@ export default class Circle {
 		this.circleColors = colors.slice(0);
 		this.colorSlice = this.level.colorSlice.slice(0);
 		this.el = document.querySelector('.js-circle');
-		this.center = document.querySelector('.circle__center');
+		this.center = document.querySelector('.game-screen__circle-center');
 		this.circleSpeedCorrection = 5;
 		this.fullCircleTime = Math.abs(1 / this.level.circleSpeed) * this.circleSpeedCorrection;
 		this._renderSlices();
@@ -51,7 +51,7 @@ export default class Circle {
 		this._getRotationDegs();
 		for (let i = 0; i < this.circleColors.length; i++) {
 			const newSector = document.createElement('li');
-			newSector.classList.add('circle__part');
+			newSector.classList.add('game-screen__circle-sector');
 			newSector.style.background = this.circleColors[i];
 
 			newSector.style.transform = `

@@ -160,7 +160,7 @@ export default class Game {
 	 */
 	_resetLevel() {
 		clearInterval(this._gameLoopInterval);
-		this.activeBall = document.querySelector('.bullet--active');
+		this.activeBall = document.querySelector('.game-screen__bullet--active');
 		if (this.activeBall) {
 			this.activeBall.remove();
 		}
@@ -362,7 +362,7 @@ export default class Game {
 	_renderLevelsScreen() {
 		this.interface.levelItems.innerHTML = '';
 		const levelToChose = document.createElement('div');
-		levelToChose.classList.add('screen__levels--level-item');
+		levelToChose.classList.add('levels-screen__level-item');
 		levelToChose.setAttribute('data-action', 'continue-chosen');
 		this.levelsToShow.forEach(level => {
 			const newLevelToChose = levelToChose.cloneNode();

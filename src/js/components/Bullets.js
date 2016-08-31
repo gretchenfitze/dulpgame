@@ -46,7 +46,7 @@ export default class Bullets {
 	 */
 	_renderBullets() {
 		const li = document.createElement('li');
-		li.classList.add('bullet');
+		li.classList.add('game-screen__bullet');
 		this.bulletColors.forEach(color => {
 			const newBullet = li.cloneNode();
 			newBullet.style.background = color;
@@ -61,7 +61,7 @@ export default class Bullets {
 		if (this.activeBullet) {
 			this.activeBullet.style.transform = 'translate(-50%)';
 			this.activeBullet.style.transition = 'none';
-			this.activeBullet.classList.add('bullet--active');
+			this.activeBullet.classList.add('game-screen__bullet--active');
 			this.activeBulletColor = this.activeBullet.style.backgroundColor;
 			this.el.parentNode.insertBefore(this.activeBullet, this.el);
 		}

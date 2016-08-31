@@ -33,49 +33,46 @@
 </head>
 
 <body>
-	<div class="screen__start">
-		<h1 class="screen__start--game-name">dulp</h1>
-		<button class="screen__start--btn btn__continue invisible" data-action="continue">CONTINUE</button>
-		<button class="screen__start--btn btn__start" data-action="newgame">NEW GAME</button>
-		<button class="screen__start--btn btn__levels" data-action="choose">LEVELS</button>
+	<div class="start-screen">
+		<h1 class="start-screen__name">dulp</h1>
+		<button class="start-screen__continue invisible" data-action="continue">CONTINUE</button>
+		<button class="start-screen__start" data-action="newgame">NEW GAME</button>
+		<button class="start-screen__levels" data-action="choose">LEVELS</button>
 	</div>
 
-	<div class="screen__game invisible">
-		<div class="circle">
-			<ul class="js-circle">
-			</ul>
-			<div class="circle__center"></div>
+	<div class="game-screen invisible">
+		<div class="game-screen__circle">
+			<ul class="js-circle"></ul>
+			<div class="game-screen__circle-center"></div>
 		</div>
-
-			<ul class="bullets js-bullets"></ul>
-
-		<button class="screen__game--pause" data-action="pause">
+		<ul class="game-screen__bullets js-bullets"></ul>
+		<button class="game-screen__pause" data-action="pause">
 			<img data-action="pause" src="/style/pause.svg"/>
 		</button>
 	</div>
 
-	<div class="screen__pause invisible">
-		<h2 class="screen__pause--verdict">Game paused</h2>
-		<button class="screen__pause--btn btn__continue" data-action="continue-pause">CONTINUE</button>
-		<button class="screen__pause--btn btn__exit" data-action="exit">EXIT</button>
+	<div class="pause-screen invisible">
+		<h2 class="pause-screen__verdict">Game paused</h2>
+		<button class="pause-screen__continue" data-action="continue-pause">CONTINUE</button>
+		<button class="pause-screen__exit" data-action="exit">EXIT</button>
 	</div>
 
-	<div class="screen__win invisible">
-		<h2 class="screen__win--verdict">Level passed!</h2>
-		<button class="screen__win--btn btn__continue" data-action="nextlevel">NEXT LEVEL</button>
-		<button class="screen__win--btn btn__exit" data-action="exit">EXIT</button>
+	<div class="win-screen invisible">
+		<h2 class="win-screen__verdict">Level passed!</h2>
+		<button class="win-screen__continue" data-action="nextlevel">NEXT LEVEL</button>
+		<button class="win-screen__exit" data-action="exit">EXIT</button>
 	</div>
 
-	<div class="screen__lose invisible">
-		<h2 class="screen__lose--verdict">You lose!</h2>
-		<button class="screen__lose--btn btn__tryagain" data-action="nextlevel">TRY AGAIN</button>
-		<button class="screen__lose--btn btn__exit" data-action="exit">EXIT</button>
+	<div class="lose-screen invisible">
+		<h2 class="lose-screen__verdict">You lose!</h2>
+		<button class="lose-screen__tryagain" data-action="nextlevel">TRY AGAIN</button>
+		<button class="lose-screen__exit" data-action="exit">EXIT</button>
 	</div>
 
-	<div class="screen__levels invisible">
-		<h2 class="screen__levels--name">Choose<br>level</h2>
-		<div class="screen__levels--level-items"></div>
-		<button class="screen__levels--back" data-action="exit">
+	<div class="levels-screen invisible">
+		<h2 class="levels-screen__name">Choose<br>level</h2>
+		<div class="levels-screen__level-items"></div>
+		<button class="levels-screen__back" data-action="exit">
 			<img data-action="exit" src="/style/back.svg"/>
 		</button>
 	</div>
