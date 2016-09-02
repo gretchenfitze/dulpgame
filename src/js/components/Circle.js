@@ -13,7 +13,7 @@ export default class Circle {
 		this.circleSpeedCorrection = 5;
 		this.fullCircleTime = Math.abs(1 / this.level.circleSpeed) * this.circleSpeedCorrection;
 		this._renderSlices();
-		this._getKeyframesRule();
+		this._getKeyframesRule('rotate-change-direction');
 	}
 
 	/**
@@ -58,6 +58,10 @@ export default class Circle {
 				rotate(${this._rotationDegs[i]}deg)
 				skew(${89 - this.colorSlice[i]}deg)
 			`;
+			newSector.style.WebkitTransform = `
+				rotate(${this._rotationDegs[i]}deg)
+				skew(${89 - this.colorSlice[i]}deg)
+			`;
 			this.el.appendChild(newSector);
 		}
 		if (this.level.circleSpeed < 0) {
@@ -74,7 +78,7 @@ export default class Circle {
 	getHitSector() {
 		this.x = Math.max(document.documentElement.clientWidth,
 			window.innerWidth || 0) / 2;
-		this.y = this.el.parentNode.offsetTop + this.el.clientHeight -
+		this.y = this.el.offsetParent.offsetTop + this.el.clientHeight -
 			(this.el.clientHeight - this.center.clientHeight) / 4;
 		this.hitSector = document.elementFromPoint(this.x, this.y);
 		this.hitSectorColor = this.hitSector.style.backgroundColor;
@@ -156,13 +160,13 @@ export default class Circle {
 			_keyframe.deleteRule('100%');
 			_keyframe.appendRule(
 				`0% {
-					transform: rotate(${ruleFromDegrees}deg);
-					-webkit-transform: rotate(${ruleFromDegrees}deg);
+					transform: translate3d(0,0,0) rotate(${ruleFromDegrees}deg);
+					-webkit-transform: translate3d(0,0,0) rotate(${ruleFromDegrees}deg);
 				}`);
 			_keyframe.appendRule(
 				`100% {
-					transform: rotate(${ruleToDegrees}deg);
-					-webkit-transform: rotate(${ruleToDegrees}deg);
+					transform: translate3d(0,0,0) rotate(${ruleToDegrees}deg);
+					-webkit-transform: translate3d(0,0,0) rotate(${ruleToDegrees}deg);
 				}`);
 		});
 
@@ -196,9 +200,11 @@ export default class Circle {
 
 		this.el.style.animationTimingFunction = 'linear';
 		this.el.style.WebkitAnimationTimingFunction = 'linear';
+
+		this.el.removeEventListener('animationend', this._restartAnimation.bind(this));
 	}
 
-	/**
+	/** TODO: utilites
 	 * Скопировать элемент для рестарта анимации
 	 *
 	 * @private
@@ -209,17 +215,18 @@ export default class Circle {
 		this.el = document.querySelector('.js-circle');
 	}
 
-	/**
+	/** TODO: utilites
 	 * Найти CSS-правило для анимации
 	 *
+	 * @param {String} CSS rule name
 	 * @private
 	 */
-	_getKeyframesRule() {
+	_getKeyframesRule(rule) {
 		this._keyframes = [];
 		const ss = document.styleSheets;
 		for (let i = 0; i < ss.length; ++i) {
 			for (let j = 0; j < ss[i].cssRules.length; ++j) {
-				if (ss[i].cssRules[j].name === 'rotate-change-direction') {
+				if (ss[i].cssRules[j].name === rule) {
 					this._keyframes.push(ss[i].cssRules[j]);
 				}
 			}

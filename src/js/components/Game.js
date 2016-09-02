@@ -11,7 +11,6 @@ export default class Game {
 	 */
 	constructor() {
 		this.interface = new Interface();
-		this._stepInterval = 1000 / 30;
 		this.gameColors = [
 			'#001f3f',
 			'#0074D9',
@@ -44,11 +43,8 @@ export default class Game {
 		this.circle = new Circle(this.level, this.colors);
 		this.bullets = new Bullets(this.level, this.colors);
 		this._isPaused = false;
-		this._fire = false;
-		this.bullets.hit = false;
 		this._changeUrl(`#level/${this.levelNumber}`);
 		this.interface.showGameScreen();
-		this._gameLoopInterval = setInterval(this._gameLoop.bind(this), this._stepInterval);
 		this.circle.continueAnimation();
 	}
 
@@ -159,14 +155,14 @@ export default class Game {
 	 * @private
 	 */
 	_resetLevel() {
-		clearInterval(this._gameLoopInterval);
-		this.activeBall = document.querySelector('.game-screen__bullet--active');
-		if (this.activeBall) {
-			this.activeBall.remove();
+		const lastBall = document.querySelector('.game-screen__bullet');
+		if (lastBall) {
+			lastBall.remove();
 		}
 		if (this.bullets) {
 			if (this.bullets.boundingBullet) {
-				this.bullets.boundingBullet.removeEventListener('transitionend', this.bullets.removeBullet);
+				this.bullets.boundingBullet.removeEventListener('transitionend',
+					this.bullets.boundingBullet.remove);
 			}
 			this.bullets.el.innerHTML = '';
 			this.bullets = null;
@@ -184,10 +180,10 @@ export default class Game {
 	 * @private
 	 */
 	_onHit() {
+		this.bullets.activeBullet.removeEventListener('animationend', this._onHit.bind(this));
 		this.bullets.rebound();
 		this.circle.getHitSector();
 		if (this.circle.hitSectorColor === this.bullets.activeBulletColor) {
-			this._fire = false;
 			this.circle.deleteHitSector();
 			this._levelPassed();
 			if (this.bullets) {
@@ -197,20 +193,6 @@ export default class Game {
 			this._resetLevel();
 			this.interface.showLoseScreen();
 			this._changeUrl(`#level/${this.levelNumber}/lose`);
-		}
-	}
-
-	/**
-	 * Основной игровой цикл
-	 *
-	 * @private
-	 */
-	_gameLoop() {
-		if ((!this._isPaused) && (this._fire)) {
-			this.bullets.update();
-			if (this.bullets.hit) {
-				this._onHit();
-			}
 		}
 	}
 
@@ -243,7 +225,8 @@ export default class Game {
 	fire(event) {
 		event.preventDefault();
 		if (event.target.dataset.action !== 'pause') {
-			this._fire = true;
+			this.bullets.fire();
+			this.bullets.activeBullet.addEventListener('animationend', this._onHit.bind(this));
 		}
 	}
 
@@ -259,7 +242,7 @@ export default class Game {
 		this.circle.pauseAnimation();
 	}
 
-	/**
+	/** TODO: utilites
 	 * Смена состояния адресной строки
 	 *
 	 * @param {String} href
@@ -383,7 +366,7 @@ export default class Game {
 				this._pauseGame();
 				break;
 			case 32:
-				this._fire = true;
+				this.bullets.fire();
 				break;
 			default:
 				break;
@@ -391,7 +374,7 @@ export default class Game {
 		}
 	}
 
-	/**
+	/** TODO: utilites
 	 * Получить номер уровня из localStorage
 	 *
 	 * @private
