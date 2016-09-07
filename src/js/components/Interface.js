@@ -1,8 +1,11 @@
+import Utilities from './Utilities.js';
+
 /**
 * @module UI module
 */
 export default class Interface {
 	constructor() {
+		this.utils = new Utilities();
 		this.startScreen = document.querySelector('.start-screen');
 		this.continueButton = this.startScreen.querySelector('.start-screen__continue');
 		this.isContinuable();
@@ -31,8 +34,8 @@ export default class Interface {
 	}
 
 	isContinuable() {
-		if ((localStorage.getItem('levelNumber') === '∞') ||
-			(+localStorage.getItem('levelNumber') > 1)) {
+		if ((this.utils.getLevelFromStorage() === '∞') ||
+			(+this.utils.getLevelFromStorage() > 1)) {
 			this._showElement(this.continueButton);
 		} else {
 			this._hideElement(this.continueButton);
@@ -41,7 +44,7 @@ export default class Interface {
 
 	showStartScreen() {
 		this._hideElement(this.gameScreen);
-		history.pushState(null, null, '#');
+		this.utils.changeUrl('#');
 		this._showElement(this.startScreen);
 		this._hideElement(this.pauseScreen);
 		this._hideElement(this.loseScreen);

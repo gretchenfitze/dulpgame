@@ -1,6 +1,5 @@
 import Game from './components/Game.js';
 import viewportUnitsBuggyfill from 'viewport-units-buggyfill';
-import levels from './../data/levels.json';
 import 'add-to-homescreen/addtohomescreen.js';
 import 'add-to-homescreen/dist/style/addtohomescreen.css';
 
@@ -11,12 +10,8 @@ if (window.navigator.userAgent.match(/iPad/i) || window.navigator.userAgent.matc
 }
 
 const game = new Game();
-game.levels = levels;
-game.checkLocation();
 window.addEventListener('hashchange', game.checkLocation.bind(game));
-
-document.body.addEventListener('mouseup', game.onClick.bind(game));
-document.body.addEventListener('touchend', game.onClick.bind(game));
+window.addEventListener('resize', game.getGameMetrics.bind(game));
+document.body.addEventListener('click', game.initClickEvents.bind(game));
+document.body.addEventListener('touchend', game.initClickEvents.bind(game));
 document.body.addEventListener('keydown', game.initKeyboardEvents.bind(game));
-game.interface.gameScreen.addEventListener('mousedown', game.fire.bind(game));
-game.interface.gameScreen.addEventListener('touchstart', game.fire.bind(game));

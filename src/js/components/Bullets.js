@@ -1,10 +1,12 @@
 import './../../css/bullets.css';
+import Utilities from './Utilities.js';
 
 /**
  * @class Bullets class
  */
 export default class Bullets {
 	constructor(level, colors) {
+		this.utils = new Utilities();
 		this.level = level;
 		this.colors = colors;
 		this._shuffleBullets(this.colors);
@@ -17,7 +19,7 @@ export default class Bullets {
 		this.boundAngleMax = 40;
 		this.boundedBullets = 0;
 		this._renderBullets();
-		this._getKeyframesRule('hit');
+		this.utils.getKeyframesRule('hit');
 	}
 
 	/**
@@ -60,8 +62,8 @@ export default class Bullets {
 		this.activeBullet = this.el.childNodes[0];
 		if (this.activeBullet) {
 			this.activeBullet.style.transition = 'none';
-			this.activeBullet.style.transform = 'translate3d(0,0,0) translate(-50%, -50%)';
-			this.activeBullet.style.WebkitTransform = 'translate3d(0,0,0) translate(-50%, -50%)';
+			this.activeBullet.style.transform = this.activeBullet.style.WebkitTransform =
+				'translate3d(0,0,0) translate(-50%, -50%)';
 			this.activeBullet.classList.add('game-screen__bullet_active');
 			this.activeBulletColor = this.activeBullet.style.backgroundColor;
 			this.el.parentNode.insertBefore(this.activeBullet, this.el);
@@ -70,30 +72,11 @@ export default class Bullets {
 
 	// Пуск пули
 	fire() {
-		this.bulletFirePath = this.activeBullet.offsetTop - this.circle.offsetParent.offsetTop -
-			this.circle.clientHeight;
-		this.fireTransform = `translate3d(0,0,0) translate(-${this.activeBullet.clientHeight / 2}px,
-			-${this.bulletFirePath}px)`;
+		this.activeBullet.style.animationName = this.activeBullet.style.WebkitAnimationName =
+			'hit';
 
-		this._keyframes.forEach((_keyframe) => {
-			_keyframe.deleteRule('100%');
-			_keyframe.appendRule(
-				`100% {
-					transform: ${this.fireTransform};
-					-webkit-transform: ${this.fireTransform};
-				}`);
-		});
-
-		this.activeBullet.style.animationName = 'hit';
-		this.activeBullet.style.WebkitAnimationName = 'hit';
-
-		this.activeBullet.style.animationDuration =
+		this.activeBullet.style.animationDuration = this.activeBullet.style.WebkitAnimationDuration =
 			`${this.bulletSpeedCorrection / this.level.bulletSpeed}ms`;
-		this.activeBullet.style.WebkitAnimationDuration =
-			`${this.bulletSpeedCorrection / this.level.bulletSpeed}ms`;
-
-		this.activeBullet.style.animationTimingFunction = 'linear';
-		this.activeBullet.style.WebkitAnimationTimingFunction = 'linear'; // TODO: cubic-bezier
 	}
 
 	// Перезарядка пули
@@ -104,21 +87,21 @@ export default class Bullets {
 
 	// Возможность пули отлетать после удара в сторону кручения круга
 	rebound() {
-		this.boundingBullet = this._replaceElement(this.activeBullet);
-		this.boundingBullet.style.animationName = 'none';
-		this.boundingBullet.style.WebkitAnimationName = 'none';
-		this.boundingBullet.style.transform = this.fireTransform;
-		this.boundingBullet.style.WebkitTransform = this.fireTransform;
+		this.boundingBullet = this.activeBullet;
+		this.boundingBullet.style.animationName = this.boundingBullet.style.WebkitAnimationName =
+			'none';
+		this.boundingBullet.style.transform = this.boundingBullet.style.WebkitTransform =
+			this._fireTransform;
 
 		if (this.boundingBullet) {
-			const distanceFromCircleToBottom = document.documentElement.clientHeight -
-				this.circle.offsetParent.offsetTop - this.circle.clientHeight;
+			this._distanceFromCircleToBottom = document.documentElement.clientHeight -
+			this.circle.offsetParent.offsetTop - this.circle.clientHeight;
 
-			const boundAngle = this._degreesToRads(this.boundAngleMin + Math.random() *
-				(this.boundAngleMax - this.boundAngleMin));
+			const boundAngle = this.utils.degreesToRads(
+				this.utils.randomize(this.boundAngleMin, this.boundAngleMax));
 
-			const reboundPath = distanceFromCircleToBottom /
-				Math.sin(this._degreesToRads(90) - boundAngle) * this.reboundPathCorrection;
+			const reboundPath = this._distanceFromCircleToBottom /
+				Math.sin(this.utils.degreesToRads(90) - boundAngle) * this.reboundPathCorrection;
 
 			let boundPathX = -reboundPath * Math.sin(boundAngle);
 			const boundPathY = reboundPath * Math.cos(boundAngle);
@@ -131,56 +114,30 @@ export default class Bullets {
 			}
 
 			this.boundingBullet.style.transition = `transform ${this.reboundSpeedCorrection /
-				this.level.bulletSpeed * (reboundPath / this.bulletFirePath)}ms
+				this.level.bulletSpeed * (reboundPath / this._bulletFirePath)}ms
 			cubic-bezier(.12,.07,.29,.74)`;
 
-			this.boundingBullet.style.transform = `translate3d(0,0,0) translate(${boundPathX}px,
-				${boundPathY}px)`;
-			this.boundingBullet.style.WebkitTransform = `translate3d(0,0,0) translate(${boundPathX}px,
-				${boundPathY}px)`;
+			this.boundingBullet.style.transform = this.boundingBullet.style.WebkitTransform =
+				`translate3d(0,0,0) translate(${boundPathX}px, ${boundPathY}px)`;
 
 			this.boundingBullet.addEventListener('transitionend', this.boundingBullet.remove);
 			this.boundedBullets++;
 		}
 	}
 
-	/** TODO: utilites
-	 * Преобразование градусов в радианы
-	 *
-	 * @param  {Number} angle in degrees
-	 * @return {Number} angle in rads
-	 * @private
-	 */
-	_degreesToRads(angle) {
-		return angle * (Math.PI / 180);
-	}
+	// Получение координат для пуль
+	getBulletsMetrics() {
+		this._bulletFirePath = this.activeBullet.offsetTop - this.circle.offsetParent.offsetTop -
+			this.circle.clientHeight;
 
-	/** TODO: utilites
-	 * Скопировать элемент для рестарта анимации
-	 *
-	 * @private
-	 */
-	_replaceElement(el) {
-		const copy = el.cloneNode(true);
-		el.parentNode.replaceChild(copy, el);
-		return copy;
-	}
-
-	/** TODO: utilites
-	 * Найти CSS-правило для анимации
-	 *
-	 * @param {String} CSS rule name
-	 * @private
-	 */
-	_getKeyframesRule(rule) {
-		this._keyframes = [];
-		const ss = document.styleSheets;
-		for (let i = 0; i < ss.length; ++i) {
-			for (let j = 0; j < ss[i].cssRules.length; ++j) {
-				if (ss[i].cssRules[j].name === rule) {
-					this._keyframes.push(ss[i].cssRules[j]);
-				}
-			}
-		}
+		this._fireTransform = `translate3d(0,0,0) translate(-50%, -${this._bulletFirePath}px)`;
+		this.utils._keyframes.forEach((_keyframe) => {
+			_keyframe.deleteRule('100%');
+			_keyframe.appendRule(
+				`100% {
+					transform: ${this._fireTransform};
+					-webkit-transform: ${this._fireTransform};
+				}`);
+		});
 	}
 }

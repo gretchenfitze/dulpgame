@@ -30,8 +30,8 @@
 	height: 5vh;
 	-webkit-transform: translate3d(0,0,0) translate(-50%, -50%);
 					transform: translate3d(0,0,0) translate(-50%, -50%);
-	-webkit-animation-timing-function: linear;
-					animation-timing-function: linear;
+	-webkit-animation-timing-function: cubic-bezier(0,.27,.93,.87);
+					animation-timing-function: cubic-bezier(0,.27,.93,.87);
 					backface-visibility: hidden;
 	-webkit-backface-visibility: hidden;
 					perspective: 1000;
