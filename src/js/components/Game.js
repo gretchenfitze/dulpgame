@@ -32,6 +32,7 @@ export default class Game {
 		this.checkLocation();
 		this.interface.gameScreen.addEventListener('mousedown', this._fire.bind(this));
 		this.interface.gameScreen.addEventListener('touchstart', this._fire.bind(this));
+		this.clickable = true;
 	}
 
 	/**
@@ -175,10 +176,22 @@ export default class Game {
 	*/
 	_fire(event) {
 		event.preventDefault();
-		if (event.target.dataset.action !== 'pause') {
+		if ((event.target.dataset.action !== 'pause') && (this.clickable)) {
 			this.bullets.fire();
 			this.bullets.activeBullet.addEventListener('animationend', this._onHit.bind(this));
+			this.clickable = false;
+			this.clickableTimeout = setTimeout(this._makeClickable.bind(this), 300);
 		}
+	}
+
+	/**
+	 * Обработчик таймаута для предотвращения двойного клика
+	 *
+	 * @private
+	 */
+	_makeClickable() {
+		clearTimeout(this.clickableTimeout);
+		this.clickable = true;
 	}
 
 	/**
