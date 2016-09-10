@@ -115,6 +115,14 @@ button:focus {
 	box-shadow: 0 0 #C0526B;
 }
 
+.win-screen > p {
+	color: #8BC34A;
+	font-size: 5vh;
+	text-transform: uppercase;
+	width: 50vh;
+	margin: 5vh auto;
+}
+
 .lose-screen__tryagain {
 	background-color: #F9A825;
 	box-shadow: 0 1vh #F57F17;

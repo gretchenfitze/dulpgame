@@ -15,6 +15,8 @@ export default class Interface {
 		this.loseScreen = document.querySelector('.lose-screen');
 		this.levelsScreen = document.querySelector('.levels-screen');
 		this.levelItems = document.querySelector('.levels-screen__level-items');
+		this.winVerdict = document.querySelector('.win-screen__verdict');
+		this.winContinue = document.querySelector('.win-screen__continue');
 	}
 
 	/**

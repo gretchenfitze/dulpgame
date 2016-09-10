@@ -157,7 +157,17 @@ export default class Game {
 		if (!this.circle.el.children.length) {
 			this._resetLevel();
 			this.interface.showWinScreen();
+			if (this.congrats) {
+				this.congrats.remove();
+				this.interface.winScreen.insertBefore(this.interface.winVerdict,
+					this.interface.winContinue);
+			}
 			if (this.levelNumber >= this.numberOfPresetedLevels) {
+				this.congrats = document.createElement('p');
+				this.congrats.innerHTML = `You have passed all ${this.numberOfPresetedLevels} levels! <br>
+					Now you can play the game in the infinite mode.`;
+				this.interface.winScreen.insertBefore(this.congrats, this.interface.winContinue);
+				this.interface.winVerdict.remove();
 				this.levelNumber = '∞';
 				localStorage.setItem('levelNumber', '∞');
 			} else if (this.levelNumber !== '∞') {
