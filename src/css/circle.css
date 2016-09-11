@@ -6,11 +6,14 @@
 
 .game-screen__circle ul {
 	position: absolute;
+	top: -5vh;
+	left: -5vh;
 	overflow: hidden;
 	margin: 0;
 	padding: 0;
 	width: 100%;
 	height: 100%;
+	border: 5vh solid transparent;
 	border-radius: 50%;
 	list-style: none;
 	-webkit-transform: translate3d(0,0,0);
