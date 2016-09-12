@@ -8,8 +8,7 @@ export default class Bullets {
 	constructor(level, colors) {
 		this.utils = new Utilities();
 		this.level = level;
-		this.colors = colors;
-		this._shuffleBullets(this.colors);
+		this._shuffleBullets(colors);
 		this.el = document.querySelector('.js-bullets');
 		this.circle = document.querySelector('.js-circle');
 		this.bulletSpeedCorrection = 400;
@@ -84,58 +83,56 @@ export default class Bullets {
 
 	// Возможность пули отлетать после удара в сторону кручения круга
 	rebound() {
-		this.boundingBullet = this.activeBullet;
-		this.boundingBullet.style.animationName = this.boundingBullet.style.WebkitAnimationName =
+		const _boundingBullet = this.activeBullet;
+		_boundingBullet.style.transform = _boundingBullet.style.WebkitTransform =
+		this.fireTransform;
+		_boundingBullet.style.animationName = _boundingBullet.style.WebkitAnimationName =
 			'none';
-		this.boundingBullet.style.transform = this.boundingBullet.style.WebkitTransform =
-			this._fireTransform;
 
-		if (this.boundingBullet) {
-			this._distanceFromCircleToBottom = document.documentElement.clientHeight -
-			this.circle.offsetParent.offsetTop - this.circle.clientHeight;
+		const _distanceFromCircleToBottom = document.documentElement.clientHeight -
+		this.circle.offsetParent.offsetTop - this.circle.clientHeight;
 
-			const boundAngle = this.utils.degreesToRads(
-				this.utils.randomize(this.boundAngleMin, this.boundAngleMax));
+		const boundAngle = this.utils.degreesToRads(
+			this.utils.randomize(this.boundAngleMin, this.boundAngleMax));
 
-			const reboundPath = this._distanceFromCircleToBottom /
-				Math.sin(this.utils.degreesToRads(90) - boundAngle) * this.reboundPathCorrection;
+		const reboundPath = _distanceFromCircleToBottom /
+			Math.sin(this.utils.degreesToRads(90) - boundAngle) * this.reboundPathCorrection;
 
-			let boundPathX = -reboundPath * Math.sin(boundAngle);
-			const boundPathY = reboundPath * Math.cos(boundAngle);
+		let boundPathX = -reboundPath * Math.sin(boundAngle);
+		const boundPathY = reboundPath * Math.cos(boundAngle);
 
-			if (this.level.circleSpeed < 0) {
-				boundPathX = -boundPathX;
-			}
-			if ((this.level.reverse) && (this.boundedBullets % 2)) {
-				boundPathX = -boundPathX;
-			}
-
-			const reboundTransitionProperty = `transform ${this.reboundSpeedCorrection /
-				this.level.bulletSpeed * (reboundPath / this._bulletFirePath)}ms
-				cubic-bezier(.12,.07,.29,.74)`;
-			this.boundingBullet.style.transition = reboundTransitionProperty;
-			this.boundingBullet.style.WebkitTransition = `-webkit-${reboundTransitionProperty}`;
-
-			this.boundingBullet.style.transform = this.boundingBullet.style.WebkitTransform =
-				`translate3d(0,0,0) translate(${boundPathX}px, ${boundPathY}px)`;
-
-			this.boundingBullet.addEventListener('transitionend', this.boundingBullet.remove);
-			this.boundedBullets++;
+		if (this.level.circleSpeed < 0) {
+			boundPathX = -boundPathX;
 		}
+		if ((this.level.reverse) && (this.boundedBullets % 2)) {
+			boundPathX = -boundPathX;
+		}
+
+		const reboundTransitionProperty = `transform ${this.reboundSpeedCorrection /
+			this.level.bulletSpeed * (reboundPath / this._bulletFirePath)}ms
+			cubic-bezier(.12,.07,.29,.74)`;
+		_boundingBullet.style.transition = reboundTransitionProperty;
+		_boundingBullet.style.WebkitTransition = `-webkit-${reboundTransitionProperty}`;
+
+		_boundingBullet.style.transform = _boundingBullet.style.WebkitTransform =
+			`translate3d(0,0,0) translate(${boundPathX}px, ${boundPathY}px)`;
+
+		_boundingBullet.addEventListener('transitionend', _boundingBullet.remove);
+		this.boundedBullets++;
 	}
 
 	// Получение координат для пуль
 	getBulletsMetrics() {
-		this._bulletFirePath = this.activeBullet.offsetTop - this.circle.offsetParent.offsetTop -
+		this.bulletFirePath = this.activeBullet.offsetTop - this.circle.offsetParent.offsetTop -
 			this.circle.clientHeight;
 
-		this._fireTransform = `translate3d(0,0,0) translate(-50%, -${this._bulletFirePath}px)`;
-		this.utils._keyframes.forEach((_keyframe) => {
-			_keyframe.deleteRule('100%');
-			_keyframe.appendRule(
+		this.fireTransform = `translate3d(0,0,0) translate(-50%, -${this.bulletFirePath}px)`;
+		this.utils.keyframes.forEach((keyframe) => {
+			keyframe.deleteRule('100%');
+			keyframe.appendRule(
 				`100% {
-					transform: ${this._fireTransform};
-					-webkit-transform: ${this._fireTransform};
+					transform: ${this.fireTransform};
+					-webkit-transform: ${this.fireTransform};
 				}`);
 		});
 	}
@@ -145,16 +142,16 @@ export default class Bullets {
 		this.activeBullet.style.animationName = this.activeBullet.style.WebkitAnimationName =
 			'none';
 		this.activeBullet.style.transform = this.activeBullet.style.WebkitTransform =
-			this._fireTransform;
+			this.fireTransform;
 
-		this._circleSectorWidth = (this.circle.clientHeight -
+		const _circleSectorWidth = (this.circle.clientHeight -
 			this.circle.nextElementSibling.clientHeight) / 2;
 
 		const addedTransitionProperty = `transform ${(this.bulletSpeedCorrection /
-			this.level.bulletSpeed) * (this._circleSectorWidth / this._bulletFirePath)}ms`;
+			this.level.bulletSpeed) * (_circleSectorWidth / this.bulletFirePath)}ms`;
 		this.activeBullet.style.transition = addedTransitionProperty;
 		this.activeBullet.style.WebkitTransition = `-webkit-${addedTransitionProperty}`;
 		this.activeBullet.style.transform = this.activeBullet.style.WebkitTransform =
-			`translate3d(0,0,0) translate(-50%, -${this._bulletFirePath + this._circleSectorWidth}px)`;
+			`translate3d(0,0,0) translate(-50%, -${this.bulletFirePath + _circleSectorWidth}px)`;
 	}
 }

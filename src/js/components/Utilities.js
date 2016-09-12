@@ -18,7 +18,7 @@ export default class Utilities {
 	 * @return {Number|String}
 	 */
 	getLevelFromStorage() {
-		return localStorage.getItem('levelNumber');
+		return localStorage.getItem('levelNumber') || 1;
 	}
 
 	/**
@@ -44,12 +44,12 @@ export default class Utilities {
 	 * @param {String} CSS rule name
 	 */
 	getKeyframesRule(rule) {
-		this._keyframes = [];
+		this.keyframes = [];
 		const ss = document.styleSheets;
 		for (let i = 0; i < ss.length; ++i) {
 			for (let j = 0; j < ss[i].cssRules.length; ++j) {
 				if (ss[i].cssRules[j].name === rule) {
-					this._keyframes.push(ss[i].cssRules[j]);
+					this.keyframes.push(ss[i].cssRules[j]);
 				}
 			}
 		}

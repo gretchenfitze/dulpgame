@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"> <!-- manifest="./cache.manifest"> -->
+<html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<title>Dulp</title>
@@ -57,13 +57,14 @@
 
 	<div class="win-screen invisible">
 		<h2 class="win-screen__verdict">Level passed!</h2>
-		<button class="win-screen__continue" data-action="nextlevel">NEXT LEVEL</button>
+		<p class="win-screen__congrats invisible">You finished the game! Now you can continue in infinite mode</p>
+		<button class="win-screen__continue" data-action="continue">NEXT LEVEL</button>
 		<button class="win-screen__exit" data-action="exit">EXIT</button>
 	</div>
 
 	<div class="lose-screen invisible">
 		<h2 class="lose-screen__verdict">You lose!</h2>
-		<button class="lose-screen__tryagain" data-action="nextlevel">TRY AGAIN</button>
+		<button class="lose-screen__tryagain" data-action="continue">TRY AGAIN</button>
 		<button class="lose-screen__exit" data-action="exit">EXIT</button>
 	</div>
 

@@ -15,7 +15,8 @@ export default class Circle {
 		this.circleSpeedCorrection = 5;
 		this.fullCircleTime = Math.abs(1 / this.level.circleSpeed) * this.circleSpeedCorrection;
 		this.utils.getKeyframesRule('rotate-change-direction');
-		this._renderSlices();
+		this._renderCircle();
+		this.center.innerHTML = this.level.name;
 	}
 
 	/**
@@ -24,40 +25,31 @@ export default class Circle {
 	* @private
 	*/
 	_getSliceRotationDegrees() {
-		this._rotationDegs = [0];
-		this._rotationDeg = 0;
+		const _rotationDegs = [0];
+		let _rotationDeg = 0;
 		for (let i = 0; i < this.circleColors.length; i++) {
-			this._rotationDeg += +this.colorSlice[i];
-			this._rotationDegs.push(this._rotationDeg);
+			_rotationDeg += +this.colorSlice[i];
+			_rotationDegs.push(_rotationDeg);
 		}
+		return _rotationDegs;
 	}
 
 	/**
-	 * Отображение номера уровня в центре круга
+	 * Отрисовка круга
 	 *
 	 * @private
 	 */
-	_showLevelNumber() {
-		this.center.innerHTML = this.level.name;
-	}
-
-	/**
-	 * Отрисовка секторов круга
-	 *
-	 * @private
-	 */
-	_renderSlices() {
+	_renderCircle() {
 		this.el.parentNode.style.height = this.el.parentNode.style.width = `${this.level.size}vh`;
 		this.center.style.lineHeight = `${this.level.size * 4 / 5}vh`;
-		this._showLevelNumber();
-		this._getSliceRotationDegrees();
+		const rotationDegrees = this._getSliceRotationDegrees();
 		for (let i = 0; i < this.circleColors.length; i++) {
 			const newSector = document.createElement('li');
 			newSector.classList.add('game-screen__circle-sector');
 			newSector.style.background = this.circleColors[i];
 
 			newSector.style.transform = newSector.style.WebkitTransform = `
-				rotate(${this._rotationDegs[i]}deg)
+				rotate(${rotationDegrees[i]}deg)
 				skew(${89 - this.colorSlice[i]}deg)
 			`;
 			this.el.appendChild(newSector);
@@ -73,9 +65,9 @@ export default class Circle {
 	}
 
 	// Получение цвета сектора, находящегося в нижней точке круга
-	getHitSector() {
+	getHitSectorColor() {
 		this.hitSector = document.elementFromPoint(this.hitSectorXCoord, this.hitSectorYCoord);
-		this.hitSectorColor = this.hitSector.style.backgroundColor;
+		return this.hitSector.style.backgroundColor;
 	}
 
 	// Удаление сектора при попадании
@@ -93,35 +85,24 @@ export default class Circle {
 	* @private
 	*/
 	_toggleRotationDirection() {
-		this.pauseAnimation();
-		this._getRotationValues();
+		const rotationAngle = this._getRotationAngle();
 
 		if (this.el.style.animationDirection === 'reverse') {
 			this.el.style.animationDirection = this.el.style.WebkitAnimationDirection =
 				'normal';
-			this._changeKeyframesRule(this.rotatedAngle, 360, 360 - this.rotatedAngle);
+			this._changeKeyframesRule(rotationAngle, 360, 360 - rotationAngle);
 		} else {
 			this.el.style.animationDirection = this.el.style.WebkitAnimationDirection =
 				'reverse';
-			this._changeKeyframesRule(0, this.rotatedAngle, this.rotatedAngle);
+			this._changeKeyframesRule(0, rotationAngle, rotationAngle);
 		}
-		this.continueAnimation();
 	}
 
-	// Пауза анимации
-	pauseAnimation() {
-		this.el.style.animationPlayState = this.el.style.WebkitAnimationPlayState =
-		'paused';
-		this._getRotationValues();
-		this.el.classList.add('no-animation');
-		this.el.style.transform = this.el.style.WebkitTransform = `rotate(${this.rotatedAngle}deg)`;
-	}
-
-	// Продолжение анимации
-	continueAnimation() {
-		this.el.classList.remove('no-animation');
-		this.el.style.animationPlayState = this.el.style.WebkitAnimationPlayState =
-			'running';
+	// Остановка анимации
+	stopAnimation() {
+		this.el.style.transform = this.el.style.WebkitTransform =
+			`translate3d(0,0,0) rotate(${this._getRotationAngle()}deg)`;
+		this.el.style.animationName = this.el.style.WebkitAnimationName = 'none';
 	}
 
 	/**
@@ -129,17 +110,14 @@ export default class Circle {
 	*
 	* @private
 	*/
-	_getRotationValues() {
-		const tr = window.getComputedStyle(this.el).getPropertyValue('transform');
-		let values = tr.split('(')[1];
-		values = values.split(')')[0];
-		values = values.split(',');
-		const a = values[0];
-		const b = values[1];
-		this.rotatedAngle = Math.atan2(b, a) * (180 / Math.PI);
-		if (this.rotatedAngle < 0) {
-			this.rotatedAngle += 360;
+	_getRotationAngle() {
+		const _tr = window.getComputedStyle(this.el).getPropertyValue('transform');
+		const _values = _tr.split('(')[1].split(')')[0].split(',');
+		let _rotationAngle = Math.atan2(_values[1], _values[0]) * (180 / Math.PI);
+		if (_rotationAngle < 0) {
+			_rotationAngle += 360;
 		}
+		return _rotationAngle;
 	}
 
 	/**
@@ -147,21 +125,21 @@ export default class Circle {
 	 *
 	 * @param  {Number} ruleFromDegrees Начальная точка анимации в градусах поворота
 	 * @param  {Number} ruleToDegrees   Конечная точка анимации в градусах поворота
-	 * @param  {Number} timeIndex       Градусы поворота? оставшиеся до конца анимации
+	 * @param  {Number} timeIndex       Градусы поворота, оставшиеся до конца анимации
 	 * @private
 	 */
 	_changeKeyframesRule(ruleFromDegrees, ruleToDegrees, timeIndex) {
 		this.el = this.utils.replaceElement(this.el);
 
-		this.utils._keyframes.forEach((_keyframe) => {
-			_keyframe.deleteRule('0%');
-			_keyframe.deleteRule('100%');
-			_keyframe.appendRule(
+		this.utils.keyframes.forEach((keyframe) => {
+			keyframe.deleteRule('0%');
+			keyframe.deleteRule('100%');
+			keyframe.appendRule(
 				`0% {
 					transform: translate3d(0,0,0) rotate(${ruleFromDegrees}deg);
 					-webkit-transform: translate3d(0,0,0) rotate(${ruleFromDegrees}deg);
 				}`);
-			_keyframe.appendRule(
+			keyframe.appendRule(
 				`100% {
 					transform: translate3d(0,0,0) rotate(${ruleToDegrees}deg);
 					-webkit-transform: translate3d(0,0,0) rotate(${ruleToDegrees}deg);

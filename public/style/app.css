@@ -49,10 +49,16 @@ h2 {
 	overflow: hidden;
 	width: 100%;
 	height: 100%;
-	-webkit-transition: -webkit-filter 500ms linear 200ms;
-	transition: -webkit-filter 500ms linear 200ms;
-	transition: filter 500ms linear 200ms;
-	transition: filter 500ms linear 200ms, -webkit-filter 500ms linear 200ms;
+	-webkit-transition: -webkit-filter 500ms linear 50ms;
+	transition: -webkit-filter 500ms linear 50ms;
+	transition: filter 500ms linear 50ms;
+	transition: filter 500ms linear 50ms, -webkit-filter 500ms linear 50ms;
+	-webkit-transform: translate3d(0,0,0);
+					transform: translate3d(0,0,0);
+					backface-visibility: hidden;
+	-webkit-backface-visibility: hidden;
+				  perspective: 1000;
+  -webkit-perspective: 1000;
 }
 
 .game-screen.blur {
@@ -124,12 +130,12 @@ button:focus {
 	box-shadow: 0 0 #C0526B;
 }
 
-.win-screen > p {
-	margin: 5vh auto;
-	width: 50vh;
-	color: #8BC34A;
+.win-screen__congrats {
+	margin: 10vh auto;
+	width: 80vw;
+	color: #FF7043;
 	text-transform: uppercase;
-	font-size: 5vh;
+	font-size: 6vh;
 }
 
 .lose-screen__tryagain {
