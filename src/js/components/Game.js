@@ -32,7 +32,6 @@ export default class Game {
 		this.checkLocation();
 		this.interface.gameScreen.addEventListener('mousedown', this._fire.bind(this));
 		this.interface.gameScreen.addEventListener('touchstart', this._fire.bind(this));
-		this.clickable = true;
 	}
 
 	/**
@@ -124,6 +123,7 @@ export default class Game {
 			this.circle.el.innerHTML = '';
 			this.circle = null;
 		}
+		this._isFired = false;
 	}
 
 	/**
@@ -147,11 +147,17 @@ export default class Game {
 				this.bullets.fireToTheCircleCenter();
 			}
 			this.interface.gameScreen.classList.add('blur');
-			setTimeout(this._loser.bind(this), 800);
+			setTimeout(this._onLevelLose.bind(this), 800);
 		}
+		this._isFired = false;
 	}
 
-	_loser() {
+	/**
+	 * Обработка окончания проигранного уровня
+	 *
+	 * @private
+	 */
+	_onLevelLose() {
 		this._resetLevel();
 		this.interface.showLoseScreen();
 	}
@@ -194,22 +200,11 @@ export default class Game {
 	*/
 	_fire(event) {
 		event.preventDefault();
-		if ((event.target.dataset.action !== 'pause') && (this.clickable)) {
+		if ((event.target.dataset.action !== 'pause') && (!this._isFired)) {
+			this._isFired = true;
 			this.bullets.fire();
 			this.bullets.activeBullet.addEventListener('animationend', this._onHit.bind(this));
-			this.clickable = false;
-			this.clickableTimeout = setTimeout(this._makeClickable.bind(this), 300);
 		}
-	}
-
-	/**
-	 * Обработчик таймаута для предотвращения двойного клика
-	 *
-	 * @private
-	 */
-	_makeClickable() {
-		clearTimeout(this.clickableTimeout);
-		this.clickable = true;
 	}
 
 	/**
