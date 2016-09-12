@@ -2,14 +2,23 @@
 	position: absolute;
 	top: 88vh;
 	left: 50%;
+	display: -webkit-box;
+	display: -ms-flexbox;
 	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: flex-start;
+	    -ms-flex-direction: column;
+	        flex-direction: column;
+	        align-items: center;
+	        justify-content: flex-start;
 	margin: 0;
 	padding-left: 0;
 	-webkit-transform: translateX(-50%);
 	        transform: translateX(-50%);
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-webkit-box-align: center;
+	    -ms-flex-align: center;
+	-webkit-box-pack: start;
+	    -ms-flex-pack: start;
 }
 
 .game-screen__bullet {
@@ -32,6 +41,8 @@
 					transform: translate3d(0,0,0) translate(-50%, -50%);
 	-webkit-animation-timing-function: cubic-bezier(0,.27,.93,.87);
 					animation-timing-function: cubic-bezier(0,.27,.93,.87);
+					animation-fill-mode: forwards;
+	-webkit-animation-fill-mode: forwards;
 					backface-visibility: hidden;
 	-webkit-backface-visibility: hidden;
 					perspective: 1000;

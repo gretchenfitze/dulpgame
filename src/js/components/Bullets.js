@@ -61,9 +61,6 @@ export default class Bullets {
 	_makeActiveBullet() {
 		this.activeBullet = this.el.childNodes[0];
 		if (this.activeBullet) {
-			this.activeBullet.style.transition = 'none';
-			this.activeBullet.style.transform = this.activeBullet.style.WebkitTransform =
-				'translate3d(0,0,0) translate(-50%, -50%)';
 			this.activeBullet.classList.add('game-screen__bullet_active');
 			this.activeBulletColor = this.activeBullet.style.backgroundColor;
 			this.el.parentNode.insertBefore(this.activeBullet, this.el);
@@ -113,9 +110,11 @@ export default class Bullets {
 				boundPathX = -boundPathX;
 			}
 
-			this.boundingBullet.style.transition = `transform ${this.reboundSpeedCorrection /
+			const reboundTransitionProperty = `transform ${this.reboundSpeedCorrection /
 				this.level.bulletSpeed * (reboundPath / this._bulletFirePath)}ms
-			cubic-bezier(.12,.07,.29,.74)`;
+				cubic-bezier(.12,.07,.29,.74)`;
+			this.boundingBullet.style.transition = reboundTransitionProperty;
+			this.boundingBullet.style.WebkitTransition = `-webkit-${reboundTransitionProperty}`;
 
 			this.boundingBullet.style.transform = this.boundingBullet.style.WebkitTransform =
 				`translate3d(0,0,0) translate(${boundPathX}px, ${boundPathY}px)`;
@@ -139,5 +138,23 @@ export default class Bullets {
 					-webkit-transform: ${this._fireTransform};
 				}`);
 		});
+	}
+
+	// Полет пули до центрального элемента круга, если сектор попадания пуст
+	fireToTheCircleCenter() {
+		this.activeBullet.style.animationName = this.activeBullet.style.WebkitAnimationName =
+			'none';
+		this.activeBullet.style.transform = this.activeBullet.style.WebkitTransform =
+			this._fireTransform;
+
+		this._circleSectorWidth = (this.circle.clientHeight -
+			this.circle.nextElementSibling.clientHeight) / 2;
+
+		const addedTransitionProperty = `transform ${(this.bulletSpeedCorrection /
+			this.level.bulletSpeed) * (this._circleSectorWidth / this._bulletFirePath)}ms`;
+		this.activeBullet.style.transition = addedTransitionProperty;
+		this.activeBullet.style.WebkitTransition = `-webkit-${addedTransitionProperty}`;
+		this.activeBullet.style.transform = this.activeBullet.style.WebkitTransform =
+			`translate3d(0,0,0) translate(-50%, -${this._bulletFirePath + this._circleSectorWidth}px)`;
 	}
 }

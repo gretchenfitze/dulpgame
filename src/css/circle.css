@@ -95,3 +95,7 @@
     transform: translate3d(0,0,0) rotate(360deg);
   }
 }
+
+.no-animation {
+  -webkit-animation: none !important;
+}

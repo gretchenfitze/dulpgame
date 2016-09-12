@@ -49,6 +49,15 @@ h2 {
 	overflow: hidden;
 	width: 100%;
 	height: 100%;
+	-webkit-transition: -webkit-filter 500ms linear 200ms;
+	transition: -webkit-filter 500ms linear 200ms;
+	transition: filter 500ms linear 200ms;
+	transition: filter 500ms linear 200ms, -webkit-filter 500ms linear 200ms;
+}
+
+.game-screen.blur {
+	-webkit-filter: blur(3vh);
+	        filter: blur(3vh);
 }
 
 button {
@@ -116,11 +125,11 @@ button:focus {
 }
 
 .win-screen > p {
-	color: #8BC34A;
-	font-size: 5vh;
-	text-transform: uppercase;
-	width: 50vh;
 	margin: 5vh auto;
+	width: 50vh;
+	color: #8BC34A;
+	text-transform: uppercase;
+	font-size: 5vh;
 }
 
 .lose-screen__tryagain {
@@ -160,9 +169,14 @@ button:focus {
 
 
 .levels-screen__level-items {
+	display: -webkit-box;
+	display: -ms-flexbox;
 	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
+	-ms-flex-wrap: wrap;
+	    flex-wrap: wrap;
+	        justify-content: center;
+	-webkit-box-pack: center;
+	    -ms-flex-pack: center;
 }
 
 .levels-screen__level-item {

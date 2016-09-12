@@ -65,7 +65,6 @@ export default class Game {
 	 * @private
 	 */
 	_initRandomLevel() {
-		this._resetLevel();
 		this.levelNumber = '∞';
 		this.random.createRandomLevel();
 		this.level = {
@@ -106,6 +105,7 @@ export default class Game {
 	 * @private
 	 */
 	_resetLevel() {
+		this.interface.gameScreen.classList.remove('blur');
 		const lostBalls = document.querySelectorAll('.game-screen__bullet');
 		if (lostBalls) {
 			[].forEach.call(lostBalls, (ball) => {
@@ -121,7 +121,6 @@ export default class Game {
 			this.bullets = null;
 		}
 		if (this.circle) {
-			this.circle.pauseAnimation();
 			this.circle.el.innerHTML = '';
 			this.circle = null;
 		}
@@ -134,18 +133,27 @@ export default class Game {
 	 */
 	_onHit() {
 		this.bullets.activeBullet.removeEventListener('animationend', this._onHit.bind(this));
-		this.bullets.rebound();
 		this.circle.getHitSector();
 		if (this.circle.hitSectorColor === this.bullets.activeBulletColor) {
+			this.bullets.rebound();
 			this.circle.deleteHitSector();
 			this._levelPassed();
 			if (this.bullets) {
 				this.bullets.reset();
 			}
 		} else {
-			this._resetLevel();
-			this.interface.showLoseScreen();
+			this.circle.pauseAnimation();
+			if (!this.circle.hitSectorColor) {
+				this.bullets.fireToTheCircleCenter();
+			}
+			this.interface.gameScreen.classList.add('blur');
+			setTimeout(this._loser.bind(this), 800);
 		}
+	}
+
+	_loser() {
+		this._resetLevel();
+		this.interface.showLoseScreen();
 	}
 
 	/**
@@ -210,9 +218,9 @@ export default class Game {
 	 * @private
 	 */
 	_pauseGame() {
+		this.circle.pauseAnimation();
 		this._isPaused = true;
 		this.interface.showPauseScreen();
-		this.circle.pauseAnimation();
 	}
 
 	/**
@@ -337,11 +345,12 @@ export default class Game {
 		}
 	}
 
-
 	// Подсчет переменных, зависящих от размера экрана
 	getGameMetrics() {
-		this.circle.getCircleMetrics();
-		this.bullets.getBulletsMetrics();
+		if (!this.interface.gameScreen.classList.contains('invisible')) {
+			this.circle.getCircleMetrics();
+			this.bullets.getBulletsMetrics();
+		}
 	}
 
 }

@@ -94,7 +94,7 @@ export default class Circle {
 	*/
 	_toggleRotationDirection() {
 		this.pauseAnimation();
-		this._getRotationValuesForReverse();
+		this._getRotationValues();
 
 		if (this.el.style.animationDirection === 'reverse') {
 			this.el.style.animationDirection = this.el.style.WebkitAnimationDirection =
@@ -111,11 +111,15 @@ export default class Circle {
 	// Пауза анимации
 	pauseAnimation() {
 		this.el.style.animationPlayState = this.el.style.WebkitAnimationPlayState =
-			'paused';
+		'paused';
+		this._getRotationValues();
+		this.el.classList.add('no-animation');
+		this.el.style.transform = this.el.style.WebkitTransform = `rotate(${this.rotatedAngle}deg)`;
 	}
 
 	// Продолжение анимации
 	continueAnimation() {
+		this.el.classList.remove('no-animation');
 		this.el.style.animationPlayState = this.el.style.WebkitAnimationPlayState =
 			'running';
 	}
@@ -125,7 +129,7 @@ export default class Circle {
 	*
 	* @private
 	*/
-	_getRotationValuesForReverse() {
+	_getRotationValues() {
 		const tr = window.getComputedStyle(this.el).getPropertyValue('transform');
 		let values = tr.split('(')[1];
 		values = values.split(')')[0];
