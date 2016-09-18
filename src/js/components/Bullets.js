@@ -109,7 +109,7 @@ export default class Bullets {
 		}
 
 		const reboundTransitionProperty = `transform ${this.reboundSpeedCorrection /
-			this.level.bulletSpeed * (reboundPath / this._bulletFirePath)}ms
+			this.level.bulletSpeed * (reboundPath / this.bulletFirePath)}ms
 			cubic-bezier(.12,.07,.29,.74)`;
 		_boundingBullet.style.transition = reboundTransitionProperty;
 		_boundingBullet.style.WebkitTransition = `-webkit-${reboundTransitionProperty}`;
