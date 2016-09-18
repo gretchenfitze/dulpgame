@@ -16,6 +16,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "add-to-homescreen": "^3.2.6",
     "autoprefixer": "^6.4.0",
     "babel-core": "6.9.0",
     "babel-loader": "6.2.4",
@@ -30,7 +31,7 @@
     "eslint-plugin-react": "5.2.2",
     "eslint-plugin-standard": "1.3.2",
     "express": "^4.14.0",
-    "fastclick": "^1.0.6",
+    "json-loader": "^0.5.4",
     "postcss-loader": "^0.11.0",
     "style-loader": "0.13.1",
     "viewport-units-buggyfill": "^0.6.0",

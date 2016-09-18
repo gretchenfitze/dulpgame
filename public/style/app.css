@@ -14,7 +14,7 @@ body {
 	display: none !important;
 }
 
-.screen__start--game-name {
+.start-screen__name {
 	margin: 10vh auto;
 	color: #FF7043;
 	font-weight: normal;
@@ -26,21 +26,44 @@ h2 {
 	font-size: 10vh;
 }
 
-.screen__pause--verdict {
+.pause-screen__verdict {
 	color: #FFCA28;
 }
 
-.screen__win--verdict {
+.win-screen__verdict {
 	color: #8BC34A;
 }
 
-.screen__lose--verdict {
+.lose-screen__verdict {
 	color: #f44336;
 }
 
-.screen__levels--name {
+.levels-screen__name {
 	margin: 0 auto;
 	color: #9575CD;
+}
+
+.game-screen {
+	position: absolute;
+	top: 0;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	-webkit-transition: -webkit-filter 500ms linear 50ms;
+	transition: -webkit-filter 500ms linear 50ms;
+	transition: filter 500ms linear 50ms;
+	transition: filter 500ms linear 50ms, -webkit-filter 500ms linear 50ms;
+	-webkit-transform: translate3d(0,0,0);
+					transform: translate3d(0,0,0);
+					backface-visibility: hidden;
+	-webkit-backface-visibility: hidden;
+				  perspective: 1000;
+  -webkit-perspective: 1000;
+}
+
+.game-screen.blur {
+	-webkit-filter: blur(3vh);
+	        filter: blur(3vh);
 }
 
 button {
@@ -71,52 +94,60 @@ button:focus {
 	outline: none;
 }
 
-.btn__start {
+.start-screen__start {
 	background-color: #81C784;
 	box-shadow: 0 1vh #43A047;
 }
 
-.btn__start:hover {
+.start-screen__start:hover {
 	box-shadow: 0 0 #43A047;
 }
 
-.btn__continue {
+.start-screen__continue, .pause-screen__continue, .win-screen__continue {
 	background-color: #4FC3F7;
 	box-shadow: 0 1vh #039BE5;
 }
 
-.btn__continue:hover {
+.start-screen__continue:hover, .pause-screen__continue:hover, .win-screen__continue:hover {
 	box-shadow: 0 0 #039BE5;
 }
 
-.btn__levels {
+.start-screen__levels {
 	background-color: #9575CD;
 	box-shadow: 0 1vh #5E35B1;
 }
 
-.btn__levels:hover {
+.start-screen__levels:hover {
 	box-shadow: 0 0 #5E35B1;
 }
 
-.btn__exit {
+.pause-screen__exit, .win-screen__exit, .lose-screen__exit {
 	background-color: #E96781;
 	box-shadow: 0 1vh #C0526B;
 }
 
-.btn__exit:hover {
+.pause-screen__exit:hover, .win-screen__exit:hover, .lose-screen__exit:hover {
 	box-shadow: 0 0 #C0526B;
 }
 
-.btn__tryagain {
+.win-screen__congrats {
+	margin: 10vh auto;
+	width: 80vw;
+	color: #FF7043;
+	text-transform: uppercase;
+	font-size: 6vh;
+}
+
+.lose-screen__tryagain {
 	background-color: #F9A825;
 	box-shadow: 0 1vh #F57F17;
 }
 
-.btn__tryagain:hover {
+.lose-screen__tryagain:hover {
 	box-shadow: 0 0 #F57F17;
 }
 
-.screen__game--pause, .screen__levels--back {
+.game-screen__pause, .levels-screen__back {
 	position: absolute;
 	top: 1vh;
 	left: 1vh;
@@ -131,32 +162,30 @@ button:focus {
 	transition: none;
 }
 
-.screen__game--pause:hover, .screen__levels--back:hover {
+.game-screen__pause:hover, .levels-screen__back:hover {
 	margin: 0;
 	background: #e57373;
 	box-shadow: none;
 }
 
-.screen__game--pause img, .screen__levels--back img {
+.game-screen__pause img, .levels-screen__back img {
 	width: 4vh;
 	height: 4vh;
 }
 
-.screen__game {
-	position: absolute;
-	top: 0;
-	overflow: hidden;
-	width: 100%;
-	height: 100%;
-}
 
-.screen__levels--level-items {
+.levels-screen__level-items {
+	display: -webkit-box;
+	display: -ms-flexbox;
 	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
+	-ms-flex-wrap: wrap;
+	    flex-wrap: wrap;
+	        justify-content: center;
+	-webkit-box-pack: center;
+	    -ms-flex-pack: center;
 }
 
-.screen__levels--level-item {
+.levels-screen__level-item {
 	margin: 1vh;
 	width: 15vh;
 	border-width: 1vh;
@@ -169,26 +198,26 @@ button:focus {
 	cursor: pointer;
 }
 
-.screen__levels--level-item:nth-child(7n-6) {
+.levels-screen__level-item:nth-child(7n-6) {
 	background-color: #FF4136;
 }
 
-.screen__levels--level-item:nth-child(7n-5) {
+.levels-screen__level-item:nth-child(7n-5) {
 	background-color: #FF851B;
 }
 
-.screen__levels--level-item:nth-child(7n-4) {
+.levels-screen__level-item:nth-child(7n-4) {
 	background-color: #FFDC00;
 }
 
-.screen__levels--level-item:nth-child(7n-3) {
+.levels-screen__level-item:nth-child(7n-3) {
 	background-color: #2ECC40;
 }
 
-.screen__levels--level-item:nth-child(7n-2) {
+.levels-screen__level-item:nth-child(7n-2) {
 	background-color: #7FDBFF;
 }
 
-.screen__levels--level-item:nth-child(7n-1) {
+.levels-screen__level-item:nth-child(7n-1) {
 	background-color: #0074D9;
 }

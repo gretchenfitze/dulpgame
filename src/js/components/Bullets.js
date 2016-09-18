@@ -1,26 +1,24 @@
 import './../../css/bullets.css';
+import Utilities from './Utilities.js';
 
 /**
  * @class Bullets class
  */
 export default class Bullets {
 	constructor(level, colors) {
+		this.utils = new Utilities();
 		this.level = level;
-		this.colors = colors;
-		this._shuffleBullets(this.colors);
+		this._shuffleBullets(colors);
 		this.el = document.querySelector('.js-bullets');
 		this.circle = document.querySelector('.js-circle');
-		this.bulletPath = 0;
-		this.hit = false;
-		this._stepInterval = 1000 / 30;
-		this.bulletSpeedCorrection = 15;
-		this.reboundSpeedCorrection = 2;
+		this.bulletSpeedCorrection = 400;
+		this.reboundSpeedCorrection = 1000;
 		this.reboundPathCorrection = 4 / 3;
 		this.boundAngleMin = 15;
 		this.boundAngleMax = 40;
-		this.timingFunction = 0;
-		this.g = 9.80665 / (1000 * 1000);
 		this.boundedBullets = 0;
+		this._renderBullets();
+		this.utils.getKeyframesRule('hit');
 	}
 
 	/**
@@ -38,99 +36,122 @@ export default class Bullets {
 		}
 	}
 
-	// Отрисовка пуль
-	renderBullets() {
+	/**
+	 * Отрисовка пуль
+	 *
+	 * @private
+	 */
+	_renderBullets() {
 		const li = document.createElement('li');
-		li.classList.add('bullet');
+		li.classList.add('game-screen__bullet');
 		this.bulletColors.forEach(color => {
 			const newBullet = li.cloneNode();
 			newBullet.style.background = color;
 			this.el.appendChild(newBullet);
 		});
-		this.makeActiveBullet();
+		this._makeActiveBullet();
 	}
 
-	// Установка активной пули
-	makeActiveBullet() {
+	/**
+	 * Установка активной пули
+	 *
+	 * @private
+	 */
+	_makeActiveBullet() {
 		this.activeBullet = this.el.childNodes[0];
 		if (this.activeBullet) {
-			this.activeBullet.style.transform = 'translate(-50%)';
-			this.activeBullet.style.transition = 'none';
-			this.activeBullet.classList.add('bullet--active');
+			this.activeBullet.classList.add('game-screen__bullet_active');
 			this.activeBulletColor = this.activeBullet.style.backgroundColor;
 			this.el.parentNode.insertBefore(this.activeBullet, this.el);
 		}
 	}
 
-	// Движение пули для цикла игры с учетом ускорения свободного падения
-	update() {
-		this.fullPath = this.activeBullet.offsetTop - this.activeBullet.clientHeight -
-			this.circle.offsetTop - this.circle.clientHeight;
-		this.bulletStep = this.fullPath * this.level.bulletSpeed / this.bulletSpeedCorrection;
-		this.time = this.fullPath / this.bulletStep;
-		this.finalSpeed = this.bulletStep - this.g * this.time;
-		this.timingFunction += (this.bulletStep - this.finalSpeed) / this.time;
-		this.bulletPath += this.bulletStep - this.timingFunction;
+	// Пуск пули
+	fire() {
+		this.activeBullet.style.animationName = this.activeBullet.style.WebkitAnimationName =
+			'hit';
 
-		if (this.bulletPath >= this.fullPath) {
-			this.bulletPath = this.fullPath;
-			this.hit = true;
-		}
-		this.activeBullet.style.transform = `translate(-${this.activeBullet.clientHeight / 2}px,
-		-${this.bulletPath}px)`;
+		this.activeBullet.style.animationDuration = this.activeBullet.style.WebkitAnimationDuration =
+			`${this.bulletSpeedCorrection / this.level.bulletSpeed}ms`;
 	}
 
-	// Сброс настроек пуль после выстрела, присвоение новой пули статуса активной
+	// Перезарядка пули
 	reset() {
-		this.hit = false;
-		this.bulletPath = 0;
-		this.timingFunction = 0;
-		this.makeActiveBullet();
+		this._makeActiveBullet();
+		this.circle = document.querySelector('.js-circle');
 	}
 
 	// Возможность пули отлетать после удара в сторону кручения круга
 	rebound() {
-		this.boundingBullet = this.activeBullet;
-		if (this.boundingBullet) {
-			this.distanceFromCircleToBottom = document.documentElement.clientHeight -
-				this.circle.offsetTop - this.circle.clientHeight;
+		const _boundingBullet = this.activeBullet;
+		_boundingBullet.style.transform = _boundingBullet.style.WebkitTransform =
+		this.fireTransform;
+		_boundingBullet.style.animationName = _boundingBullet.style.WebkitAnimationName =
+			'none';
 
-			this.boundAngle = this._degreesToRads(this.boundAngleMin + Math.random() *
-				(this.boundAngleMax - this.boundAngleMin));
+		const _distanceFromCircleToBottom = document.documentElement.clientHeight -
+		this.circle.offsetParent.offsetTop - this.circle.clientHeight;
 
-			this.reboundPath = this.distanceFromCircleToBottom /
-				Math.sin(this._degreesToRads(90) - this.boundAngle) * this.reboundPathCorrection;
+		const boundAngle = this.utils.degreesToRads(
+			this.utils.randomize(this.boundAngleMin, this.boundAngleMax));
 
-			this.boundPathX = -this.reboundPath * Math.sin(this.boundAngle);
-			this.boundPathY = this.reboundPath * Math.cos(this.boundAngle);
+		const reboundPath = _distanceFromCircleToBottom /
+			Math.sin(this.utils.degreesToRads(90) - boundAngle) * this.reboundPathCorrection;
 
-			if (this.level.circleSpeed < 0) {
-				this.boundPathX = -this.boundPathX;
-			}
-			if ((this.level.reverse) && (this.boundedBullets % 2)) {
-				this.boundPathX = -this.boundPathX;
-			}
+		let boundPathX = -reboundPath * Math.sin(boundAngle);
+		const boundPathY = reboundPath * Math.cos(boundAngle);
 
-			this.boundingBullet.style.transition = `transform
-			${this.reboundPath / (this.bulletStep / this._stepInterval) * this.reboundSpeedCorrection}ms
-			cubic-bezier(.12,.07,.29,.74)`;
-
-			this.boundingBullet.style.transform = `translate(${this.boundPathX}px,
-				${this.boundPathY}px)`;
-
-			this.boundingBullet.addEventListener('transitionend', this.boundingBullet.remove);
-			this.boundedBullets++;
+		if (this.level.circleSpeed < 0) {
+			boundPathX = -boundPathX;
 		}
+		if ((this.level.reverse) && (this.boundedBullets % 2)) {
+			boundPathX = -boundPathX;
+		}
+
+		const reboundTransitionProperty = `transform ${this.reboundSpeedCorrection /
+			this.level.bulletSpeed * (reboundPath / this._bulletFirePath)}ms
+			cubic-bezier(.12,.07,.29,.74)`;
+		_boundingBullet.style.transition = reboundTransitionProperty;
+		_boundingBullet.style.WebkitTransition = `-webkit-${reboundTransitionProperty}`;
+
+		_boundingBullet.style.transform = _boundingBullet.style.WebkitTransform =
+			`translate3d(0,0,0) translate(${boundPathX}px, ${boundPathY}px)`;
+
+		_boundingBullet.addEventListener('transitionend', _boundingBullet.remove);
+		this.boundedBullets++;
 	}
 
-	/**
-	 * Преобразование градусов в радианы
-	 *
-	 * @param  {Number} angle in degrees
-	 * @return {Number} angle in rads
-	 * @private
-	 */
-	_degreesToRads(angle) {
-		return angle * (Math.PI / 180);
+	// Получение координат для пуль
+	getBulletsMetrics() {
+		this.bulletFirePath = this.activeBullet.offsetTop - this.circle.offsetParent.offsetTop -
+			this.circle.clientHeight;
+
+		this.fireTransform = `translate3d(0,0,0) translate(-50%, -${this.bulletFirePath}px)`;
+		this.utils.keyframes.forEach((keyframe) => {
+			keyframe.deleteRule('100%');
+			keyframe.appendRule(
+				`100% {
+					transform: ${this.fireTransform};
+					-webkit-transform: ${this.fireTransform};
+				}`);
+		});
+	}
+
+	// Полет пули до центрального элемента круга, если сектор попадания пуст
+	fireToTheCircleCenter() {
+		this.activeBullet.style.animationName = this.activeBullet.style.WebkitAnimationName =
+			'none';
+		this.activeBullet.style.transform = this.activeBullet.style.WebkitTransform =
+			this.fireTransform;
+
+		const _circleSectorWidth = (this.circle.clientHeight -
+			this.circle.nextElementSibling.clientHeight) / 2;
+
+		const addedTransitionProperty = `transform ${(this.bulletSpeedCorrection /
+			this.level.bulletSpeed) * (_circleSectorWidth / this.bulletFirePath)}ms`;
+		this.activeBullet.style.transition = addedTransitionProperty;
+		this.activeBullet.style.WebkitTransition = `-webkit-${addedTransitionProperty}`;
+		this.activeBullet.style.transform = this.activeBullet.style.WebkitTransform =
+			`translate3d(0,0,0) translate(-50%, -${this.bulletFirePath + _circleSectorWidth}px)`;
 	}
 }

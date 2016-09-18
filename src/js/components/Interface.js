@@ -1,80 +1,103 @@
+import Utilities from './Utilities.js';
+
 /**
 * @module UI module
 */
 export default class Interface {
 	constructor() {
-		this.startScreen = document.querySelector('.screen__start');
-		this.continueButton = this.startScreen.querySelector('.btn__continue');
+		this.utils = new Utilities();
+		this.startScreen = document.querySelector('.start-screen');
+		this.continueButton = this.startScreen.querySelector('.start-screen__continue');
 		this.isContinuable();
-		this.gameScreen = document.querySelector('.screen__game');
-		this.pauseScreen = document.querySelector('.screen__pause');
-		this.winScreen = document.querySelector('.screen__win');
-		this.loseScreen = document.querySelector('.screen__lose');
-		this.levelsScreen = document.querySelector('.screen__levels');
-		this.levelItems = document.querySelector('.screen__levels--level-items');
+		this.gameScreen = document.querySelector('.game-screen');
+		this.pauseScreen = document.querySelector('.pause-screen');
+		this.winScreen = document.querySelector('.win-screen');
+		this.loseScreen = document.querySelector('.lose-screen');
+		this.levelsScreen = document.querySelector('.levels-screen');
+		this.winVerdict = document.querySelector('.win-screen__verdict');
+		this.winContinue = document.querySelector('.win-screen__continue');
+		this.congrats = document.querySelector('.win-screen__congrats');
 	}
 
 	/**
+	 * Показать нужный экран и скрыть остальные экраны
+	 *
 	 * @param  {HTMLElement} element
-	 * @private
 	 */
-	_hideElement(element) {
-		element.classList.add('invisible');
-	}
-
-	/**
-	 * @param  {HTMLElement} element
-	 * @private
-	 */
-	_showElement(element) {
+	showScreen(element) {
+		for (let i = 0, l = document.body.children.length - 1; i < l; i++) {
+			document.body.children[i].classList.add('invisible');
+		}
 		element.classList.remove('invisible');
 	}
 
+	// Проверка, можно ли продолжить игру
 	isContinuable() {
-		if ((localStorage.getItem('levelNumber') === '∞') ||
-			(+localStorage.getItem('levelNumber') > 1)) {
-			this._showElement(this.continueButton);
+		if (this.utils.getLevelFromStorage() !== 1) {
+			this.continueButton.classList.remove('invisible');
 		} else {
-			this._hideElement(this.continueButton);
+			this.continueButton.classList.add('invisible');
 		}
 	}
 
-	showStartScreen() {
-		this._hideElement(this.gameScreen);
-		history.replaceState(null, null, '#');
-		this._showElement(this.startScreen);
-		this._hideElement(this.pauseScreen);
-		this._hideElement(this.loseScreen);
-		this._hideElement(this.winScreen);
-		this._hideElement(this.levelsScreen);
+	/**
+	 * Отрисовка экрана выбора уровней
+	 *
+	 * @param {Number} Preseted levels
+	 */
+	renderLevelsScreen(numberOfPresetedLevels) {
+		this.levelsToShow = [1];
+		const levelNumber = this.utils.getLevelFromStorage();
+		if (levelNumber === 'random') {
+			for (let i = 1; i < numberOfPresetedLevels; i++) {
+				this.levelsToShow.push(i + 1);
+			}
+			this.levelsToShow.push('∞');
+		} else {
+			for (let i = 1; i < levelNumber; i++) {
+				this.levelsToShow.push(i + 1);
+			}
+		}
+		this._renderLevelsScreenItems();
+		this.utils.changeUrl('#levels');
+		this.showScreen(this.levelsScreen);
 	}
 
-	showGameScreen() {
-		this._showElement(this.gameScreen);
-		this._hideElement(this.startScreen);
-		this._hideElement(this.levelsScreen);
-		this._hideElement(this.pauseScreen);
-		this._hideElement(this.loseScreen);
-		this._hideElement(this.winScreen);
+	/**
+	 * Создание элементов уровней на экране выбора уровней
+	 *
+	 * @private
+	 */
+	_renderLevelsScreenItems() {
+		const levelItems = document.querySelector('.levels-screen__level-items');
+		levelItems.innerHTML = '';
+		const levelToChose = document.createElement('div');
+		levelToChose.classList.add('levels-screen__level-item');
+		levelToChose.setAttribute('data-action', 'continue-chosen');
+		this.levelsToShow.forEach(level => {
+			const newLevelToChose = levelToChose.cloneNode();
+			newLevelToChose.innerHTML = level;
+			levelItems.appendChild(newLevelToChose);
+		});
 	}
 
-	showPauseScreen() {
-		this._hideElement(this.gameScreen);
-		this._showElement(this.pauseScreen);
+	// Выход в главное меню
+	exitToMainMenu() {
+		this.utils.changeUrl('#');
+		this.showScreen(this.startScreen);
+		this.isContinuable();
+	}
+
+	showCongratulations() {
+		this.congrats.classList.remove('invisible');
+		this.winVerdict.classList.add('invisible');
 	}
 
 	showWinScreen() {
-		this._hideElement(this.gameScreen);
-		this._showElement(this.winScreen);
-	}
-
-	showLoseScreen() {
-		this._hideElement(this.gameScreen);
-		this._showElement(this.loseScreen);
-	}
-
-	showLevelsScreen() {
-		this._hideElement(this.startScreen);
-		this._showElement(this.levelsScreen);
+		this.showScreen(this.winScreen);
+		if (!this.congrats.classList.contains('invisible')) {
+			this.congrats.classList.add('invisible');
+			this.winVerdict.classList.remove('invisible');
+		}
 	}
 }

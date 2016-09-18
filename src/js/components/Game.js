@@ -1,6 +1,9 @@
 import Circle from './Circle.js';
 import Interface from './Interface.js';
 import Bullets from './Bullets.js';
+import Utilities from './Utilities.js';
+import RandomLevel from './RandomLevel.js';
+import levels from '../../data/levels.json';
 
 /**
  * @class Game class with main loop
@@ -10,21 +13,24 @@ export default class Game {
 	 * @constructor
 	 */
 	constructor() {
+		this.utils = new Utilities();
 		this.interface = new Interface();
-		this._stepInterval = 1000 / 30;
 		this.gameColors = [
 			'#001f3f',
 			'#0074D9',
 			'#7FDBFF',
 			'#39CCCC',
 			'#3D9970',
-			'#2ECC40',
 			'#01FF70',
 			'#FFDC00',
 			'#FF851B',
 			'#FF4136',
 			'#F012BE',
 			'#B10DC9'];
+		this.numberOfPresetedLevels = Object.keys(levels).length;
+		this.checkLocation();
+		this.interface.gameScreen.addEventListener('mousedown', this._fire.bind(this));
+		this.interface.gameScreen.addEventListener('touchstart', this._fire.bind(this));
 	}
 
 	/**
@@ -33,23 +39,20 @@ export default class Game {
 	 * @param {Number} Level number
 	 * @private
 	 */
-	_initNewGame(level) {
+	_initNewGame(levelNumber) {
 		this._resetLevel();
-		if ((!this.levelNumber) || (this.levelNumber <= Object.keys(this.levels).length)) {
-			this.level = this.levels[level];
-		} else {
+		if (levelNumber === 'random') {
 			this._initRandomLevel();
+		} else {
+			this.level = levels[levelNumber];
 		}
-		this._shuffleColors(this.gameColors, this.level.colorSlice.length);
-		this.circle = new Circle(this.level, this.colors);
-		this.bullets = new Bullets(this.level, this.colors);
-		this._render();
+		const colors = this._shuffleColors(this.gameColors, this.level.colorSlice.length);
+		this.circle = new Circle(this.level, colors);
+		this.bullets = new Bullets(this.level, colors);
 		this._isPaused = false;
-		this._fire = false;
-		this.bullets.hit = false;
-		this._changeUrl(`#level/${this.levelNumber}`);
-		this.interface.showGameScreen();
-		this._gameLoopInterval = setInterval(this._gameLoop.bind(this), this._stepInterval);
+		this.utils.changeUrl(`#level/${levelNumber}`);
+		this.interface.showScreen(this.interface.gameScreen);
+		this.getGameMetrics();
 	}
 
 	/**
@@ -58,75 +61,15 @@ export default class Game {
 	 * @private
 	 */
 	_initRandomLevel() {
-		this._resetLevel();
-		this.minSlice = 15;
-		this.maxSlice = 150;
-		this.maxNumberOfSlices = 12;
-		this.levelNumber = '∞';
-		this.colorSliceRandom = [];
-		this.sumOfSlices = 0;
-		this._addRandomSlice();
-		while (this._sumOfSlices() <= 360) {
-			this._addRandomSlice();
-		}
-		this.colorSliceRandom.splice(-1, 1, this._lastSlice() - this._sumOfSlices() + 360);
-		if (this._lastSlice() < this.minSlice) {
-			this.colorSliceRandom.splice(-2, 2);
-			this.colorSliceRandom.push(360 - this._sumOfSlices());
-		}
-
-		if (this.colorSliceRandom.length > this.maxNumberOfSlices) {
-			this.colorSliceRandom.splice(this.maxNumberOfSlices - 1,
-				this.colorSliceRandom.length - this.maxNumberOfSlices + 1);
-			this.colorSliceRandom.push(360 - this._sumOfSlices());
-		}
-
-		this.minSpeed = 0.5;
-		this.maxSpeed = 5;
-		this.minSize = 20;
-		this.maxSize = 45;
-
-		this.speedRandom = this.minSpeed + Math.random() * (this.maxSpeed - this.minSpeed);
-		this.sizeRandom = this.minSize + Math.random() * (this.maxSize - this.minSize);
-		this.reverseRandom = Math.random() < 0.5;
+		const randomLevel = new RandomLevel();
 		this.level = {
 			name: '∞',
-			colorSlice: this.colorSliceRandom,
-			circleSpeed: this.speedRandom,
-			bulletSpeed: this.speedRandom,
-			size: this.sizeRandom,
-			reverse: this.reverseRandom,
+			colorSlice: randomLevel.colorSlice,
+			circleSpeed: randomLevel.speed,
+			bulletSpeed: Math.abs(randomLevel.speed),
+			size: randomLevel.size,
+			reverse: randomLevel.reverse,
 		};
-	}
-
-	/**
-	 * Добавление сектора для случайных уровней
-	 *
-	 * @private
-	 * @return {Number}
-	 */
-	_addRandomSlice() {
-		this.colorSliceRandom.push(this.minSlice + Math.random() * (this.maxSlice - this.minSlice));
-	}
-
-	/**
-	 * Определение размера последнего сектора для случайных уровней
-	 *
-	 * @private
-	 * @return {Number}
-	 */
-	_lastSlice() {
-		return this.colorSliceRandom[this.colorSliceRandom.length - 1];
-	}
-
-	/**
-	 * Подсчет суммы секторов для случайных уровней
-	 *
-	 * @private
-	 * @return {Number}
-	 */
-	_sumOfSlices() {
-		return this.colorSliceRandom.reduce((slice1, slice2) => slice1 + slice2);
 	}
 
 	/**
@@ -134,31 +77,24 @@ export default class Game {
 	 *
 	 * @param	{Array} colors used in the game
 	 * @param	{Number} number of circle slices for level
+	 * @private
+	 * @return {Array} colors for level
 	 */
 	_shuffleColors(gameColors, count) {
-		this.colors = gameColors.slice(0);
-		if (this.level.colorSlice.length > this.colors.length) {
-			this.colors = this.colors.concat(this.colors);
+		let colors = gameColors.slice(0);
+		if (this.level.colorSlice.length > colors.length) {
+			colors = colors.concat(colors);
 		}
-		let i = this.colors.length;
+		let i = colors.length;
 		const min = i - count;
 		while (i-- > min) {
 			const index = Math.floor((i + 1) * Math.random());
-			const temp = this.colors[index];
-			this.colors[index] = this.colors[i];
-			this.colors[i] = temp;
+			const temp = colors[index];
+			colors[index] = colors[i];
+			colors[i] = temp;
 		}
-		this.colors = this.colors.slice(min);
-	}
-
-	/**
-	 * Прорисовка игровых компонентов
-	 *
-	 * @private
-	 */
-	_render() {
-		this.circle.renderSlices();
-		this.bullets.renderBullets();
+		colors = colors.slice(min);
+		return colors;
 	}
 
 	/**
@@ -167,20 +103,22 @@ export default class Game {
 	 * @private
 	 */
 	_resetLevel() {
-		clearInterval(this._gameLoopInterval);
-		this.activeBall = document.querySelector('.bullet--active');
-		if (this.activeBall) {
-			this.activeBall.remove();
+		this.interface.gameScreen.classList.remove('blur');
+		const lostBalls = document.querySelectorAll('.game-screen__bullet');
+		if (lostBalls) {
+			[].forEach.call(lostBalls, (ball) => {
+				ball.remove();
+			});
 		}
 		if (this.bullets) {
-			if (this.bullets.boundingBullet) {
-				this.bullets.boundingBullet.removeEventListener('transitionend', this.bullets.removeBullet);
-			}
-			this.circle.el.innerHTML = '';
 			this.bullets.el.innerHTML = '';
-			this.circle = null;
 			this.bullets = null;
 		}
+		if (this.circle) {
+			this.circle.el.innerHTML = '';
+			this.circle = null;
+		}
+		this._isFired = false;
 	}
 
 	/**
@@ -189,37 +127,33 @@ export default class Game {
 	 * @private
 	 */
 	_onHit() {
-		this.bullets.rebound();
-		this.circle.getHitSector();
-		if (this.circle.hitSectorColor === this.bullets.activeBulletColor) {
-			this._fire = false;
+		this.bullets.activeBullet.removeEventListener('animationend', this._onHit.bind(this));
+		const hitSectorColor = this.circle.getHitSectorColor();
+		if (hitSectorColor === this.bullets.activeBulletColor) {
+			this.bullets.rebound();
 			this.circle.deleteHitSector();
-			this._levelPassed();
+			this._isLevelPassed();
 			if (this.bullets) {
 				this.bullets.reset();
 			}
 		} else {
-			this._resetLevel();
-			this.interface.showLoseScreen();
-			this._changeUrl(`#level/${this.levelNumber}/lose`);
+			this.circle.stopAnimation();
+			if (!hitSectorColor) {
+				this.bullets.fireToTheCircleCenter();
+			}
+			this.interface.gameScreen.classList.add('blur');
+			setTimeout(this._onLevelLose.bind(this), 500);
 		}
+		this._isFired = false;
 	}
 
 	/**
-	 * Основной игровой цикл
+	 * Обработка окончания проигранного уровня
 	 *
 	 * @private
 	 */
-	_gameLoop() {
-		if (!this._isPaused) {
-			this.circle.update();
-			if (this._fire) {
-				this.bullets.update();
-				if (this.bullets.hit) {
-					this._onHit();
-				}
-			}
-		}
+	_onLevelLose() {
+		this.interface.showScreen(this.interface.loseScreen);
 	}
 
 	/**
@@ -227,17 +161,17 @@ export default class Game {
 	 *
 	 * @private
 	 */
-	_levelPassed() {
+	_isLevelPassed() {
 		if (!this.circle.el.children.length) {
-			this._changeUrl(`#level/${this.levelNumber}/win`);
-			this._resetLevel();
+			let levelNumber = this.utils.getLevelFromStorage();
 			this.interface.showWinScreen();
-			if (this.levelNumber >= Object.keys(this.levels).length) {
-				this.levelNumber = '∞';
-				localStorage.setItem('levelNumber', '∞');
-			} else if (this.levelNumber !== '∞') {
-				this.levelNumber++;
-				localStorage.setItem('levelNumber', this.levelNumber);
+			if (levelNumber >= this.numberOfPresetedLevels) {
+				this.interface.showCongratulations();
+				levelNumber = 'random';
+				localStorage.setItem('levelNumber', 'random');
+			} else if (levelNumber !== 'random') {
+				levelNumber++;
+				localStorage.setItem('levelNumber', levelNumber);
 			}
 		}
 	}
@@ -246,23 +180,26 @@ export default class Game {
 	* Обработка клика для запуска пули
 	*
 	* @param	{Event} bullet fire event
+	* @private
 	* @return {Boolean}
 	*/
-	fire(event) {
+	_fire(event) {
 		event.preventDefault();
-		if (event.target.dataset.action !== 'pause') {
-			this._fire = true;
+		if ((event.target.dataset.action !== 'pause') && (!this._isFired)) {
+			this._isFired = true;
+			this.bullets.fire();
+			this.bullets.activeBullet.addEventListener('animationend', this._onHit.bind(this));
 		}
 	}
 
 	/**
-	 * Смена состояния адресной строки
+	 * Пауза игры
 	 *
-	 * @param {String} href
 	 * @private
 	 */
-	_changeUrl(href) {
-		history.replaceState(null, null, href);
+	_pauseGame() {
+		this._isPaused = true;
+		this.interface.showScreen(this.interface.pauseScreen);
 	}
 
 	/**
@@ -270,73 +207,35 @@ export default class Game {
 	 *
 	 * @param	{Event} click event
 	 */
-	onClick(event) {
+	initClickEvents(event) {
 		event.preventDefault();
+		let _levelNumber = this.utils.getLevelFromStorage();
 
 		switch (event.target.dataset.action) {
 		case 'newgame':
 			localStorage.clear();
-			this.levelNumber = 1;
-			this._initNewGame(this.levelNumber);
+			this._initNewGame(1);
 			break;
 		case 'continue':
-			this.levelNumber = this._getLevelFromStorage();
-			this._initNewGame(this.levelNumber);
-			this.interface.showGameScreen();
+			this._initNewGame(_levelNumber);
 			break;
 		case 'choose':
-			this.levelsToShow = [1];
-			switch (this._getLevelFromStorage()) {
-			case '∞':
-				for (let i = 1; i < Object.keys(this.levels).length; i++) {
-					this.levelsToShow.push(i + 1);
-				}
-				this.levelsToShow.push('∞');
-				break;
-			case null:
-				break;
-			default:
-				for (let i = 1; i < this._getLevelFromStorage(); i++) {
-					this.levelsToShow.push(i + 1);
-				}
-				break;
-			}
-			this.renderLevelsToChose();
-			this._changeUrl('#levels');
-			this.interface.showLevelsScreen();
+			this.interface.renderLevelsScreen(this.numberOfPresetedLevels);
 			break;
 		case 'continue-chosen':
-			this.levelNumber = event.target.textContent;
-			this._initNewGame(this.levelNumber);
-			this.interface.showGameScreen();
+			_levelNumber = event.target.textContent !== '∞' ? event.target.textContent : 'random';
+			localStorage.setItem('levelNumber', _levelNumber);
+			this._initNewGame(_levelNumber);
 			break;
 		case 'pause':
-			this._isPaused = true;
-			this._changeUrl(`#level/${this.levelNumber}/paused`);
-			this.interface.showPauseScreen();
+			this._pauseGame();
 			break;
 		case 'continue-pause':
 			this._isPaused = false;
-			this._changeUrl(`#level/${this.levelNumber}`);
-			this.interface.showGameScreen();
-			break;
-		case 'exit-win':
-			this._resetLevel();
-			this.interface.showStartScreen();
-			this.interface.isContinuable();
+			this.interface.showScreen(this.interface.gameScreen);
 			break;
 		case 'exit':
-			this._resetLevel();
-			this.interface.showStartScreen();
-			this.interface.isContinuable();
-			break;
-		case 'nextlevel':
-			this._initNewGame(this.levelNumber);
-			this.interface.showGameScreen();
-			break;
-		case 'tryagain':
-			this._initNewGame(this.levelNumber);
-			this.interface.showGameScreen();
+			this.interface.exitToMainMenu();
 			break;
 		default:
 			break;
@@ -346,35 +245,17 @@ export default class Game {
 	/**
 	 * Запуск уровня, соответствующего URL в адресной строке
 	 * Если уровень ещё не открыт - редирект на главную страницу
+	 *
+	 * @private
 	 */
 	checkLocation() {
-		this.levelHash = location.hash.split('/')[1];
-		if ((location.hash.indexOf('#level/') > -1) &&
-		((this._getLevelFromStorage()) &&
-		(this.levelHash <= this._getLevelFromStorage()) ||
-		(+this.levelHash === 1))) {
-			this.levelNumber = this.levelHash;
-			this._initNewGame(this.levelNumber);
-			this._isPaused = true;
-			this._changeUrl(`#level/${this.levelNumber}/paused`);
-			this.interface.showPauseScreen();
+		const _levelHash = location.hash.split('/')[1];
+		if ((location.hash.indexOf('level/') > -1) &&
+		(_levelHash <= this.utils.getLevelFromStorage())) {
+			this._initNewGame(_levelHash);
 		} else {
-			this._resetLevel();
-			this.interface.showStartScreen();
-			this.interface.isContinuable();
+			this.interface.exitToMainMenu();
 		}
-	}
-
-	renderLevelsToChose() {
-		this.interface.levelItems.innerHTML = '';
-		const levelToChose = document.createElement('div');
-		levelToChose.classList.add('screen__levels--level-item');
-		levelToChose.setAttribute('data-action', 'continue-chosen');
-		this.levelsToShow.forEach(level => {
-			const newLevelToChose = levelToChose.cloneNode();
-			newLevelToChose.innerHTML = level;
-			this.interface.levelItems.appendChild(newLevelToChose);
-		});
 	}
 
 	/**
@@ -386,12 +267,10 @@ export default class Game {
 		if (!this.interface.gameScreen.classList.contains('invisible')) {
 			switch (event.keyCode) {
 			case 27:
-				this._isPaused = true;
-				this._changeUrl(`#level/${this.levelNumber}/paused`);
-				this.interface.showPauseScreen();
+				this._pauseGame();
 				break;
 			case 32:
-				this._fire = true;
+				this.bullets.fire();
 				break;
 			default:
 				break;
@@ -399,13 +278,11 @@ export default class Game {
 		}
 	}
 
-	/**
-	 * Получить номер уровня из localStorage
-	 *
-	 * @private
-	 * @return {Number|String}
-	 */
-	_getLevelFromStorage() {
-		return localStorage.getItem('levelNumber');
+	// Подсчет переменных, зависящих от размера экрана
+	getGameMetrics() {
+		if (!this.interface.gameScreen.classList.contains('invisible')) {
+			this.circle.getCircleMetrics();
+			this.bullets.getBulletsMetrics();
+		}
 	}
 }

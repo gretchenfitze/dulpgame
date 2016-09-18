@@ -1,28 +1,17 @@
 import Game from './components/Game.js';
 import viewportUnitsBuggyfill from 'viewport-units-buggyfill';
-import fastclick from 'fastclick';
-import './../css/addtohomescreen.css';
+import 'add-to-homescreen/addtohomescreen.js';
+import 'add-to-homescreen/dist/style/addtohomescreen.css';
+
+window.addToHomescreen();
 
 if (window.navigator.userAgent.match(/iPad/i) || window.navigator.userAgent.match(/iPhone/i)) {
 	viewportUnitsBuggyfill.init();
-	fastclick.attach(document.body);
 }
 
-const xhr = new XMLHttpRequest();
-xhr.open('GET', '/data/levels.json', true);
-xhr.send();
-
-xhr.onreadystatechange = () => {
-	if (xhr.readyState !== 4) return;
-	if (xhr.status === 200) {
-		const game = new Game();
-		game.levels = JSON.parse(xhr.responseText);
-		game.checkLocation();
-		window.addEventListener('hashchange', game.checkLocation.bind(game));
-		document.body.addEventListener('click', game.onClick.bind(game));
-		game.interface.gameScreen.addEventListener('mousedown', game.fire.bind(game));
-		document.body.addEventListener('keydown', game.initKeyboardEvents.bind(game));
-	} else {
-		console.log(`${xhr.status}: ${xhr.statusText}`); // TODO: страница ошибки
-	}
-};
+const game = new Game();
+window.addEventListener('hashchange', game.checkLocation.bind(game));
+window.addEventListener('resize', game.getGameMetrics.bind(game));
+document.body.addEventListener('click', game.initClickEvents.bind(game));
+document.body.addEventListener('touchend', game.initClickEvents.bind(game));
+document.body.addEventListener('keydown', game.initKeyboardEvents.bind(game));
