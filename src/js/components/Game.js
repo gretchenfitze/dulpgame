@@ -52,7 +52,8 @@ export default class Game {
 		this._isPaused = false;
 		this.utils.changeUrl(`#level/${levelNumber}`);
 		this.interface.showScreen(this.interface.gameScreen);
-		this.getGameMetrics();
+		this.metricTimeout = setTimeout(this.getGameMetrics.bind(this),
+			this.interface.interfaceTimeout * 2);
 	}
 
 	/**
@@ -127,7 +128,6 @@ export default class Game {
 	 * @private
 	 */
 	_onHit() {
-		this.bullets.activeBullet.removeEventListener('animationend', this._onHit.bind(this));
 		const hitSectorColor = this.circle.getHitSectorColor();
 		if (hitSectorColor === this.bullets.activeBulletColor) {
 			this.bullets.rebound();
@@ -141,19 +141,9 @@ export default class Game {
 			if (!hitSectorColor) {
 				this.bullets.fireToTheCircleCenter();
 			}
-			this.interface.gameScreen.classList.add('blur');
-			setTimeout(this._onLevelLose.bind(this), 500);
+			this.interface.showScreen(this.interface.loseScreen);
 		}
 		this._isFired = false;
-	}
-
-	/**
-	 * Обработка окончания проигранного уровня
-	 *
-	 * @private
-	 */
-	_onLevelLose() {
-		this.interface.showScreen(this.interface.loseScreen);
 	}
 
 	/**
@@ -280,9 +270,8 @@ export default class Game {
 
 	// Подсчет переменных, зависящих от размера экрана
 	getGameMetrics() {
-		if (!this.interface.gameScreen.classList.contains('invisible')) {
-			this.circle.getCircleMetrics();
-			this.bullets.getBulletsMetrics();
-		}
+		this.circle.getCircleMetrics();
+		this.bullets.getBulletsMetrics();
+		clearTimeout(this.metricTimeout);
 	}
 }

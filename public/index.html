@@ -29,14 +29,14 @@
 </head>
 
 <body>
-	<div class="start-screen">
+	<div class="screen start-screen invisible">
 		<h1 class="start-screen__name">dulp</h1>
 		<button class="start-screen__continue invisible" data-action="continue">CONTINUE</button>
 		<button class="start-screen__start" data-action="newgame">NEW GAME</button>
 		<button class="start-screen__levels" data-action="choose">LEVELS</button>
 	</div>
 
-	<div class="game-screen invisible">
+	<div class="screen game-screen invisible">
 		<div class="game-screen__circle">
 			<ul class="js-circle"></ul>
 			<div class="game-screen__circle-center"></div>
@@ -49,26 +49,26 @@
 		</button>
 	</div>
 
-	<div class="pause-screen invisible">
+	<div class="screen pause-screen invisible">
 		<h2 class="pause-screen__verdict">Game paused</h2>
 		<button class="pause-screen__continue" data-action="continue-pause">CONTINUE</button>
 		<button class="pause-screen__exit" data-action="exit">EXIT</button>
 	</div>
 
-	<div class="win-screen invisible">
+	<div class="screen win-screen invisible">
 		<h2 class="win-screen__verdict">Level passed!</h2>
 		<p class="win-screen__congrats invisible">You finished the game! Now you can continue in infinite mode</p>
 		<button class="win-screen__continue" data-action="continue">NEXT LEVEL</button>
 		<button class="win-screen__exit" data-action="exit">EXIT</button>
 	</div>
 
-	<div class="lose-screen invisible">
+	<div class="screen lose-screen invisible">
 		<h2 class="lose-screen__verdict">You lose!</h2>
 		<button class="lose-screen__tryagain" data-action="continue">TRY AGAIN</button>
 		<button class="lose-screen__exit" data-action="exit">EXIT</button>
 	</div>
 
-	<div class="levels-screen invisible">
+	<div class="screen levels-screen invisible">
 		<h2 class="levels-screen__name">Choose<br>level</h2>
 		<div class="levels-screen__level-items"></div>
 		<button class="levels-screen__back" data-action="exit">

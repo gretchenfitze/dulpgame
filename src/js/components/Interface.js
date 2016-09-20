@@ -6,9 +6,10 @@ import Utilities from './Utilities.js';
 export default class Interface {
 	constructor() {
 		this.utils = new Utilities();
+		this.screens = document.querySelectorAll('.screen');
 		this.startScreen = document.querySelector('.start-screen');
 		this.continueButton = this.startScreen.querySelector('.start-screen__continue');
-		this.isContinuable();
+		this._isContinuable();
 		this.gameScreen = document.querySelector('.game-screen');
 		this.pauseScreen = document.querySelector('.pause-screen');
 		this.winScreen = document.querySelector('.win-screen');
@@ -17,6 +18,7 @@ export default class Interface {
 		this.winVerdict = document.querySelector('.win-screen__verdict');
 		this.winContinue = document.querySelector('.win-screen__continue');
 		this.congrats = document.querySelector('.win-screen__congrats');
+		this.interfaceTimeout = 200;
 	}
 
 	/**
@@ -25,18 +27,52 @@ export default class Interface {
 	 * @param  {HTMLElement} element
 	 */
 	showScreen(element) {
-		for (let i = 0, l = document.body.children.length - 1; i < l; i++) {
-			document.body.children[i].classList.add('invisible');
+		for (let i = 0; i < this.screens.length; i++) {
+			if ((this.screens[i] !== element) && (!this.screens[i].classList.contains('invisible'))) {
+				this.screens[i].classList.remove('blurin');
+				this.screens[i].classList.add('blurout');
+				this.hideTimeout = setTimeout(this._makeInvisible, this.interfaceTimeout, this.screens[i]);
+			}
+			this.showTimeout = setTimeout(this._makeVisible, this.interfaceTimeout, element);
 		}
-		element.classList.remove('invisible');
 	}
 
-	// Проверка, можно ли продолжить игру
-	isContinuable() {
-		if (this.utils.getLevelFromStorage() !== 1) {
-			this.continueButton.classList.remove('invisible');
-		} else {
+	/**
+	 * Скрыть элемент
+	 *
+	 * @param  {HTMLElement} element
+	 * @private
+	 */
+	_makeInvisible(element) {
+		element.classList.add('invisible');
+		element.removeEventListener('animationend', this._makeInvisible);
+		element.classList.remove('blurout');
+	}
+
+	/**
+	 * Показать элемент
+	 *
+	 * @param  {HTMLElement} element
+	 * @private
+	 */
+	_makeVisible(element) {
+		element.classList.remove('blurout');
+		element.classList.remove('invisible');
+		element.classList.add('blurin');
+		clearTimeout(this.hideTimeout);
+		clearTimeout(this.showTimeout);
+	}
+
+	/**
+	 * Проверка, можно ли продолжить игру
+	 *
+	 * @private
+	 */
+	_isContinuable() {
+		if (+this.utils.getLevelFromStorage() === 1) {
 			this.continueButton.classList.add('invisible');
+		} else {
+			this.continueButton.classList.remove('invisible');
 		}
 	}
 
@@ -85,14 +121,16 @@ export default class Interface {
 	exitToMainMenu() {
 		this.utils.changeUrl('#');
 		this.showScreen(this.startScreen);
-		this.isContinuable();
+		this._isContinuable();
 	}
 
+	// Показ сообщения об окончании уровней
 	showCongratulations() {
 		this.congrats.classList.remove('invisible');
 		this.winVerdict.classList.add('invisible');
 	}
 
+	// Показ экрана выигрыша
 	showWinScreen() {
 		this.showScreen(this.winScreen);
 		if (!this.congrats.classList.contains('invisible')) {
