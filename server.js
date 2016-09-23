@@ -16,7 +16,7 @@ app.use(express.static(publicPath));
 
 app.all('/db/*', function (req, res) {
   proxy.web(req, res, {
-    target: 'http://salty-caverns-61223.herokuapp.com/'
+    target: 'http://dulpgame.herokuapp.com/'
   });
 });
 
