@@ -42,6 +42,7 @@ export default class Circle {
 	_renderCircle() {
 		this.el.parentNode.style.height = this.el.parentNode.style.width = `${this.level.size}vh`;
 		this.center.style.lineHeight = `${this.level.size * 4 / 5}vh`;
+
 		const rotationDegrees = this._getSliceRotationDegrees();
 		for (let i = 0; i < this.circleColors.length; i++) {
 			const newSector = document.createElement('li');
@@ -54,13 +55,9 @@ export default class Circle {
 			`;
 			this.el.appendChild(newSector);
 		}
-		if (this.level.circleSpeed < 0) {
-			this.el.style.animationDirection = 'reverse';
-		} else {
-			this.el.style.animationDirection = 'normal';
-		}
-		this.el.style.WebkitAnimationDirection = this.el.style.animationDirection;
 
+		this.el.style.animationDirection = this.el.style.WebkitAnimationDirection =
+			this.level.circleSpeed < 0 ? 'reverse' : 'normal';
 		this._resetAnimation();
 	}
 
@@ -85,16 +82,16 @@ export default class Circle {
 	* @private
 	*/
 	_toggleRotationDirection() {
-		const rotationAngle = this._getRotationAngle();
+		const _rotationAngle = this._getRotationAngle();
 
 		if (this.el.style.animationDirection === 'reverse') {
 			this.el.style.animationDirection = this.el.style.WebkitAnimationDirection =
 				'normal';
-			this._changeKeyframesRule(rotationAngle, 360, 360 - rotationAngle);
+			this._changeKeyframesRule(_rotationAngle, 360, 360 - _rotationAngle);
 		} else {
 			this.el.style.animationDirection = this.el.style.WebkitAnimationDirection =
 				'reverse';
-			this._changeKeyframesRule(0, rotationAngle, rotationAngle);
+			this._changeKeyframesRule(0, _rotationAngle, _rotationAngle);
 		}
 	}
 

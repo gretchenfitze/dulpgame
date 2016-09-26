@@ -46,10 +46,9 @@ export default class Game {
 		} else {
 			this.level = levels[levelNumber];
 		}
-		const colors = this._shuffleColors(this.gameColors, this.level.colorSlice.length);
-		this.circle = new Circle(this.level, colors);
-		this.bullets = new Bullets(this.level, colors);
-		this._isPaused = false;
+		const _colors = this._shuffleColors(this.gameColors, this.level.colorSlice.length);
+		this.circle = new Circle(this.level, _colors);
+		this.bullets = new Bullets(this.level, _colors);
 		this.utils.changeUrl(`#level/${levelNumber}`);
 		this.interface.showScreen(this.interface.gameScreen);
 		this.metricTimeout = setTimeout(this.getGameMetrics.bind(this),
@@ -62,14 +61,14 @@ export default class Game {
 	 * @private
 	 */
 	_initRandomLevel() {
-		const randomLevel = new RandomLevel();
+		const _randomLevel = new RandomLevel();
 		this.level = {
 			name: '∞',
-			colorSlice: randomLevel.colorSlice,
-			circleSpeed: randomLevel.speed,
-			bulletSpeed: Math.abs(randomLevel.speed),
-			size: randomLevel.size,
-			reverse: randomLevel.reverse,
+			colorSlice: _randomLevel.colorSlice,
+			circleSpeed: _randomLevel.speed,
+			bulletSpeed: Math.abs(_randomLevel.speed),
+			size: _randomLevel.size,
+			reverse: _randomLevel.reverse,
 		};
 	}
 
@@ -105,9 +104,9 @@ export default class Game {
 	 */
 	_resetLevel() {
 		this.interface.gameScreen.classList.remove('blur');
-		const lostBalls = document.querySelectorAll('.game-screen__bullet');
-		if (lostBalls) {
-			[].forEach.call(lostBalls, (ball) => {
+		const _lostBalls = document.querySelectorAll('.game-screen__bullet');
+		if (_lostBalls) {
+			[].forEach.call(_lostBalls, (ball) => {
 				ball.remove();
 			});
 		}
@@ -128,8 +127,8 @@ export default class Game {
 	 * @private
 	 */
 	_onHit() {
-		const hitSectorColor = this.circle.getHitSectorColor();
-		if (hitSectorColor === this.bullets.activeBulletColor) {
+		const _hitSectorColor = this.circle.getHitSectorColor();
+		if (_hitSectorColor === this.bullets.activeBulletColor) {
 			this.bullets.rebound();
 			this.circle.deleteHitSector();
 			this._isLevelPassed();
@@ -138,7 +137,7 @@ export default class Game {
 			}
 		} else {
 			this.circle.stopAnimation();
-			if (!hitSectorColor) {
+			if (!_hitSectorColor) {
 				this.bullets.fireToTheCircleCenter();
 			}
 			this.interface.showScreen(this.interface.loseScreen);
@@ -183,16 +182,6 @@ export default class Game {
 	}
 
 	/**
-	 * Пауза игры
-	 *
-	 * @private
-	 */
-	_pauseGame() {
-		this._isPaused = true;
-		this.interface.showScreen(this.interface.pauseScreen);
-	}
-
-	/**
 	 * Обработка событий клика по кнопкам меню
 	 *
 	 * @param	{Event} click event
@@ -218,10 +207,9 @@ export default class Game {
 			this._initNewGame(_levelNumber);
 			break;
 		case 'pause':
-			this._pauseGame();
+			this.interface.showScreen(this.interface.pauseScreen);
 			break;
 		case 'continue-pause':
-			this._isPaused = false;
 			this.interface.showScreen(this.interface.gameScreen);
 			break;
 		case 'exit':
@@ -257,7 +245,7 @@ export default class Game {
 		if (!this.interface.gameScreen.classList.contains('invisible')) {
 			switch (event.keyCode) {
 			case 27:
-				this._pauseGame();
+				this.interface.showScreen(this.interface.pauseScreen);
 				break;
 			case 32:
 				this.bullets.fire();
@@ -270,8 +258,10 @@ export default class Game {
 
 	// Подсчет переменных, зависящих от размера экрана
 	getGameMetrics() {
-		this.circle.getCircleMetrics();
-		this.bullets.getBulletsMetrics();
-		clearTimeout(this.metricTimeout);
+		if (!this.interface.gameScreen.classList.contains('invisible')) {
+			this.circle.getCircleMetrics();
+			this.bullets.getBulletsMetrics();
+			clearTimeout(this.metricTimeout);
+		}
 	}
 }

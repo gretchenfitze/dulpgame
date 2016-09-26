@@ -44,11 +44,13 @@ export default class Bullets {
 	_renderBullets() {
 		const li = document.createElement('li');
 		li.classList.add('game-screen__bullet');
+
 		this.bulletColors.forEach(color => {
 			const newBullet = li.cloneNode();
 			newBullet.style.background = color;
 			this.el.appendChild(newBullet);
 		});
+
 		this._makeActiveBullet();
 	}
 
@@ -89,13 +91,10 @@ export default class Bullets {
 		_boundingBullet.style.animationName = _boundingBullet.style.WebkitAnimationName =
 			'none';
 
-		const _distanceFromCircleToBottom = document.documentElement.clientHeight -
-		this.circle.offsetParent.offsetTop - this.circle.clientHeight;
-
 		const boundAngle = this.utils.degreesToRads(
 			this.utils.randomize(this.boundAngleMin, this.boundAngleMax));
 
-		const reboundPath = _distanceFromCircleToBottom /
+		const reboundPath = (document.documentElement.clientHeight - this.impactPoint) /
 			Math.sin(this.utils.degreesToRads(90) - boundAngle) * this.reboundPathCorrection;
 
 		let boundPathX = -reboundPath * Math.sin(boundAngle);
@@ -123,9 +122,8 @@ export default class Bullets {
 
 	// Получение координат для пуль
 	getBulletsMetrics() {
-		this.bulletFirePath = this.activeBullet.offsetTop - this.circle.offsetParent.offsetTop -
-			this.circle.clientHeight;
-
+		this.impactPoint = this.circle.offsetParent.offsetTop + this.circle.clientHeight;
+		this.bulletFirePath = this.activeBullet.offsetTop - this.impactPoint;
 		this.fireTransform = `translate3d(0,0,0) translate(-50%, -${this.bulletFirePath}px)`;
 		this.utils.keyframes.forEach((keyframe) => {
 			keyframe.deleteRule('100%');
@@ -147,10 +145,10 @@ export default class Bullets {
 		const _circleSectorWidth = (this.circle.clientHeight -
 			this.circle.nextElementSibling.clientHeight) / 2;
 
-		const addedTransitionProperty = `transform ${(this.bulletSpeedCorrection /
+		const _addedTransitionProperty = `transform ${(this.bulletSpeedCorrection /
 			this.level.bulletSpeed) * (_circleSectorWidth / this.bulletFirePath)}ms`;
-		this.activeBullet.style.transition = addedTransitionProperty;
-		this.activeBullet.style.WebkitTransition = `-webkit-${addedTransitionProperty}`;
+		this.activeBullet.style.transition = _addedTransitionProperty;
+		this.activeBullet.style.WebkitTransition = `-webkit-${_addedTransitionProperty}`;
 		this.activeBullet.style.transform = this.activeBullet.style.WebkitTransform =
 			`translate3d(0,0,0) translate(-50%, -${this.bulletFirePath + _circleSectorWidth}px)`;
 	}
