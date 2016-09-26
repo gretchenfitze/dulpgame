@@ -64,7 +64,9 @@ export default class Circle {
 	// Получение цвета сектора, находящегося в нижней точке круга
 	getHitSectorColor() {
 		this.hitSector = document.elementFromPoint(this.hitSectorXCoord, this.hitSectorYCoord);
-		return this.hitSector.style.backgroundColor;
+		const hitSectorColor = this.hitSector.classList.contains('game-screen__circle-sector') ?
+		this.hitSector.style.backgroundColor : false;
+		return hitSectorColor;
 	}
 
 	// Удаление сектора при попадании
@@ -98,7 +100,7 @@ export default class Circle {
 	// Остановка анимации
 	stopAnimation() {
 		this.el.style.transform = this.el.style.WebkitTransform =
-			`translate3d(0,0,0) rotate(${this._getRotationAngle()}deg)`;
+			`translateZ(0) translate3d(0,0,0) rotate(${this._getRotationAngle()}deg)`;
 		this.el.style.animationName = this.el.style.WebkitAnimationName = 'none';
 	}
 
@@ -133,13 +135,13 @@ export default class Circle {
 			keyframe.deleteRule('100%');
 			keyframe.appendRule(
 				`0% {
-					transform: translate3d(0,0,0) rotate(${ruleFromDegrees}deg);
-					-webkit-transform: translate3d(0,0,0) rotate(${ruleFromDegrees}deg);
+					transform: translateZ(0) translate3d(0,0,0) rotate(${ruleFromDegrees}deg);
+					-webkit-transform: translateZ(0) translate3d(0,0,0) rotate(${ruleFromDegrees}deg);
 				}`);
 			keyframe.appendRule(
 				`100% {
-					transform: translate3d(0,0,0) rotate(${ruleToDegrees}deg);
-					-webkit-transform: translate3d(0,0,0) rotate(${ruleToDegrees}deg);
+					transform: translateZ(0) translate3d(0,0,0) rotate(${ruleToDegrees}deg);
+					-webkit-transform: translateZ(0) translate3d(0,0,0) rotate(${ruleToDegrees}deg);
 				}`);
 		});
 
@@ -176,8 +178,7 @@ export default class Circle {
 
 	// Получение координат для круга
 	getCircleMetrics() {
-		this.hitSectorXCoord = Math.max(document.documentElement.clientWidth,
-			window.innerWidth || 0) / 2;
+		this.hitSectorXCoord = document.documentElement.clientWidth / 2;
 		this.hitSectorYCoord = this.el.offsetParent.offsetTop + this.el.clientHeight -
 			(this.el.clientHeight - this.center.clientHeight) / 4;
 	}

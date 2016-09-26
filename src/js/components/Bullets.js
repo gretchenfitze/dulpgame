@@ -12,13 +12,11 @@ export default class Bullets {
 		this.el = document.querySelector('.js-bullets');
 		this.circle = document.querySelector('.js-circle');
 		this.bulletSpeedCorrection = 400;
-		this.reboundSpeedCorrection = 1000;
 		this.reboundPathCorrection = 4 / 3;
 		this.boundAngleMin = 15;
 		this.boundAngleMax = 40;
 		this.boundedBullets = 0;
 		this._renderBullets();
-		this.utils.getKeyframesRule('hit');
 	}
 
 	/**
@@ -70,11 +68,9 @@ export default class Bullets {
 
 	// Пуск пули
 	fire() {
-		this.activeBullet.style.animationName = this.activeBullet.style.WebkitAnimationName =
-			'hit';
-
-		this.activeBullet.style.animationDuration = this.activeBullet.style.WebkitAnimationDuration =
-			`${this.bulletSpeedCorrection / this.level.bulletSpeed}ms`;
+		this.activeBullet.style.transition = this.activeBullet.style.WebkitTransition =
+			`top ${this.fireTime}ms linear`;
+		this.activeBullet.style.top = `${this.collosionCoordinateY}px`;
 	}
 
 	// Перезарядка пули
@@ -85,16 +81,14 @@ export default class Bullets {
 
 	// Возможность пули отлетать после удара в сторону кручения круга
 	rebound() {
-		const _boundingBullet = this.activeBullet;
-		_boundingBullet.style.transform = _boundingBullet.style.WebkitTransform =
-		this.fireTransform;
-		_boundingBullet.style.animationName = _boundingBullet.style.WebkitAnimationName =
-			'none';
+		const _boundingBullet = this.utils.replaceElement(this.activeBullet);
 
 		const boundAngle = this.utils.degreesToRads(
 			this.utils.randomize(this.boundAngleMin, this.boundAngleMax));
+		const distanceFromCircleToBottom = document.documentElement.clientHeight -
+			this.collosionCoordinateY;
 
-		const reboundPath = (document.documentElement.clientHeight - this.impactPoint) /
+		const reboundPath = distanceFromCircleToBottom /
 			Math.sin(this.utils.degreesToRads(90) - boundAngle) * this.reboundPathCorrection;
 
 		let boundPathX = -reboundPath * Math.sin(boundAngle);
@@ -106,15 +100,13 @@ export default class Bullets {
 		if ((this.level.reverse) && (this.boundedBullets % 2)) {
 			boundPathX = -boundPathX;
 		}
-
-		const reboundTransitionProperty = `transform ${this.reboundSpeedCorrection /
-			this.level.bulletSpeed * (reboundPath / this.bulletFirePath)}ms
-			cubic-bezier(.12,.07,.29,.74)`;
+		const reboundTransitionProperty = `transform ${this.fireTime * (reboundPath /
+			this.firePath)}ms cubic-bezier(.6,.52,.46,.93)`;
 		_boundingBullet.style.transition = reboundTransitionProperty;
 		_boundingBullet.style.WebkitTransition = `-webkit-${reboundTransitionProperty}`;
 
 		_boundingBullet.style.transform = _boundingBullet.style.WebkitTransform =
-			`translate3d(0,0,0) translate(${boundPathX}px, ${boundPathY}px)`;
+			`translateZ(0) translate3d(0,0,0) translate(${boundPathX}px, ${boundPathY}px)`;
 
 		_boundingBullet.addEventListener('transitionend', _boundingBullet.remove);
 		this.boundedBullets++;
@@ -122,34 +114,19 @@ export default class Bullets {
 
 	// Получение координат для пуль
 	getBulletsMetrics() {
-		this.impactPoint = this.circle.offsetParent.offsetTop + this.circle.clientHeight;
-		this.bulletFirePath = this.activeBullet.offsetTop - this.impactPoint;
-		this.fireTransform = `translate3d(0,0,0) translate(-50%, -${this.bulletFirePath}px)`;
-		this.utils.keyframes.forEach((keyframe) => {
-			keyframe.deleteRule('100%');
-			keyframe.appendRule(
-				`100% {
-					transform: ${this.fireTransform};
-					-webkit-transform: ${this.fireTransform};
-				}`);
-		});
+		this.collosionCoordinateY = this.circle.offsetParent.offsetTop + this.circle.clientHeight;
+		this.fireTime = this.bulletSpeedCorrection / this.level.bulletSpeed;
+		this.firePath = this.activeBullet.offsetTop - this.collosionCoordinateY;
 	}
 
 	// Полет пули до центрального элемента круга, если сектор попадания пуст
 	fireToTheCircleCenter() {
-		this.activeBullet.style.animationName = this.activeBullet.style.WebkitAnimationName =
-			'none';
-		this.activeBullet.style.transform = this.activeBullet.style.WebkitTransform =
-			this.fireTransform;
-
 		const _circleSectorWidth = (this.circle.clientHeight -
 			this.circle.nextElementSibling.clientHeight) / 2;
 
-		const _addedTransitionProperty = `transform ${(this.bulletSpeedCorrection /
-			this.level.bulletSpeed) * (_circleSectorWidth / this.bulletFirePath)}ms`;
-		this.activeBullet.style.transition = _addedTransitionProperty;
-		this.activeBullet.style.WebkitTransition = `-webkit-${_addedTransitionProperty}`;
-		this.activeBullet.style.transform = this.activeBullet.style.WebkitTransform =
-			`translate3d(0,0,0) translate(-50%, -${this.bulletFirePath + _circleSectorWidth}px)`;
+		this.activeBullet.style.transition = this.activeBullet.style.WebkitTransition =
+			`top ${this.fireTime * (_circleSectorWidth / this.collosionCoordinateY)}ms linear`;
+
+		this.activeBullet.style.top = `${this.collosionCoordinateY - _circleSectorWidth}px`;
 	}
 }

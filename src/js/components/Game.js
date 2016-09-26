@@ -177,7 +177,7 @@ export default class Game {
 		if ((event.target.dataset.action !== 'pause') && (!this._isFired)) {
 			this._isFired = true;
 			this.bullets.fire();
-			this.bullets.activeBullet.addEventListener('animationend', this._onHit.bind(this));
+			this.bullets.activeBullet.addEventListener('transitionend', this._onHit.bind(this));
 		}
 	}
 

@@ -32,41 +32,15 @@
 
 .game-screen__bullet.game-screen__bullet_active {
 	position: absolute;
-	top: 84vh;
-	left: 50%;
+	top: calc(84vh - 5vh / 2);
+	left: calc(50% - 5vh / 2);
 	margin: 0 1vh 1vh 0;
 	width: 5vh;
 	height: 5vh;
-	-webkit-transform: translate3d(0,0,0) translate(-50%, -50%);
-					transform: translate3d(0,0,0) translate(-50%, -50%);
-	-webkit-animation-timing-function: cubic-bezier(0,.27,.93,.87);
-					animation-timing-function: cubic-bezier(0,.27,.93,.87);
-					animation-fill-mode: forwards;
-	-webkit-animation-fill-mode: forwards;
+	-webkit-transform: translateZ(0) translate3d(0,0,0);
+					transform: translateZ(0) translate3d(0,0,0);
 					backface-visibility: hidden;
 	-webkit-backface-visibility: hidden;
 					perspective: 1000;
 	-webkit-perspective: 1000;
-}
-
-@-webkit-keyframes hit {
-  0% {
-    -webkit-transform: translate3d(0,0,0) translate(-50%, -50%);
-    transform: translate3d(0,0,0) translate(-50%, -50%);
-  }
-  100% {
-    -webkit-transform: translate3d(0,0,0) translate(-50%, -50%);
-    transform: translate3d(0,0,0) translate(-50%, -50%);
-  }
-}
-
-@keyframes hit {
-  0% {
-    -webkit-transform: translate3d(0,0,0) translate(-50%, -50%);
-    transform: translate3d(0,0,0) translate(-50%, -50%);
-  }
-  100% {
-    -webkit-transform: translate3d(0,0,0) translate(-50%, -50%);
-    transform: translate3d(0,0,0) translate(-50%, -50%);
-  }
 }
