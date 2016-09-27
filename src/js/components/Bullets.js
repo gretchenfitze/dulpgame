@@ -79,10 +79,12 @@ export default class Bullets {
 		this.circle = document.querySelector('.js-circle');
 	}
 
-	// Возможность пули отлетать после удара в сторону кручения круга
-	rebound() {
-		const _boundingBullet = this.utils.replaceElement(this.activeBullet);
-
+	/**
+	 * Возможность пули отлетать после удара в сторону кручения круга
+	 *
+	 * @private
+	 */
+	_rebounding() {
 		const boundAngle = this.utils.degreesToRads(
 			this.utils.randomize(this.boundAngleMin, this.boundAngleMax));
 		const distanceFromCircleToBottom = document.documentElement.clientHeight -
@@ -102,14 +104,20 @@ export default class Bullets {
 		}
 		const reboundTransitionProperty = `transform ${this.fireTime * (reboundPath /
 			this.firePath)}ms cubic-bezier(.6,.52,.46,.93)`;
-		_boundingBullet.style.transition = reboundTransitionProperty;
-		_boundingBullet.style.WebkitTransition = `-webkit-${reboundTransitionProperty}`;
+		this.boundingBullet.style.transition = reboundTransitionProperty;
+		this.boundingBullet.style.WebkitTransition = `-webkit-${reboundTransitionProperty}`;
 
-		_boundingBullet.style.transform = _boundingBullet.style.WebkitTransform =
+		this.boundingBullet.style.transform = this.boundingBullet.style.WebkitTransform =
 			`translateZ(0) translate3d(0,0,0) translate(${boundPathX}px, ${boundPathY}px)`;
 
-		_boundingBullet.addEventListener('transitionend', _boundingBullet.remove);
+		this.boundingBullet.addEventListener('transitionend', this.boundingBullet.remove);
 		this.boundedBullets++;
+	}
+
+	// Замена элемента пули и отскок
+	rebound() {
+		this.boundingBullet = this.utils.replaceElement(this.activeBullet);
+		setTimeout(this._rebounding.bind(this), 0);
 	}
 
 	// Получение координат для пуль
