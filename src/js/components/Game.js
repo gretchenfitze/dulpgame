@@ -248,7 +248,7 @@ export default class Game {
 				this.interface.showScreen(this.interface.pauseScreen);
 				break;
 			case 32:
-				this.bullets.fire();
+				this._fire(event);
 				break;
 			default:
 				break;
