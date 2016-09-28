@@ -116,8 +116,9 @@ export default class Bullets {
 
 	// Замена элемента пули и отскок
 	rebound() {
+		const LAST_FRAME_TIMEOUT = 7;
 		this.boundingBullet = this.utils.replaceElement(this.activeBullet);
-		setTimeout(this._rebounding.bind(this), 0);
+		setTimeout(this._rebounding.bind(this), LAST_FRAME_TIMEOUT);
 	}
 
 	// Получение координат для пуль
