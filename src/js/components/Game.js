@@ -135,6 +135,7 @@ export default class Game {
 			if (this.bullets) {
 				this.bullets.reset();
 			}
+			this._isFired = false;
 		} else {
 			this.circle.stopAnimation();
 			if (!_hitSectorColor) {
@@ -142,7 +143,6 @@ export default class Game {
 			}
 			this.interface.showScreen(this.interface.loseScreen);
 		}
-		this._isFired = false;
 	}
 
 	/**
@@ -207,7 +207,7 @@ export default class Game {
 			this._initNewGame(_levelNumber);
 			break;
 		case 'pause':
-			this.interface.showScreen(this.interface.pauseScreen);
+			this._pauseGame();
 			break;
 		case 'continue-pause':
 			this.interface.showScreen(this.interface.gameScreen);
@@ -217,6 +217,17 @@ export default class Game {
 			break;
 		default:
 			break;
+		}
+	}
+
+	/**
+	* Пауза игры
+	*
+	* @private
+	*/
+	_pauseGame() {
+		if (!this._isFired) {
+			this.interface.showScreen(this.interface.pauseScreen);
 		}
 	}
 
@@ -245,7 +256,7 @@ export default class Game {
 		if (!this.interface.gameScreen.classList.contains('invisible')) {
 			switch (event.keyCode) {
 			case 27:
-				this.interface.showScreen(this.interface.pauseScreen);
+				this._pauseGame();
 				break;
 			case 32:
 				this._fire(event);

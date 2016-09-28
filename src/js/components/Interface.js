@@ -33,8 +33,8 @@ export default class Interface {
 				this.screens[i].classList.add('blurout');
 				this.hideTimeout = setTimeout(this._makeInvisible, this.interfaceTimeout, this.screens[i]);
 			}
-			this.showTimeout = setTimeout(this._makeVisible, this.interfaceTimeout, element);
 		}
+		this.showTimeout = setTimeout(this._makeVisible, this.interfaceTimeout, element);
 	}
 
 	/**
@@ -45,7 +45,6 @@ export default class Interface {
 	 */
 	_makeInvisible(element) {
 		element.classList.add('invisible');
-		element.removeEventListener('animationend', this._makeInvisible);
 		element.classList.remove('blurout');
 	}
 
