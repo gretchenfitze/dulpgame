@@ -31,6 +31,7 @@ export default class Game {
 		this.checkLocation();
 		this.interface.gameScreen.addEventListener('mousedown', this._fire.bind(this));
 		this.interface.gameScreen.addEventListener('touchstart', this._fire.bind(this));
+		this._onHit = this._onHit.bind(this);
 	}
 
 	/**
@@ -127,6 +128,7 @@ export default class Game {
 	 * @private
 	 */
 	_onHit() {
+		this.bullets.activeBullet.removeEventListener('transitionend', this._onHit);
 		const _hitSectorColor = this.circle.getHitSectorColor();
 		if (_hitSectorColor === this.bullets.activeBulletColor) {
 			this.bullets.rebound();
@@ -177,7 +179,7 @@ export default class Game {
 		if ((event.target.dataset.action !== 'pause') && (!this._isFired)) {
 			this._isFired = true;
 			this.bullets.fire();
-			this.bullets.activeBullet.addEventListener('transitionend', this._onHit.bind(this));
+			this.bullets.activeBullet.addEventListener('transitionend', this._onHit);
 		}
 	}
 

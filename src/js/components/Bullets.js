@@ -117,7 +117,7 @@ export default class Bullets {
 	// Замена элемента пули и отскок
 	rebound() {
 		const LAST_FRAME_TIMEOUT = 7;
-		this.boundingBullet = this.utils.replaceElement(this.activeBullet);
+		this.boundingBullet = this.activeBullet;
 		setTimeout(this._rebounding.bind(this), LAST_FRAME_TIMEOUT);
 	}
 
