@@ -2,10 +2,6 @@
   "name": "dulpgame",
   "version": "1.0.0",
   "description": "<h1>Dulp game</h1>",
-  "engines": {
-    "node": "6.4.0",
-    "npm": "3.10.6"
-  },
   "main": "",
   "directories": {
     "test": "test"
